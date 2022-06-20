@@ -318,6 +318,7 @@ class MvsPointsVolumetricModel(NeuralPointsVolumetricModel):
             assert isinstance(name, str)
             load_filename = '{}_net_{}.pth'.format(epoch, name)
             load_path = os.path.join(self.opt.resume_dir, load_filename)
+            print(load_path)
             print('loading', name, " from ", load_path)
             if not os.path.isfile(load_path):
                 print('cannot load', load_path)

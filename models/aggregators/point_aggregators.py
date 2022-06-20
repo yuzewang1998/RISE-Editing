@@ -83,6 +83,12 @@ class PointAggregator(torch.nn.Module):
             help='interpolate first and feature mlp 0 | feature mlp then interpolate 1 | feature mlp color then interpolate 2')
 
         parser.add_argument(
+            '--shading_feature_mlp_layer0_clockwiseAngle',
+            type=int,
+            default=0,
+            help='interp to agged features mlp num')
+
+        parser.add_argument(
             '--shading_feature_mlp_layer0',
             type=int,
             default=0,
@@ -249,7 +255,7 @@ class PointAggregator(torch.nn.Module):
             self.shcomp = SphericalHarm(opt.sh_degree)
 
         self.opt = opt
-        self.dist_dim = (4 if self.opt.agg_dist_pers == 30 else 6) if self.opt.agg_dist_pers > 9 else 3
+        self.dist_dim = (4 if self.opt.agg_dist_pers == 30 else 6 if self.opt.agg_dist_pers != 15 else 3) if self.opt.agg_dist_pers > 9 else 3
         self.dist_func = getattr(self, opt.agg_distance_kernel, None)
         assert self.dist_func is not None, "InterpAggregator doesn't have disance_kernel {} ".format(opt.agg_distance_kernel)
 
@@ -288,6 +294,15 @@ class PointAggregator(torch.nn.Module):
         in_channels = opt.point_features_dim + (0 if opt.agg_feat_xyz_mode == "None" else self.pnt_channels) - (opt.weight_feat_dim if opt.agg_distance_kernel in ["feat_intrp", "meta_intrp"] else 0) - (opt.sh_degree ** 2 if opt.agg_distance_kernel == "sh_intrp" else 0) - (7 if opt.agg_distance_kernel == "gau_intrp" else 0)
         in_channels += (2 * opt.num_feat_freqs * in_channels if opt.num_feat_freqs > 0 else 0) + (dist_xyz_dim if opt.agg_intrp_order > 0 else 0)
 
+        if opt.shading_feature_mlp_layer0_clockwiseAngle>0:
+            out_channels = opt.shading_feature_num
+            block1 = []
+            for i in range(opt.shading_feature_mlp_layer1):
+                block1.append(nn.Linear(in_channels, out_channels))
+                block1.append(self.act(inplace=True))
+                in_channels = out_channels
+            self.block1 = nn.Sequential(*block1)
+            block_init_lst.append(self.block1)
         if opt.shading_feature_mlp_layer1 > 0:#2
             out_channels = opt.shading_feature_num
             block1 = []
@@ -555,9 +570,10 @@ class PointAggregator(torch.nn.Module):
             dists_flat = dists.view(-1, dists.shape[-1])#dists:[1,784,24,8,6],colmap的input点云到query的点的距离，目前只有[...，:3]有用[150528,6]
             if self.opt.apply_pnt_mask > 0:#True
                 dists_flat = dists_flat[pnt_mask_flat, :]
-            dists_flat /= (# 不变
-                1.0 if self.opt.dist_xyz_deno == 0. else float(self.opt.dist_xyz_deno * np.linalg.norm(vsize)))
-            dists_flat[..., :3] = dists_flat[..., :3] @ sampled_Rw2c if uni_w2c else (dists_flat[..., None, :3] @ sampled_Rw2c).squeeze(-2)#不变
+            if self.opt.agg_dist_pers !=15:
+                dists_flat /= (# 不变
+                    1.0 if self.opt.dist_xyz_deno == 0. else float(self.opt.dist_xyz_deno * np.linalg.norm(vsize)))
+                dists_flat[..., :3] = dists_flat[..., :3] @ sampled_Rw2c if uni_w2c else (dists_flat[..., None, :3] @ sampled_Rw2c).squeeze(-2)#不变
             if self.opt.dist_xyz_freq != 0:
                 # print(dists.dtype, (self.opt.dist_xyz_deno * np.linalg.norm(vsize)).dtype, dists_flat.dtype)
                 dists_flat = positional_encoding(dists_flat, self.opt.dist_xyz_freq)
@@ -630,15 +646,18 @@ class PointAggregator(torch.nn.Module):
                 proxz_ori_viewdirs = ori_viewdirs[:, ::2]  # [ptr,2]proxy_sampled_dir = sampled_dir[:,:2]#[ptr,2]
                 proyz_sampled_dir = sampled_dir[:, 1:]  # [ptr,2]
                 proyz_ori_viewdirs = ori_viewdirs[:, 1:]  # [ptr,2]proxy_sampled_dir = sampled_dir[:,:2]#[ptr,2]
-                theta = torch.sum(proxy_sampled_dir*proxy_ori_viewdirs,dim = -1)/torch.norm(proxy_sampled_dir,dim=-1)/torch.norm(proxy_ori_viewdirs,dim=-1)#[37410]
+                cos_theta = torch.sum(proxy_sampled_dir*proxy_ori_viewdirs,dim = -1)/torch.norm(proxy_sampled_dir,dim=-1)/torch.norm(proxy_ori_viewdirs,dim=-1)#[37410]
                 clockwise_theta_msk = torch.where(proxy_sampled_dir[:,0]*proxy_ori_viewdirs[:,1]-proxy_sampled_dir[:,1]*proxy_ori_viewdirs[:,1]>0,1,-1)
-                theta = clockwise_theta_msk*theta#[ptr]
-                row = torch.sum(proxz_sampled_dir * proxz_ori_viewdirs, dim=-1) / torch.norm(proxz_sampled_dir,dim=-1) / torch.norm(proxz_ori_viewdirs, dim=-1)  # [37410]
+                cos_theta = clockwise_theta_msk*cos_theta#[ptr]
+                cos_row = torch.sum(proxz_sampled_dir * proxz_ori_viewdirs, dim=-1) / torch.norm(proxz_sampled_dir,dim=-1) / torch.norm(proxz_ori_viewdirs, dim=-1)  # [37410]
                 clockwise_row_msk = torch.where(proxz_sampled_dir[:, 0] * proxz_ori_viewdirs[:, 1] - proxz_sampled_dir[:, 1] * proxz_ori_viewdirs[:,1] > 0, 1, -1)
-                row = clockwise_row_msk * row  # [ptr]
-                fai = torch.sum(proyz_sampled_dir * proyz_ori_viewdirs, dim=-1) / torch.norm(proyz_sampled_dir,dim=-1) / torch.norm(proyz_ori_viewdirs, dim=-1) # [37410]
+                cos_row = clockwise_row_msk * cos_row  # [ptr]
+                cos_fai = torch.sum(proyz_sampled_dir * proyz_ori_viewdirs, dim=-1) / torch.norm(proyz_sampled_dir,dim=-1) / torch.norm(proyz_ori_viewdirs, dim=-1) # [37410]
                 clockwise_fai_msk = torch.where(proyz_sampled_dir[:, 0] * proyz_ori_viewdirs[:, 1] - proyz_sampled_dir[:, 1] * proyz_ori_viewdirs[:,1] > 0, 1, -1)
-                fai = clockwise_fai_msk * fai  # [ptr]
+                cos_fai = clockwise_fai_msk * cos_fai  # [ptr]
+                row = torch.acos(cos_row)
+                theta = torch.acos(cos_theta)
+                fai = torch.acos(cos_fai)
                 row_theta_fai_feat = torch.cat([row[...,None],theta[...,None],fai[...,None]], dim=-1)#18
                 row_theta_fai_feat = positional_encoding(row_theta_fai_feat,self.opt.num_feat_freqs)#18
                 feat = torch.cat([feat, row_theta_fai_feat],dim= -1)
@@ -821,7 +840,7 @@ class PointAggregator(torch.nn.Module):
         if total_len == 0 or torch.sum(ray_valid) == 0:#False
             # print("skip since no valid ray, total_len:", total_len, torch.sum(ray_valid))
             return torch.zeros(in_shape[:-1] + (self.opt.shading_color_channel_num + 1,), device=ray_valid.device, dtype=torch.float32), ray_valid.view(in_shape[:-1]), None, None
-
+        viewdirs = sample_ray_dirs.view(-1, sample_ray_dirs.shape[-1])  # [18816,3]
         if self.opt.agg_dist_pers < 0: #False
             dists = sample_loc_w[..., None, :]
         elif self.opt.agg_dist_pers == 0: #False
@@ -837,7 +856,28 @@ class PointAggregator(torch.nn.Module):
             else:
                 B, R, SR, K, _ = sampled_xyz_pers.shape
                 dists = torch.zeros([B, R, SR, K, 3], device=sampled_xyz_pers.device, dtype=sampled_xyz_pers.dtype)
-
+        elif self.opt.agg_dist_pers == 15:#CODE5:input derta clockwise angle and ||dist||
+            det_dir = sampled_xyz - sample_loc_w[..., None, :]
+            view_dir= sample_ray_dirs[...,None,:].repeat(1,1,1,det_dir.shape[3], 1)
+            proxy_det_dir = det_dir[...,:2]
+            proxy_view_dir = view_dir[...,:2]
+            proxz_det_dir = det_dir[...,1:]
+            proxz_view_dir = view_dir[..., 1:]
+            proyz_det_dir = det_dir[...,[0,2]]
+            proyz_view_dir = view_dir[..., [0,2]]
+            cos_theta = torch.sum(proxy_det_dir*proxy_view_dir,dim = -1)/torch.norm(proxy_det_dir,dim=-1)/torch.norm(proxy_view_dir,dim=-1)
+            clockwise_theta_msk = torch.where(proxy_det_dir[..., 0] * proxy_view_dir[..., 1] - proxy_det_dir[..., 1] * proxy_view_dir[...,1] > 0, 1, -1)
+            cos_theta = clockwise_theta_msk * cos_theta
+            cos_row = torch.sum(proxz_det_dir*proxz_view_dir,dim = -1)/torch.norm(proxz_det_dir,dim=-1)/torch.norm(proxz_view_dir,dim=-1)
+            clockwise_row_msk = torch.where(proxz_det_dir[..., 0] * proxz_view_dir[..., 1] - proxz_det_dir[..., 1] * proxz_view_dir[...,1] > 0, 1, -1)
+            cos_row = clockwise_row_msk * cos_row
+            cos_fai = torch.sum(proyz_det_dir*proyz_view_dir,dim = -1)/torch.norm(proyz_det_dir,dim=-1)/torch.norm(proyz_view_dir,dim=-1)
+            clockwise_fai_msk = torch.where(proyz_det_dir[..., 0] * proyz_view_dir[..., 1] - proyz_det_dir[..., 1] * proyz_view_dir[...,1] > 0, 1, -1)
+            cos_fai = clockwise_fai_msk * cos_fai
+            row = torch.acos(cos_row)
+            theta = torch.acos(cos_theta)
+            fai = torch.acos(cos_fai)
+            dists = torch.stack([theta, row,fai], dim=-1)
         elif self.opt.agg_dist_pers == 10:#False
 
             if sampled_xyz_pers.shape[1] > 0:
@@ -880,7 +920,6 @@ class PointAggregator(torch.nn.Module):
             weight = weight / torch.clamp(torch.sum(weight, dim=-1, keepdim=True), min=1e-8)
         pnt_mask_flat = sample_pnt_mask.view(-1)#sample_pnt_mask：[1,784,24,8]
         pts = sample_loc_w.view(-1, sample_loc_w.shape[-1])#[18816,3]
-        viewdirs = sample_ray_dirs.view(-1, sample_ray_dirs.shape[-1])#[18816,3]
         conf_coefficient = 1
         if sampled_conf is not None:#True
             conf_coefficient = self.gradiant_clamp(sampled_conf[..., 0], min=0.0001, max=1)#[1,784,24,8],all are 1

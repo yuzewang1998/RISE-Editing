@@ -3,7 +3,7 @@
 semantic_guidance=0
 nrCheckpoint="../checkpoints"
 nrDataRoot="../data_src"
-name='58-scene0113-strictSGS_sparseview_notClockwiseangleNetwork'
+name='62-scene0113-noSGS_sparseview_doubleClockwiseangleNetwork'
 
 resume_iter=best #latest
 
@@ -45,7 +45,7 @@ agg_alpha_xyz_mode="None"
 agg_color_xyz_mode="None"
 feature_init_method="rand" #"rand" # "zeros"
 agg_axis_weight=" 1. 1. 1."
-agg_dist_pers=20
+agg_dist_pers=15
 radius_limit_scale=4
 depth_limit_scale=0
 vscale=" 2 2 2 "
@@ -74,12 +74,12 @@ shading_feature_mlp_layer0=1
 shading_feature_mlp_layer1=2
 shading_feature_mlp_layer2=0
 shading_feature_mlp_linear=0
-shading_feature_mlp_layer3=2 #0
-shading_feature_mlp_layer4=0 #1
+shading_feature_mlp_layer3=0 #0
+shading_feature_mlp_layer4=1 #1
 shading_alpha_mlp_layer=1
 shading_color_mlp_layer=4
 shading_feature_num=256
-dist_xyz_freq=5
+dist_xyz_freq=10
 num_feat_freqs=3
 dist_xyz_deno=0
 
