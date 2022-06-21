@@ -614,6 +614,7 @@ def main():
             #Here maybe rendering a plane ,not 360
             if opt.bgmodel.endswith("plane"):
                 _, _, _, _, _, img_lst, c2ws_lst, w2cs_lst, intrinsics_all, HDWD_lst = gen_points_filter_embeddings(train_dataset, visualizer, opt)
+                _, _, _, _, _, img_lst, c2ws_lst, w2cs_lst, intrinsics_all, HDWD_lst = gen_points_filter_embeddings(train_dataset, visualizer, opt)
 
             resume_dir = os.path.join(opt.checkpoints_dir, opt.name)
             if opt.resume_iter == "best":

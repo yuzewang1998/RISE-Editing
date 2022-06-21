@@ -476,7 +476,10 @@ class PointAggregator(torch.nn.Module):
             weights = 1. / torch.clamp(torch.sqrt(torch.sum(torch.square(dists[...,:2]), dim=-1)) * axis_weight[..., 0] + torch.abs(dists[...,2]) * axis_weight[..., 1], min= 1e-6)
         weights = pnt_mask * weights
         return weights, embedding
-
+    def linear_immediately(self, embedding, dists, pnt_mask, vsize, grid_vox_sz, axis_weight=None):
+        weights = 1. / torch.clamp(dists[...,-1], min=1e-6)
+        weights = pnt_mask * weights
+        return weights, embedding
 
     def numlinear(self, embedding, dists, pnt_mask, vsize, grid_vox_sz, axis_weight=None):
         # dists: B * R * SR * K * channel
@@ -655,9 +658,12 @@ class PointAggregator(torch.nn.Module):
                 cos_fai = torch.sum(proyz_sampled_dir * proyz_ori_viewdirs, dim=-1) / torch.norm(proyz_sampled_dir,dim=-1) / torch.norm(proyz_ori_viewdirs, dim=-1) # [37410]
                 clockwise_fai_msk = torch.where(proyz_sampled_dir[:, 0] * proyz_ori_viewdirs[:, 1] - proyz_sampled_dir[:, 1] * proyz_ori_viewdirs[:,1] > 0, 1, -1)
                 cos_fai = clockwise_fai_msk * cos_fai  # [ptr]
-                row = torch.acos(cos_row)
-                theta = torch.acos(cos_theta)
-                fai = torch.acos(cos_fai)
+                # row = torch.acos(cos_row)
+                # theta = torch.acos(cos_theta)
+                # fai = torch.acos(cos_fai)
+                row = cos_row
+                theta = cos_theta
+                fai = cos_fai
                 row_theta_fai_feat = torch.cat([row[...,None],theta[...,None],fai[...,None]], dim=-1)#18
                 row_theta_fai_feat = positional_encoding(row_theta_fai_feat,self.opt.num_feat_freqs)#18
                 feat = torch.cat([feat, row_theta_fai_feat],dim= -1)
@@ -863,21 +869,25 @@ class PointAggregator(torch.nn.Module):
             proxy_view_dir = view_dir[...,:2]
             proxz_det_dir = det_dir[...,1:]
             proxz_view_dir = view_dir[..., 1:]
-            proyz_det_dir = det_dir[...,[0,2]]
-            proyz_view_dir = view_dir[..., [0,2]]
+            # proyz_det_dir = det_dir[...,[0,2]]
+            # proyz_view_dir = view_dir[..., [0,2]]
             cos_theta = torch.sum(proxy_det_dir*proxy_view_dir,dim = -1)/torch.norm(proxy_det_dir,dim=-1)/torch.norm(proxy_view_dir,dim=-1)
             clockwise_theta_msk = torch.where(proxy_det_dir[..., 0] * proxy_view_dir[..., 1] - proxy_det_dir[..., 1] * proxy_view_dir[...,1] > 0, 1, -1)
             cos_theta = clockwise_theta_msk * cos_theta
             cos_row = torch.sum(proxz_det_dir*proxz_view_dir,dim = -1)/torch.norm(proxz_det_dir,dim=-1)/torch.norm(proxz_view_dir,dim=-1)
             clockwise_row_msk = torch.where(proxz_det_dir[..., 0] * proxz_view_dir[..., 1] - proxz_det_dir[..., 1] * proxz_view_dir[...,1] > 0, 1, -1)
             cos_row = clockwise_row_msk * cos_row
-            cos_fai = torch.sum(proyz_det_dir*proyz_view_dir,dim = -1)/torch.norm(proyz_det_dir,dim=-1)/torch.norm(proyz_view_dir,dim=-1)
-            clockwise_fai_msk = torch.where(proyz_det_dir[..., 0] * proyz_view_dir[..., 1] - proyz_det_dir[..., 1] * proyz_view_dir[...,1] > 0, 1, -1)
-            cos_fai = clockwise_fai_msk * cos_fai
-            row = torch.acos(cos_row)
-            theta = torch.acos(cos_theta)
-            fai = torch.acos(cos_fai)
-            dists = torch.stack([theta, row,fai], dim=-1)
+            # cos_fai = torch.sum(proyz_det_dir*proyz_view_dir,dim = -1)/torch.norm(proyz_det_dir,dim=-1)/torch.norm(proyz_view_dir,dim=-1)
+            # clockwise_fai_msk = torch.where(proyz_det_dir[..., 0] * proyz_view_dir[..., 1] - proyz_det_dir[..., 1] * proyz_view_dir[...,1] > 0, 1, -1)
+            # cos_fai = clockwise_fai_msk * cos_fai
+            distanceL2 = torch.sum(torch.square(det_dir),dim=-1)
+            # row = torch.acos(cos_row)
+            # theta = torch.acos(cos_theta)
+            # fai = torch.acos(cos_fai)
+            row = cos_row
+            theta = cos_theta
+            # fai = cos_fai
+            dists = torch.stack([theta, row,distanceL2], dim=-1)
         elif self.opt.agg_dist_pers == 10:#False
 
             if sampled_xyz_pers.shape[1] > 0:
