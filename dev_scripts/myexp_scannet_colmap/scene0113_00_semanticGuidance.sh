@@ -3,7 +3,7 @@
 semantic_guidance=0
 nrCheckpoint="../checkpoints"
 nrDataRoot="../data_src"
-name='64-scene0113-noSGS_sparseview_doubleClockwiseangleNetwork+L2dist_(fixlinearweightBUG)'
+name='64-scene0113-noSGS_sparseview_doubleClockwiseangleNetwork+L2dist_(fixlinearweightBUG+acosBUG)'
 
 resume_iter=best #latest
 
@@ -103,7 +103,7 @@ num_pos_freqs=10
 num_viewdir_freqs=4 #6
 
 random_sample='random'
-random_sample_size=32 # 32 * 32 = 1024
+random_sample_size=16 # 32 * 32 = 1024
 batch_size=1
 
 plr=0.002

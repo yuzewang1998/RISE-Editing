@@ -650,20 +650,21 @@ class PointAggregator(torch.nn.Module):
                 proyz_sampled_dir = sampled_dir[:, 1:]  # [ptr,2]
                 proyz_ori_viewdirs = ori_viewdirs[:, 1:]  # [ptr,2]proxy_sampled_dir = sampled_dir[:,:2]#[ptr,2]
                 cos_theta = torch.sum(proxy_sampled_dir*proxy_ori_viewdirs,dim = -1)/torch.norm(proxy_sampled_dir,dim=-1)/torch.norm(proxy_ori_viewdirs,dim=-1)#[37410]
+                cos_theta = torch.clamp(cos_theta, min=-1+1e-5, max=1-1e-5)
+                theta = torch.acos(cos_theta)
                 clockwise_theta_msk = torch.where(proxy_sampled_dir[:,0]*proxy_ori_viewdirs[:,1]-proxy_sampled_dir[:,1]*proxy_ori_viewdirs[:,1]>0,1,-1)
-                cos_theta = clockwise_theta_msk*cos_theta#[ptr]
+                theta = clockwise_theta_msk*theta#[ptr]
                 cos_row = torch.sum(proxz_sampled_dir * proxz_ori_viewdirs, dim=-1) / torch.norm(proxz_sampled_dir,dim=-1) / torch.norm(proxz_ori_viewdirs, dim=-1)  # [37410]
+                cos_row = torch.clamp(cos_row, min=-1 + 1e-7, max=1 - 1e-7)
+                row = torch.acos(cos_row)
                 clockwise_row_msk = torch.where(proxz_sampled_dir[:, 0] * proxz_ori_viewdirs[:, 1] - proxz_sampled_dir[:, 1] * proxz_ori_viewdirs[:,1] > 0, 1, -1)
-                cos_row = clockwise_row_msk * cos_row  # [ptr]
+                row = clockwise_row_msk * row  # [ptr]
                 cos_fai = torch.sum(proyz_sampled_dir * proyz_ori_viewdirs, dim=-1) / torch.norm(proyz_sampled_dir,dim=-1) / torch.norm(proyz_ori_viewdirs, dim=-1) # [37410]
+                cos_fai = torch.clamp(cos_fai, min=-1 + 1e-7, max=1 - 1e-7)
+                fai = torch.acos(cos_fai)
                 clockwise_fai_msk = torch.where(proyz_sampled_dir[:, 0] * proyz_ori_viewdirs[:, 1] - proyz_sampled_dir[:, 1] * proyz_ori_viewdirs[:,1] > 0, 1, -1)
-                cos_fai = clockwise_fai_msk * cos_fai  # [ptr]
-                # row = torch.acos(cos_row)
-                # theta = torch.acos(cos_theta)
-                # fai = torch.acos(cos_fai)
-                row = cos_row
-                theta = cos_theta
-                fai = cos_fai
+                fai = clockwise_fai_msk * fai  # [ptr]
+
                 row_theta_fai_feat = torch.cat([row[...,None],theta[...,None],fai[...,None]], dim=-1)#18
                 row_theta_fai_feat = positional_encoding(row_theta_fai_feat,self.opt.num_feat_freqs)#18
                 feat = torch.cat([feat, row_theta_fai_feat],dim= -1)
@@ -872,20 +873,21 @@ class PointAggregator(torch.nn.Module):
             # proyz_det_dir = det_dir[...,[0,2]]
             # proyz_view_dir = view_dir[..., [0,2]]
             cos_theta = torch.sum(proxy_det_dir*proxy_view_dir,dim = -1)/torch.norm(proxy_det_dir,dim=-1)/torch.norm(proxy_view_dir,dim=-1)
+            cos_theta = torch.clamp(cos_theta, min=-1 + 1e-7, max=1 - 1e-7)
+            theta = torch.acos(cos_theta)
             clockwise_theta_msk = torch.where(proxy_det_dir[..., 0] * proxy_view_dir[..., 1] - proxy_det_dir[..., 1] * proxy_view_dir[...,1] > 0, 1, -1)
-            cos_theta = clockwise_theta_msk * cos_theta
+            theta = clockwise_theta_msk * theta
             cos_row = torch.sum(proxz_det_dir*proxz_view_dir,dim = -1)/torch.norm(proxz_det_dir,dim=-1)/torch.norm(proxz_view_dir,dim=-1)
+            cos_row = torch.clamp(cos_row, min=-1 + 1e-7, max=1 - 1e-7)
+            row = torch.acos(cos_row)
             clockwise_row_msk = torch.where(proxz_det_dir[..., 0] * proxz_view_dir[..., 1] - proxz_det_dir[..., 1] * proxz_view_dir[...,1] > 0, 1, -1)
-            cos_row = clockwise_row_msk * cos_row
+            row = clockwise_row_msk * row
             # cos_fai = torch.sum(proyz_det_dir*proyz_view_dir,dim = -1)/torch.norm(proyz_det_dir,dim=-1)/torch.norm(proyz_view_dir,dim=-1)
             # clockwise_fai_msk = torch.where(proyz_det_dir[..., 0] * proyz_view_dir[..., 1] - proyz_det_dir[..., 1] * proyz_view_dir[...,1] > 0, 1, -1)
             # cos_fai = clockwise_fai_msk * cos_fai
             distanceL2 = torch.sum(torch.square(det_dir),dim=-1)
-            # row = torch.acos(cos_row)
-            # theta = torch.acos(cos_theta)
-            # fai = torch.acos(cos_fai)
-            row = cos_row
-            theta = cos_theta
+            # row = cos_row
+            # theta = cos_theta
             # fai = cos_fai
             dists = torch.stack([theta, row,distanceL2], dim=-1)
         elif self.opt.agg_dist_pers == 10:#False
