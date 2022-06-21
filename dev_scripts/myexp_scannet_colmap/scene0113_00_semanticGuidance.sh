@@ -64,7 +64,7 @@ NN=2
 act_type="LeakyReLU"
 
 agg_intrp_order=2
-agg_distance_kernel="linear" #"avg" #"feat_intrp"
+agg_distance_kernel="linear_immediately" #"avg" #"feat_intrp"
 point_features_dim=32
 shpnt_jitter="passfunc" #"uniform" # uniform gaussian
 
