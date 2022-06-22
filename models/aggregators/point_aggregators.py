@@ -652,18 +652,18 @@ class PointAggregator(torch.nn.Module):
                 cos_theta = torch.sum(proxy_sampled_dir*proxy_ori_viewdirs,dim = -1)/torch.norm(proxy_sampled_dir,dim=-1)/torch.norm(proxy_ori_viewdirs,dim=-1)#[37410]
                 cos_theta = torch.clamp(cos_theta, min=-1+1e-5, max=1-1e-5)
                 theta = torch.acos(cos_theta)
-                clockwise_theta_msk = torch.where(proxy_sampled_dir[:,0]*proxy_ori_viewdirs[:,1]-proxy_sampled_dir[:,1]*proxy_ori_viewdirs[:,1]>0,1,-1)
-                theta = clockwise_theta_msk*theta#[ptr]
+                # clockwise_theta_msk = torch.where(proxy_sampled_dir[:,0]*proxy_ori_viewdirs[:,1]-proxy_sampled_dir[:,1]*proxy_ori_viewdirs[:,1]>0,1,-1)
+                # theta = clockwise_theta_msk*theta#[ptr]
                 cos_row = torch.sum(proxz_sampled_dir * proxz_ori_viewdirs, dim=-1) / torch.norm(proxz_sampled_dir,dim=-1) / torch.norm(proxz_ori_viewdirs, dim=-1)  # [37410]
                 cos_row = torch.clamp(cos_row, min=-1 + 1e-7, max=1 - 1e-7)
                 row = torch.acos(cos_row)
-                clockwise_row_msk = torch.where(proxz_sampled_dir[:, 0] * proxz_ori_viewdirs[:, 1] - proxz_sampled_dir[:, 1] * proxz_ori_viewdirs[:,1] > 0, 1, -1)
-                row = clockwise_row_msk * row  # [ptr]
+                # clockwise_row_msk = torch.where(proxz_sampled_dir[:, 0] * proxz_ori_viewdirs[:, 1] - proxz_sampled_dir[:, 1] * proxz_ori_viewdirs[:,1] > 0, 1, -1)
+                # row = clockwise_row_msk * row  # [ptr]
                 cos_fai = torch.sum(proyz_sampled_dir * proyz_ori_viewdirs, dim=-1) / torch.norm(proyz_sampled_dir,dim=-1) / torch.norm(proyz_ori_viewdirs, dim=-1) # [37410]
                 cos_fai = torch.clamp(cos_fai, min=-1 + 1e-7, max=1 - 1e-7)
                 fai = torch.acos(cos_fai)
-                clockwise_fai_msk = torch.where(proyz_sampled_dir[:, 0] * proyz_ori_viewdirs[:, 1] - proyz_sampled_dir[:, 1] * proyz_ori_viewdirs[:,1] > 0, 1, -1)
-                fai = clockwise_fai_msk * fai  # [ptr]
+                # clockwise_fai_msk = torch.where(proyz_sampled_dir[:, 0] * proyz_ori_viewdirs[:, 1] - proyz_sampled_dir[:, 1] * proyz_ori_viewdirs[:,1] > 0, 1, -1)
+                # fai = clockwise_fai_msk * fai  # [ptr]
 
                 row_theta_fai_feat = torch.cat([row[...,None],theta[...,None],fai[...,None]], dim=-1)#18
                 row_theta_fai_feat = positional_encoding(row_theta_fai_feat,self.opt.num_feat_freqs)#18
@@ -865,23 +865,23 @@ class PointAggregator(torch.nn.Module):
                 dists = torch.zeros([B, R, SR, K, 3], device=sampled_xyz_pers.device, dtype=sampled_xyz_pers.dtype)
         elif self.opt.agg_dist_pers == 15:#CODE5:input derta clockwise angle and ||dist||
             det_dir = sampled_xyz - sample_loc_w[..., None, :]
-            view_dir= sample_ray_dirs[...,None,:].repeat(1,1,1,det_dir.shape[3], 1)
+
             proxy_det_dir = det_dir[...,:2]
-            proxy_view_dir = view_dir[...,:2]
+            proxy_sampled_dir = sampled_dir[...,:2]
             proxz_det_dir = det_dir[...,1:]
-            proxz_view_dir = view_dir[..., 1:]
+            proxz_sampled_dir = sampled_dir[..., 1:]
             # proyz_det_dir = det_dir[...,[0,2]]
             # proyz_view_dir = view_dir[..., [0,2]]
-            cos_theta = torch.sum(proxy_det_dir*proxy_view_dir,dim = -1)/torch.norm(proxy_det_dir,dim=-1)/torch.norm(proxy_view_dir,dim=-1)
+            cos_theta = torch.sum(proxy_det_dir*proxy_sampled_dir,dim = -1)/torch.norm(proxy_det_dir,dim=-1)/torch.norm(proxy_sampled_dir,dim=-1)
             cos_theta = torch.clamp(cos_theta, min=-1 + 1e-7, max=1 - 1e-7)
             theta = torch.acos(cos_theta)
-            clockwise_theta_msk = torch.where(proxy_det_dir[..., 0] * proxy_view_dir[..., 1] - proxy_det_dir[..., 1] * proxy_view_dir[...,1] > 0, 1, -1)
-            theta = clockwise_theta_msk * theta
-            cos_row = torch.sum(proxz_det_dir*proxz_view_dir,dim = -1)/torch.norm(proxz_det_dir,dim=-1)/torch.norm(proxz_view_dir,dim=-1)
+            # clockwise_theta_msk = torch.where(proxy_det_dir[..., 0] * proxy_sampled_dir[..., 1] - proxy_det_dir[..., 1] * proxy_sampled_dir[...,1] > 0, 1, -1)
+            # theta = clockwise_theta_msk * theta
+            cos_row = torch.sum(proxz_det_dir*proxz_sampled_dir,dim = -1)/torch.norm(proxz_det_dir,dim=-1)/torch.norm(proxz_sampled_dir,dim=-1)
             cos_row = torch.clamp(cos_row, min=-1 + 1e-7, max=1 - 1e-7)
             row = torch.acos(cos_row)
-            clockwise_row_msk = torch.where(proxz_det_dir[..., 0] * proxz_view_dir[..., 1] - proxz_det_dir[..., 1] * proxz_view_dir[...,1] > 0, 1, -1)
-            row = clockwise_row_msk * row
+            # clockwise_row_msk = torch.where(proxz_det_dir[..., 0] * proxz_sampled_dir[..., 1] - proxz_det_dir[..., 1] * proxz_sampled_dir[...,1] > 0, 1, -1)
+            # row = clockwise_row_msk * row
             # cos_fai = torch.sum(proyz_det_dir*proyz_view_dir,dim = -1)/torch.norm(proyz_det_dir,dim=-1)/torch.norm(proyz_view_dir,dim=-1)
             # clockwise_fai_msk = torch.where(proyz_det_dir[..., 0] * proyz_view_dir[..., 1] - proyz_det_dir[..., 1] * proyz_view_dir[...,1] > 0, 1, -1)
             # cos_fai = clockwise_fai_msk * cos_fai

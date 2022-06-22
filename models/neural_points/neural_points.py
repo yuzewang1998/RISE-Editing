@@ -418,7 +418,8 @@ class NeuralPoints(nn.Module):
         if parameter:
             self.xyz = nn.Parameter(points_xyz)#不会对点云做grad
             self.xyz.requires_grad = self.opt.xyz_grad > 0
-            self.points_label = nn.Parameter(points_label,requires_grad=False)
+            if points_label is not None:
+                self.points_label = nn.Parameter(points_label,requires_grad=False)
             if points_conf is not None:
                 points_conf = nn.Parameter(points_conf)
                 points_conf.requires_grad = self.opt.conf_grad > 0#yes
@@ -583,7 +584,10 @@ class NeuralPoints(nn.Module):
         # print("actual_numpoints_tensor", actual_numpoints_tensor.shape)
         # sample_pidx_tensor: B, R, SR, K
         ray_dirs_tensor = inputs["raydir"]
-        ray_label_tensor = pixel_label_tensor.reshape(-1,1)[None,...]
+        if pixel_label_tensor is not None:
+            ray_label_tensor = pixel_label_tensor.reshape(-1,1)[None,...]
+        else :
+            ray_label_tensor = None
         # (1,784,3)-784个采样点
         # print("ray_dirs_tensor", ray_dirs_tensor.shape, self.xyz.shape)
         #sample_pidx_tensor[1,784,24,8]每个像素(784)，需要采样的每个query点(24)的点云中临近8点

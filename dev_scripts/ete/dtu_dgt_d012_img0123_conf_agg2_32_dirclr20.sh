@@ -61,10 +61,12 @@ shpnt_jitter="uniform" #"uniform" # uniform gaussian
 
 which_agg_model="viewmlp"
 apply_pnt_mask=1
-shading_feature_mlp_layer0=1 #2
-shading_feature_mlp_layer1=2 #2
-shading_feature_mlp_layer2=0 #1
-shading_feature_mlp_layer3=2 #1
+shading_feature_mlp_layer0=1
+shading_feature_mlp_layer1=2
+shading_feature_mlp_layer2=0
+shading_feature_mlp_linear=0
+shading_feature_mlp_layer3=0 #0
+shading_feature_mlp_layer4=1 #1
 shading_alpha_mlp_layer=1
 shading_color_mlp_layer=4
 shading_feature_num=256
@@ -97,7 +99,7 @@ batch_size=1
 lr=0.0005 # 0.0005 #0.00015
 lr_policy="iter_exponential_decay"
 lr_decay_iters=500000
-gpu_ids='1'
+gpu_ids='0'
 checkpoints_dir="${nrCheckpoint}/init"
 resume_dir="${checkpoints_dir}/${name}"
 
@@ -180,9 +182,11 @@ python3 train.py \
         --agg_dist_pers $agg_dist_pers \
         --agg_intrp_order $agg_intrp_order \
         --shading_feature_mlp_layer0 $shading_feature_mlp_layer0 \
+        --shading_feature_mlp_linear $shading_feature_mlp_linear\
         --shading_feature_mlp_layer1 $shading_feature_mlp_layer1 \
         --shading_feature_mlp_layer2 $shading_feature_mlp_layer2 \
         --shading_feature_mlp_layer3 $shading_feature_mlp_layer3 \
+        --shading_feature_mlp_layer4 $shading_feature_mlp_layer4 \
         --shading_feature_num $shading_feature_num \
         --dist_xyz_freq $dist_xyz_freq \
         --shpnt_jitter $shpnt_jitter \
