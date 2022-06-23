@@ -3,7 +3,7 @@
 novel_cam_trajectory="1"
 nrCheckpoint="../checkpoints"
 nrDataRoot="../data_src"
-name='61-scene0113-41+sparseview+NOgrowingPruneSemanticpointe+randomsampler(10W+10W)_finetune_edit'
+name='40===-scene0113-30+semanticguidance_denseview_raylabel0+vlabel0+random_sampler_edit'
 
 resume_iter=latest # 20000 #latest
 data_root="${nrDataRoot}/scannet/scans/"

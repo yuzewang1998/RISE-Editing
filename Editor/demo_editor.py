@@ -24,7 +24,7 @@ class Options:
         parser = argparse.ArgumentParser(description="Argparse of  point_editor")
         parser.add_argument('--checkpoints_root',
                             type=str,
-                            default='/home/slam/devdata/NSEPN/checkpoints/scannet/61-scene0113-41+sparseview+NOgrowingPruneSemanticpointe+randomsampler(10W+10W)_finetune_edit',#/home/slam/devdata/pointnerf/checkpoints/scannet/scene000-T
+                            default='/home/slam/devdata/NSEPN/checkpoints/scannet/40===-scene0113-30+semanticguidance_denseview_raylabel0+vlabel0+random_sampler_edit',#/home/slam/devdata/pointnerf/checkpoints/scannet/scene000-T
                             help='root of checkpoints datasets')
         parser.add_argument('--gpu_ids',
                             type=str,
@@ -51,13 +51,13 @@ def test_edit(opt):
     object_npcd = object_mpcd.meshlabpcd2neuralpcd(scene_npcd)
     object_npcd.save_as_ply('sofa1')
     pce = PointCloudEditor(opt)
-    R = cauc_RotationMatrix(0, 0, 30)
+    R = cauc_RotationMatrix(0, 0, 15)
     transMatrix = cauc_transformationMatrix(R, np.array([0, -0.8, 0]))
-    transed_sofa = pce.translation_point_cloud_global(object_npcd,transMatrix)
-    transed_sofa.save_as_ply('sofa1_trans(0,0,0)(0,-0.8,0)')
+    transed_sofa = pce.translation_point_cloud_local(object_npcd,transMatrix)
+    transed_sofa.save_as_ply('sofa1_trans(0,0,15)(0,-0.8,0)')
     new_scene = pce.add_point_cloud(transed_sofa,scene_npcd)
-    new_scene.save_as_ply('scene_add_sofa1(0,0,0)(0,-0.8,0)')
-    cpc.save_checkpoints_from_neuralpcd(new_scene,'scene_add_sofa1(0,0,0)(0,-0.8,0)')
+    new_scene.save_as_ply('scene_add_sofa1(0,0,15)(0,-0.8,0)')
+    cpc.save_checkpoints_from_neuralpcd(new_scene,'scene_add_sofa1(0,0,15)(0,-0.8,0)')
 
 def test_edit1(opt):# sofa only
     cpc = CheckpointsController(opt)
@@ -82,9 +82,11 @@ def test_edit2(opt):# delete
 def main():
     sparse = Options()
     opt = sparse.opt
-
     test_load_checkpoints_save_as_ply(opt,'scene_origin')
     # 测试读ply:这一步中间，用mesh手抠一个物体，命名为sofa_meshlabpcd.ply~！~！~！~！~！~！~！~！
+    test_edit(opt)
+    # test_edit1(opt)
+    # test_edit2(opt)
 
 
 

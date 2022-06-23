@@ -64,7 +64,7 @@ class PointCloudEditor:
         res_npc.color = npcd.color
         res_npc.embeding = npcd.embeding
         res_npc.conf = npcd.conf
-        res_npc.dir = npcd.dir
+        res_npc.dir = npcd.dir@ rot_matrix
         res_npc.label = npcd.label
         return res_npc
     def translation_point_cloud_local(self,npcd,transMatirx):#rotate by self coordinate
@@ -77,7 +77,7 @@ class PointCloudEditor:
         res_npc.color = npcd.color
         res_npc.embeding = npcd.embeding
         res_npc.conf = npcd.conf
-        res_npc.dir = npcd.dir
+        res_npc.dir = npcd.dir@ rot_matrix
         res_npc.label = npcd.label
         return res_npc
     def add_point_cloud(self,npcd_child,npcd_father):

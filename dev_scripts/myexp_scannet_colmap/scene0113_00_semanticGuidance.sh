@@ -1,9 +1,9 @@
 #!/bin/bash
 
-semantic_guidance=1
+semantic_guidance=0
 nrCheckpoint="../checkpoints"
 nrDataRoot="../data_src"
-name='64-scene0113-SGS_sparseview_RotationInvartionNetwork+L2dist_(fixlinearweightBUG+acosBUG+v2+fixClockwiseangle)'
+name='64-scene0113-No_SGS_sparseview_RotationInvartionNetwork(theta,fai,L2dist)+2*feature_extraction-DENSEPOINTCLOUD!'
 
 resume_iter=best #latest
 
@@ -76,10 +76,12 @@ shading_feature_mlp_layer2=0
 shading_feature_mlp_linear=0
 shading_feature_mlp_layer3=0 #0
 shading_feature_mlp_layer4=1 #1
+shading_feature_mlp_layer0_rotation_invariance_feature_extraction_module=1
+shading_feature_mlp_layer0_rotation_invariance_feature_extraction_dim=60
 shading_alpha_mlp_layer=1
 shading_color_mlp_layer=4
 shading_feature_num=256
-dist_xyz_freq=10
+dist_xyz_freq=5
 num_feat_freqs=3
 dist_xyz_deno=0
 
@@ -228,6 +230,8 @@ python3 train_ft.py \
         --shading_feature_mlp_layer2 $shading_feature_mlp_layer2 \
         --shading_feature_mlp_layer3 $shading_feature_mlp_layer3 \
         --shading_feature_mlp_layer4 $shading_feature_mlp_layer4 \
+        --shading_feature_mlp_layer0_rotation_invariance_feature_extraction_module $shading_feature_mlp_layer0_rotation_invariance_feature_extraction_module\
+        --shading_feature_mlp_layer0_rotation_invariance_feature_extraction_dim $shading_feature_mlp_layer0_rotation_invariance_feature_extraction_dim\
         --shading_feature_mlp_linear $shading_feature_mlp_linear \
         --shading_feature_num $shading_feature_num \
         --dist_xyz_freq $dist_xyz_freq \
