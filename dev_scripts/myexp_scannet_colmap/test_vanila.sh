@@ -3,7 +3,7 @@
 novel_cam_trajectory="1"
 nrCheckpoint="../checkpoints"
 nrDataRoot="../data_src"
-name="05-scene0113__FlexSGS(40W)FINETUNE(60W)__1RIFEM__EDIT"
+name="00-scene0113-vanila_edit"
 
 resume_iter=latest # 20000 #latest
 data_root="${nrDataRoot}/scannet/scans/"
@@ -20,7 +20,7 @@ agg_alpha_xyz_mode="None"
 agg_color_xyz_mode="None"
 feature_init_method="rand" #"rand" # "zeros"
 agg_axis_weight=" 1. 1. 1."
-agg_dist_pers=15
+agg_dist_pers=20
 radius_limit_scale=4
 depth_limit_scale=0
 vscale=" 2 2 2 "
@@ -38,7 +38,7 @@ NN=2
 act_type="LeakyReLU"
 
 agg_intrp_order=2
-agg_distance_kernel="linear_immediately" #"avg" #"feat_intrp"
+agg_distance_kernel="linear" #"avg" #"feat_intrp"
 
 point_features_dim=32
 shpnt_jitter="passfunc" #"uniform" # uniform gaussian
@@ -48,11 +48,10 @@ apply_pnt_mask=1
 shading_feature_mlp_layer0=1
 shading_feature_mlp_layer1=2
 shading_feature_mlp_layer2=0
-shading_feature_mlp_linear=0
-shading_feature_mlp_layer3=0 #0
-shading_feature_mlp_layer4=1 #1
-shading_feature_mlp_layer0_rotation_invariance_feature_extraction_module=1
-shading_feature_mlp_layer0_rotation_invariance_feature_extraction_dim=60
+shading_feature_mlp_layer3=2 #0
+shading_feature_mlp_layer4=0 #1
+shading_feature_mlp_layer0_rotation_invariance_feature_extraction_module=0
+shading_feature_mlp_layer0_rotation_invariance_feature_extraction_dim=0
 
 shading_alpha_mlp_layer=1
 shading_color_mlp_layer=4
@@ -155,7 +154,6 @@ python3 test_ft.py \
         --shading_feature_mlp_layer2 $shading_feature_mlp_layer2 \
         --shading_feature_mlp_layer3 $shading_feature_mlp_layer3 \
         --shading_feature_mlp_layer4 $shading_feature_mlp_layer4 \
-        --shading_feature_mlp_linear $shading_feature_mlp_linear \
         --shading_feature_num $shading_feature_num \
         --dist_xyz_freq $dist_xyz_freq \
         --shpnt_jitter $shpnt_jitter \

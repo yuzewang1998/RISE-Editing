@@ -72,7 +72,7 @@ class lighting_fast_querier():
         return np.asarray(radius_limit_np).astype(np.float32), np.asarray(depth_limit_np).astype(np.float32), ranges_np, vsize_np, vdim_np, scaled_vsize_np, scaled_vdim_np, vscale_np, ranges_gpu, scaled_vsize_gpu, scaled_vdim_gpu, vscale_gpu, kernel_size_gpu, query_size_gpu
 
     # add pixel_label_tensor
-    def query_points(self, pixel_idx_tensor,pixel_label_tensor, point_xyz_pers_tensor, point_xyz_w_tensor,points_label_tensor, actual_numpoints_tensor, h, w, intrinsic, near_depth, far_depth, ray_dirs_tensor,ray_label_tensor ,cam_pos_tensor, cam_rot_tensor):
+    def query_points(self, pixel_idx_tensor, point_xyz_pers_tensor, point_xyz_w_tensor,points_label_tensor, actual_numpoints_tensor, h, w, intrinsic, near_depth, far_depth, ray_dirs_tensor,ray_label_tensor ,cam_pos_tensor, cam_rot_tensor):
         near_depth, far_depth = np.asarray(near_depth).item() , np.asarray(far_depth).item()#0.1，8
         radius_limit_np, depth_limit_np, ranges_np, vsize_np, vdim_np, scaled_vsize_np, scaled_vdim_np, vscale_np, range_gpu, scaled_vsize_gpu, scaled_vdim_gpu, vscale_gpu, kernel_size_gpu, query_size_gpu = self.get_hyperparameters(self.opt.vsize, point_xyz_w_tensor, ranges=self.opt.ranges)
         # print("self.opt.ranges", self.opt.ranges, range_gpu, ray_dirs_tensor)
@@ -85,7 +85,7 @@ class lighting_fast_querier():
         #sample_loc_w_tensor[1,784,24,3],init:all-0，存某个pixel需要query的点的坐标
         #ray_mask_tensor[1,784]true or false，存放不需要采集的像素的msk
         raylabel_tensor = ray_label_tensor[...,None,:].repeat(1,1,raypos_tensor.shape[2],1)
-        sample_pidx_tensor, sample_loc_w_tensor,ray_mask_tensor = self.query_grid_point_index(h, w, pixel_idx_tensor,pixel_label_tensor,raypos_tensor, raylabel_tensor,point_xyz_w_tensor,points_label_tensor,actual_numpoints_tensor, kernel_size_gpu, query_size_gpu, self.opt.SR, self.opt.K, ranges_np, scaled_vsize_np, scaled_vdim_np, vscale_np, self.opt.max_o, self.opt.P, radius_limit_np, depth_limit_np, range_gpu, scaled_vsize_gpu, scaled_vdim_gpu, vscale_gpu, ray_dirs_tensor, cam_pos_tensor, kMaxThreadsPerBlock=self.opt.gpu_maxthr)
+        sample_pidx_tensor, sample_loc_w_tensor,ray_mask_tensor = self.query_grid_point_index(h, w, pixel_idx_tensor,raylabel_tensor,raypos_tensor, raylabel_tensor,point_xyz_w_tensor,points_label_tensor,actual_numpoints_tensor, kernel_size_gpu, query_size_gpu, self.opt.SR, self.opt.K, ranges_np, scaled_vsize_np, scaled_vdim_np, vscale_np, self.opt.max_o, self.opt.P, radius_limit_np, depth_limit_np, range_gpu, scaled_vsize_gpu, scaled_vdim_gpu, vscale_gpu, ray_dirs_tensor, cam_pos_tensor, kMaxThreadsPerBlock=self.opt.gpu_maxthr)
         sample_ray_dirs_tensor = torch.masked_select(ray_dirs_tensor, ray_mask_tensor[..., None]>0).reshape(ray_dirs_tensor.shape[0],-1,3)[...,None,:].expand(-1, -1, self.opt.SR, -1).contiguous()
         #sample_pidx_tensor[1,784,24,8]每个像素(784)，需要采样的每个query点(24)的点云中临近8点
         #elf.w2pers(sample_loc_w_tensor, cam_rot_tensor, cam_pos_tensor) sample_loc_w_tensor转了坐标系
@@ -464,7 +464,7 @@ class lighting_fast_querier():
                 
                 __global__ void query_neigh_along_ray_layered_semantic_guidance(
                     const float* in_data,   // #point cloud data input:[1,4242263,3]
-                    const int* in_data_label,//[1,4242263,1] neural point label information
+                    const int* in_label,
                     const int B,            //1
                     const int SR,               // num. samples along each ray 24
                     const int R,               // e.g., 784
@@ -482,7 +482,7 @@ class lighting_fast_querier():
                     const int *coor_2_occ,      // B * 400 * 400 * 400  [1,344,377,357]：init=-1；存放的是occ的index(0~610000)
                     const float *sample_loc,       // B * R * SR * 3 [1,784,24,3],init:all-0，存某个pixel需要采样的点的坐标
                     const int *sample_loc_mask,       // B * R * SR  [1,784,24],init:all-0，存sample_loc_tensor的msk
-                    const int *sample_pidx_tensor, //new[1,784,24,1],label
+                    const int *sample_label,
                     int *sample_pidx,       // B * R * SR * K [1,784,24,8]init-all -1;8，即K，一个查询点的max num.  neighbors；返回每个像素（784个）所要query的每个点（24个）的真实邻居点（最临近的8点）的pid
                     unsigned long seconds,
                     const int NN
@@ -493,8 +493,7 @@ class lighting_fast_querier():
                     float centerx = sample_loc[index * 3];
                     float centery = sample_loc[index * 3 + 1];
                     float centerz = sample_loc[index * 3 + 2];
-                    int center_label = sample_pidx_tensor[index];
-                    //cauc bounding box
+                    int center_label = sample_label[index];
                     int frustx = (int) floor((centerx - d_coord_shift[0]) / d_voxel_size[0]);//这个点云所在的体素场的坐标frustx,y,z
                     int frusty = (int) floor((centery - d_coord_shift[1]) / d_voxel_size[1]);
                     int frustz = (int) floor((centerz - d_coord_shift[2]) / d_voxel_size[2]);
@@ -502,6 +501,7 @@ class lighting_fast_querier():
                     centerx = sample_loc[index * 3];
                     centery = sample_loc[index * 3 + 1];
                     centerz = sample_loc[index * 3 + 2];
+                    center_label = sample_label[index];   
                                         
                     int kid = 0, far_ind = 0, coor_z, coor_y, coor_x;
                     float far2 = 0.0;
@@ -520,14 +520,13 @@ class lighting_fast_querier():
                                     if (occ_indx >= 0) {//if occ_indx = -1则里面没点
                                         for (int g = 0; g < min(P, occ_numpnts[occ_indx]); g++) {//occ_numpnts:某个occ中点云的数量，P超参：最大的点云数量
                                             int pidx = occ_2_pnts[occ_indx * P + g];//occ_2_pnts[1,610000,26]，从每个occ中取出每个点的index
-                                            int label_v = in_data_label[pidx];
-                                            if((center_label==label_v||label_v==0||center_label==0))
-                                            {
-                                                float x_v = (in_data[pidx*3]-centerx);//in_data[pidx*3]：点云坐标；centerx:query点的坐标
-                                                float y_v = (in_data[pidx*3 + 1]-centery);
-                                                float z_v = (in_data[pidx*3 + 2]-centerz);
-                                                float xyz2 = x_v * x_v + y_v * y_v + z_v * z_v;//点到query点距离**2
-                                                if ((radius_limit2 == 0 || xyz2 <= radius_limit2)){//如果是在radius_limit2的范围内
+                                            float x_v = (in_data[pidx*3]-centerx);//in_data[pidx*3]：点云坐标；centerx:query点的坐标
+                                            float y_v = (in_data[pidx*3 + 1]-centery);
+                                            float z_v = (in_data[pidx*3 + 2]-centerz);
+                                            int label_v = (in_label[pidx]);
+                                            float xyz2 = x_v * x_v + y_v * y_v + z_v * z_v;//点到query点距离**2
+                                            if ((radius_limit2 == 0 || xyz2 <= radius_limit2)){//如果是在radius_limit2的范围内
+                                                if(center_label==label_v||center_label==0){
                                                     if (kid++ < K) {//K:max num.  neighbors;kid:current num neighbors
                                                         sample_pidx[index * K + kid - 1] = pidx;//sample_pidx存相应的pidx
                                                         xyz2Buffer[kid-1] = xyz2;//缓存xyz距离
@@ -896,7 +895,7 @@ class lighting_fast_querier():
                     Holder(coor_2_occ_tensor),#[1,344,377,357]：init=-1；存放的是occ的index(0~610000)
                     Holder(sample_loc_tensor),#[1,784,24,3],init:all-0，存某个pixel需要query的点的坐标
                     Holder(sample_loc_mask_tensor),#[1,784,24],init:all-0，存sample_loc_tensor的msk
-                    Holder(sample_label_tensor.squeeze(dim=-1)),#!!!new [1,784,24]
+                    Holder(sample_label_tensor),#!!!new [1,784,24]
                     Holder(sample_pidx_tensor),#B * R * SR * K [1,784,24,8]init-all -1;8，即K，一个查询点的max num.  neighbors；返回每个像素（784个）所要query的每个点（24个）的真实邻居点（最临近的8点）的pid
                     np.uint64(seconds),
                     np.int32(self.opt.NN),

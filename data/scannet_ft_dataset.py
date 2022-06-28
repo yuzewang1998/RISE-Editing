@@ -594,9 +594,9 @@ class ScannetFtDataset(BaseDataset):
         semantic itm
         '''
         semantic_path = os.path.join(self.data_dir, self.scan, "label-filt/{}.png".format(vid))
-        gt_semantic_img = Image.open(semantic_path).convert(mode='I')
-        gt_semantic_img = gt_semantic_img.resize(self.img_wh, Image.NEAREST)
-        gt_semantic_img = self.transform(gt_semantic_img)  # (batch, h, w)
+        semantic_img = Image.open(semantic_path).convert(mode='I')
+        semantic_img = semantic_img.resize(self.img_wh, Image.NEAREST)
+        semantic_img = self.transform(semantic_img)  # (batch, h, w)
 
         item["intrinsic"] = intrinsic
         # item["intrinsic"] = sample['intrinsics'][0, ...]
@@ -619,7 +619,7 @@ class ScannetFtDataset(BaseDataset):
         if full_img:
             item['images'] = img[None,...].clone()
         gt_image = np.transpose(img, (1, 2, 0))
-        gt_semantic_img = np.transpose(gt_semantic_img,(1,2,0))
+        gt_semantic_img = np.transpose(semantic_img,(1,2,0))
         subsamplesize = self.opt.random_sample_size
         if self.opt.random_sample == "patch":#随机取一个patch，patch长宽为28*28
             indx = np.random.randint(margin, width - margin - subsamplesize + 1)#左边沿margin，右边沿

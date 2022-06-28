@@ -566,7 +566,7 @@ class NeuralPoints(nn.Module):
 
     # 需要更改，采样的时候采集语义点云
 
-    def get_point_indices(self, inputs, cam_rot_tensor, cam_pos_tensor, pixel_idx_tensor, pixel_label_tensor, near_plane, far_plane, h, w, intrinsic, vox_query=False):
+    def get_point_indices(self, inputs, cam_rot_tensor, cam_pos_tensor, pixel_idx_tensor,raylabel, near_plane, far_plane, h, w, intrinsic, vox_query=False):
         '''
         cam_rot_tensor:[1,3,3]
         cam_pos_tensor [1,3]
@@ -584,10 +584,7 @@ class NeuralPoints(nn.Module):
         # print("actual_numpoints_tensor", actual_numpoints_tensor.shape)
         # sample_pidx_tensor: B, R, SR, K
         ray_dirs_tensor = inputs["raydir"]
-        if pixel_label_tensor is not None:
-            ray_label_tensor = pixel_label_tensor.reshape(-1,1)[None,...]
-        else :
-            ray_label_tensor = None
+        ray_label_tensor= inputs["raylabel"]
         # (1,784,3)-784个采样点
         # print("ray_dirs_tensor", ray_dirs_tensor.shape, self.xyz.shape)
         #sample_pidx_tensor[1,784,24,8]每个像素(784)，需要采样的每个query点(24)的点云中临近8点
@@ -597,7 +594,7 @@ class NeuralPoints(nn.Module):
         #ray_mask_tensor[1,784]true or false，存放不需要采集的像素的msk
         #vsize_np[0.008 0.008 0.008]
         #ranges_np[-1.6265 -1.9573 -3.2914 3.868 4.070 2.417]
-        sample_pidx_tensor, sample_loc_tensor, sample_loc_w_tensor,sample_ray_dirs_tensor, ray_mask_tensor, vsize, ranges = self.querier.query_points(pixel_idx_tensor,pixel_label_tensor, point_xyz_pers_tensor, self.xyz[None,...],self.points_label[None,...], actual_numpoints_tensor, h, w, intrinsic, near_plane, far_plane, ray_dirs_tensor,ray_label_tensor, cam_pos_tensor, cam_rot_tensor)
+        sample_pidx_tensor, sample_loc_tensor, sample_loc_w_tensor,sample_ray_dirs_tensor, ray_mask_tensor, vsize, ranges = self.querier.query_points(pixel_idx_tensor, point_xyz_pers_tensor, self.xyz[None,...],self.points_label[None,...], actual_numpoints_tensor, h, w, intrinsic, near_plane, far_plane, ray_dirs_tensor,ray_label_tensor, cam_pos_tensor, cam_rot_tensor)
         # sample_pidx_tensor[1,784,24,8];sample_loc_tensor[1,784,24,3];sample_loc_w_tensor[1,784,24,3];sample_ray_dirs_tensor[1,784,24,3];ray_mask_tensor[1,784]
         #loc_w ? whats meaning
         B, _, SR, K = sample_pidx_tensor.shape#B1 SR24 K 8
@@ -743,7 +740,7 @@ class NeuralPoints(nn.Module):
 
     def forward(self, inputs):
 
-        pixel_idx, camrotc2w, campos, near_plane, far_plane, h, w, intrinsic,pixel_label = inputs["pixel_idx"].to(torch.int32), inputs["camrotc2w"], inputs["campos"], inputs["near"], inputs["far"], inputs["h"], inputs["w"], inputs["intrinsic"],inputs["pixel_label"]
+        pixel_idx, camrotc2w, campos, near_plane, far_plane, h, w, intrinsic,raylabel = inputs["pixel_idx"].to(torch.int32), inputs["camrotc2w"], inputs["campos"], inputs["near"], inputs["far"], inputs["h"], inputs["w"], inputs["intrinsic"],inputs["raylabel"]
         # 1, 294, 24, 32;   1, 294, 24;     1, 291, 2
         # sample_pidx_tensor[1,784,24,8]每个像素(784)，需要采样的每个query点(24)的点云中临近8点
         # sample_loc_tensor[1,784,24,3]存某个pixel需要query的点的坐标，换坐标系了，应该从世界坐标系转到了pers（相机坐标系？）
@@ -753,7 +750,7 @@ class NeuralPoints(nn.Module):
         # sample_ray_dirs_tensor[1,784,24,3]存dir,24个点的3d方向向量相同
         #vsize：voxel size [0.008 0.008 0.008]
         #pixel_label!新加入的[1,784,1]Label ray
-        sample_pidx, sample_loc,ray_mask_tensor, point_xyz_pers_tensor, sample_loc_w_tensor, sample_ray_dirs_tensor, vsize = self.get_point_indices(inputs, camrotc2w, campos, pixel_idx,pixel_label, torch.min(near_plane).cpu().numpy(), torch.max(far_plane).cpu().numpy(), torch.max(h).cpu().numpy(), torch.max(w).cpu().numpy(), intrinsic.cpu().numpy()[0], vox_query=self.opt.NN<0)
+        sample_pidx, sample_loc,ray_mask_tensor, point_xyz_pers_tensor, sample_loc_w_tensor, sample_ray_dirs_tensor, vsize = self.get_point_indices(inputs, camrotc2w, campos, pixel_idx,raylabel, torch.min(near_plane).cpu().numpy(), torch.max(far_plane).cpu().numpy(), torch.max(h).cpu().numpy(), torch.max(w).cpu().numpy(), intrinsic.cpu().numpy()[0], vox_query=self.opt.NN<0)
         sample_pnt_mask = sample_pidx >= 0#[1,784,24,8]，colmap点云的msk
         B, R, SR, K = sample_pidx.shape#B：batch，R：sampled_pixel;SR:24一个ray最多query的点 K: 8一个query点的max num neighbour
         sample_pidx = torch.clamp(sample_pidx, min=0).view(-1).long()#sample_pidx = 150528
