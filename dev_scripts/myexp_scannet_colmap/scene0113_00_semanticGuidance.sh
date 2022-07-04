@@ -1,9 +1,9 @@
 #!/bin/bash
 
-semantic_guidance=1
+semantic_guidance=0
 nrCheckpoint="../checkpoints"
 nrDataRoot="../data_src"
-name='08-scene0113__VeryStrictSGS__1RIFEM__2RadianceModule_modifysampler(problity_0.5)'
+name='01*-scene0113__NoSGS__1RIFEM__FIXBUG'
 
 resume_iter=latest #latest
 
