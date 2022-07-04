@@ -1,9 +1,9 @@
 #!/bin/bash
-
+semantic_guidance=0
 novel_cam_trajectory="1"
 nrCheckpoint="../checkpoints"
 nrDataRoot="../data_src"
-name="05-scene0113__FlexSGS(40W)FINETUNE(60W)__1RIFEM__EDIT"
+name="03-scene0113__StrictSGS__1RIFEM__EDIT"
 
 resume_iter=latest # 20000 #latest
 data_root="${nrDataRoot}/scannet/scans/"
@@ -184,4 +184,5 @@ python3 test_ft.py \
         --debug \
         --novel_cam_trajectory $novel_cam_trajectory \
         --shading_feature_mlp_layer0_rotation_invariance_feature_extraction_module $shading_feature_mlp_layer0_rotation_invariance_feature_extraction_module\
-        --shading_feature_mlp_layer0_rotation_invariance_feature_extraction_dim $shading_feature_mlp_layer0_rotation_invariance_feature_extraction_dim
+        --shading_feature_mlp_layer0_rotation_invariance_feature_extraction_dim $shading_feature_mlp_layer0_rotation_invariance_feature_extraction_dim\
+        --semantic_guidance $semantic_guidance

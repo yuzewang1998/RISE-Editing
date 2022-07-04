@@ -352,7 +352,7 @@ class PointAggregator(torch.nn.Module):
             self.block3 = self.passfunc
         #layer4:rotatation invariance
         if opt.shading_feature_mlp_layer4 > 0:
-            in_channels = in_channels + 6*opt.num_feat_freqs+ (3 if "1" in list(opt.point_color_mode) else 0)
+            in_channels = in_channels + 6*opt.dist_xyz_freq+ (3 if "1" in list(opt.point_color_mode) else 0)
             out_channels = opt.shading_feature_num
             block4 = []
             for i in range(opt.shading_feature_mlp_layer4):
@@ -673,7 +673,7 @@ class PointAggregator(torch.nn.Module):
                 # fai = clockwise_fai_msk * fai  # [ptr]
 
                 row_theta_fai_feat = torch.cat([row[...,None],theta[...,None],fai[...,None]], dim=-1)#18
-                row_theta_fai_feat = positional_encoding(row_theta_fai_feat,self.opt.num_feat_freqs)#18
+                row_theta_fai_feat = positional_encoding(row_theta_fai_feat,self.opt.dist_xyz_freq)#18
                 feat = torch.cat([feat, row_theta_fai_feat],dim= -1)
             feat = self.block4(feat)  # [35634,256+18]
 
@@ -739,7 +739,9 @@ class PointAggregator(torch.nn.Module):
             if self.opt.agg_color_xyz_mode != "None":#False
                 color_in = torch.cat([color_in, pts], dim=-1)
 
-            color_in = torch.cat([color_in, viewdirs], dim=-1)
+            #color_in = torch.cat([color_in, viewdirs], dim=-1)
+            # TODO: HAD TODO ,MUST FIX!!!
+            color_in = torch.cat([color_in, color_in[...,:24]], dim=-1)
             color_output = self.raw2out_color(self.color_branch(color_in)) #[4890,3]
             # color_output = torch.sigmoid(color_output)
             # output_placeholder = torch.cat([alpha, color_output], dim=-1)

@@ -24,7 +24,7 @@ class Options:
         parser = argparse.ArgumentParser(description="Argparse of  point_editor")
         parser.add_argument('--checkpoints_root',
                             type=str,
-                            default='/home/slam/devdata/NSEPN/checkpoints/scannet/05-scene0113__FlexSGS(40W)FINETUNE(60W)__1RIFEM__EDIT',#/home/slam/devdata/pointnerf/checkpoints/scannet/scene000-T
+                            default='/home/slam/devdata/NSEPN/checkpoints/scannet/07-scene0113__VeryStrictSGS__1RIFEM__NofiltLabel_modifysampler(problity_0.2)_EDIT',#/home/slam/devdata/pointnerf/checkpoints/scannet/scene000-T
                             help='root of checkpoints datasets')
         parser.add_argument('--gpu_ids',
                             type=str,
@@ -66,9 +66,9 @@ def test_edit(opt):
 def main():
     sparse = Options()
     opt = sparse.opt
-    test_load_checkpoints_save_as_ply(opt,'scene_origin')
+    # test_load_checkpoints_save_as_ply(opt,'scene_origin')
     # 测试读ply:这一步中间，用mesh手抠一个物体，命名为sofa_meshlabpcd.ply~！~！~！~！~！~！~！~！
-    # test_edit(opt)
+    test_edit(opt)
 
 
 
