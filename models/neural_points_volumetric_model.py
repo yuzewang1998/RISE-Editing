@@ -73,13 +73,11 @@ class NeuralPointsVolumetricModel(BaseRenderingModel):
     def add_default_color_losses(self, opt):
         if "coarse_raycolor" not in opt.color_loss_items:
             opt.color_loss_items.append('coarse_raycolor')
-        if opt.fine_sample_num > 0:
             opt.color_loss_items.append('fine_raycolor')
 
     def add_default_visual_items(self, opt):
         opt.visual_items = ['gt_image', 'coarse_raycolor', 'queried_shading']
-        if opt.fine_sample_num > 0:
-            opt.visual_items.append('fine_raycolor')
+        opt.visual_items.append('fine_raycolor')
 
     def run_network_models(self):
         return self.fill_invalid(self.net_ray_marching(**self.input), self.input)#self.net_ray_marching(**self.input)在这训练了！！！！！！！！！！！！！！！！！！！！

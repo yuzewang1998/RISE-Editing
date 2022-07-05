@@ -388,7 +388,7 @@ class PointAggregator(torch.nn.Module):
         block_init_lst.append(self.alpha_branch)
 
         color_block = []
-        in_channels = opt.shading_feature_num + self.viewdir_channels + (
+        in_channels = opt.shading_feature_num  + (
             0 if opt.agg_color_xyz_mode == "None" else self.pnt_channels)
         out_channels = int(opt.shading_feature_num / 2)
         for i in range(opt.shading_color_mlp_layer - 1):
@@ -740,8 +740,6 @@ class PointAggregator(torch.nn.Module):
                 color_in = torch.cat([color_in, pts], dim=-1)
 
             #color_in = torch.cat([color_in, viewdirs], dim=-1)
-            # TODO: HAD TODO ,MUST FIX!!!
-            color_in = torch.cat([color_in, color_in[...,:24]], dim=-1)
             color_output = self.raw2out_color(self.color_branch(color_in)) #[4890,3]
             # color_output = torch.sigmoid(color_output)
             # output_placeholder = torch.cat([alpha, color_output], dim=-1)

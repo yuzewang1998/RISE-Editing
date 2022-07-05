@@ -584,7 +584,7 @@ class NeuralPoints(nn.Module):
         # print("actual_numpoints_tensor", actual_numpoints_tensor.shape)
         # sample_pidx_tensor: B, R, SR, K
         ray_dirs_tensor = inputs["raydir"]
-        ray_label_tensor= inputs["raylabel"]
+        ray_label_tensor= inputs["raylabel"] if inputs["raylabel"]  is not None else None
         # (1,784,3)-784个采样点
         # print("ray_dirs_tensor", ray_dirs_tensor.shape, self.xyz.shape)
         #sample_pidx_tensor[1,784,24,8]每个像素(784)，需要采样的每个query点(24)的点云中临近8点
@@ -594,7 +594,10 @@ class NeuralPoints(nn.Module):
         #ray_mask_tensor[1,784]true or false，存放不需要采集的像素的msk
         #vsize_np[0.008 0.008 0.008]
         #ranges_np[-1.6265 -1.9573 -3.2914 3.868 4.070 2.417]
-        sample_pidx_tensor, sample_loc_tensor, sample_loc_w_tensor,sample_ray_dirs_tensor,sample_ray_labels_tensor, ray_mask_tensor, vsize, ranges = self.querier.query_points(pixel_idx_tensor, point_xyz_pers_tensor, self.xyz[None,...],self.points_label[None,...], actual_numpoints_tensor, h, w, intrinsic, near_plane, far_plane, ray_dirs_tensor,ray_label_tensor, cam_pos_tensor, cam_rot_tensor)
+        if ray_label_tensor is not None:
+            sample_pidx_tensor, sample_loc_tensor, sample_loc_w_tensor,sample_ray_dirs_tensor,sample_ray_labels_tensor, ray_mask_tensor, vsize, ranges = self.querier.query_points(pixel_idx_tensor, point_xyz_pers_tensor, self.xyz[None,...], actual_numpoints_tensor, h, w, intrinsic, near_plane, far_plane, ray_dirs_tensor, cam_pos_tensor, cam_rot_tensor,self.points_label[None,...],ray_label_tensor)
+        else:
+            sample_pidx_tensor, sample_loc_tensor, sample_loc_w_tensor, sample_ray_dirs_tensor, sample_ray_labels_tensor, ray_mask_tensor, vsize, ranges = self.querier.query_points(pixel_idx_tensor, point_xyz_pers_tensor, self.xyz[None, ...],actual_numpoints_tensor, h, w, intrinsic, near_plane, far_plane, ray_dirs_tensor,cam_pos_tensor, cam_rot_tensor)
         # sample_pidx_tensor[1,784,24,8];sample_loc_tensor[1,784,24,3];sample_loc_w_tensor[1,784,24,3];sample_ray_dirs_tensor[1,784,24,3];ray_mask_tensor[1,784]
         #loc_w ? whats meaning
         B, _, SR, K = sample_pidx_tensor.shape#B1 SR24 K 8
@@ -764,7 +767,7 @@ class NeuralPoints(nn.Module):
         # [1,784,24,8,1]基本上全是1
         sampled_Rw2c = self.Rw2c if self.Rw2c.dim() == 2 else torch.index_select(self.Rw2c, 0, sample_pidx).view(B, R, SR, K, self.Rw2c.shape[1], self.Rw2c.shape[2])
 
-        sampled_label = None if self.points_label[None,...] is None else torch.index_select(self.points_label[None,...], 1, sample_pidx).view(B, R, SR, K, self.points_label[None,...].shape[2])
+        sampled_label = None if self.points_label is None else torch.index_select(self.points_label[None,...], 1, sample_pidx).view(B, R, SR, K, self.points_label[None,...].shape[2])
 
 
 

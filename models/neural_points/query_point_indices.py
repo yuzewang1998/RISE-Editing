@@ -612,7 +612,7 @@ class lighting_fast_querier():
         return pixel_id
 
 
-    def query_grid_point_index(self, h, w, pixel_idx_tensor, point_xyz_pers_tensor, point_xyz_w_tensor, actual_numpoints_tensor, kernel_size_gpu, query_size_gpu, SR, K, ranges, scaled_vsize, scaled_vdim, vscale, max_o, P, radius_limit, depth_limit, range_gpu, scaled_vsize_gpu, scaled_vdim_gpu, vscale_gpu, kMaxThreadsPerBlock = 1024):
+    def query_grid_point_index(self, h, w, pixel_idx_tensor, point_xyz_pers_tensor, point_xyz_w_tensor, actual_numpoints_tensor, kernel_size_gpu, query_size_gpu, SR, K, ranges, scaled_vsize, scaled_vdim, vscale, max_o, P, radius_limit, depth_limit, range_gpu, scaled_vsize_gpu, scaled_vdim_gpu, vscale_gpu, kMaxThreadsPerBlock = 1024,points_label_tensor=None,ray_label_tensor=None):
 
         device = point_xyz_pers_tensor.device
         B, N = point_xyz_pers_tensor.shape[0], point_xyz_pers_tensor.shape[1]

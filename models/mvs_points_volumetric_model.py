@@ -122,7 +122,7 @@ class MvsPointsVolumetricModel(NeuralPointsVolumetricModel):
 
 
     def forward(self):
-        if self.opt.mode != 2:#False，colmap不是靠mvs来做深度估计、点云估计
+        if self.opt.mode != 2:#False(FT)，True(train from scratch)
             points_xyz, points_embedding, points_colors, points_dirs, points_conf = self.net_mvs(self.input)
             # print("volume_feature", volume_feature.shape)
             self.neural_points.set_points(points_xyz, None,points_embedding, points_color=points_colors, points_dir=points_dirs, points_conf=points_conf, parameter=self.opt.feedforward==0) # if feedforward, no neural points optimization

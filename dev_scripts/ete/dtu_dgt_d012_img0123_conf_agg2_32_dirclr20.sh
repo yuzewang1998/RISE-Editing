@@ -1,5 +1,5 @@
 #!/bin/bash
-
+#xiu
 nrCheckpoint="../checkpoints"
 nrDataRoot="../data_src"
 name='dtu_dgt_d012_img0123_conf_agg2_32_dirclr20'
@@ -16,7 +16,6 @@ depth_occ=0
 depth_vid="012"
 trgt_id=3
 manual_depth_view=0 # use mvsnet pytorch
-init_view_num=3
 pre_d_est="${nrCheckpoint}/MVSNet/model_000015.ckpt"
 manual_std_depth=0.0
 depth_conf_thresh=0.1
@@ -34,15 +33,15 @@ agg_alpha_xyz_mode="None"
 agg_color_xyz_mode="None"
 feature_init_method="rand" #"rand" # "zeros"
 agg_axis_weight=" 1. 1. 1."
-agg_dist_pers=20
+agg_dist_pers=15
 radius_limit_scale=4
 depth_limit_scale=0
 vscale=" 2 2 2 "
 kernel_size=" 5 5 5 "
 query_size=" 3 3 3 "
-vsize=" 0.002 0.002 0.002 " #" 0.005 0.005 0.005 "
+vsize=" 0.005 0.005 0.005 " #" 0.002 0.002 0.002 "
 wcoord_query=1
-z_depth_dim=400
+
 max_o=400000 #2000000
 SR=40
 K=8
@@ -52,21 +51,21 @@ NN=2
 act_type="LeakyReLU"
 
 agg_intrp_order=2
-agg_distance_kernel="linear" #"avg" #"feat_intrp"
-weight_xyz_freq=2
-weight_feat_dim=8
+agg_distance_kernel="linear_immediately" #"avg" #"feat_intrp"
+
 
 point_features_dim=32
-shpnt_jitter="uniform" #"uniform" # uniform gaussian
+shpnt_jitter="passfunc" #"uniform" # uniform gaussian
 
 which_agg_model="viewmlp"
 apply_pnt_mask=1
 shading_feature_mlp_layer0=1
 shading_feature_mlp_layer1=2
 shading_feature_mlp_layer2=0
-shading_feature_mlp_linear=0
-shading_feature_mlp_layer3=0 #0
-shading_feature_mlp_layer4=1 #1
+shading_feature_mlp_layer3=0
+shading_feature_mlp_layer4=2
+shading_feature_mlp_layer0_rotation_invariance_feature_extraction_module=1
+shading_feature_mlp_layer0_rotation_invariance_feature_extraction_dim=60
 shading_alpha_mlp_layer=1
 shading_color_mlp_layer=4
 shading_feature_num=256
@@ -94,7 +93,7 @@ num_pos_freqs=10
 num_viewdir_freqs=4 #6
 
 random_sample='random'
-random_sample_size=70 # 32 * 32 = 1024
+random_sample_size=32 # 32 * 32 = 1024
 batch_size=1
 lr=0.0005 # 0.0005 #0.00015
 lr_policy="iter_exponential_decay"
@@ -182,11 +181,12 @@ python3 train.py \
         --agg_dist_pers $agg_dist_pers \
         --agg_intrp_order $agg_intrp_order \
         --shading_feature_mlp_layer0 $shading_feature_mlp_layer0 \
-        --shading_feature_mlp_linear $shading_feature_mlp_linear\
         --shading_feature_mlp_layer1 $shading_feature_mlp_layer1 \
         --shading_feature_mlp_layer2 $shading_feature_mlp_layer2 \
         --shading_feature_mlp_layer3 $shading_feature_mlp_layer3 \
         --shading_feature_mlp_layer4 $shading_feature_mlp_layer4 \
+        --shading_feature_mlp_layer0_rotation_invariance_feature_extraction_module $shading_feature_mlp_layer0_rotation_invariance_feature_extraction_module\
+        --shading_feature_mlp_layer0_rotation_invariance_feature_extraction_dim $shading_feature_mlp_layer0_rotation_invariance_feature_extraction_dim \
         --shading_feature_num $shading_feature_num \
         --dist_xyz_freq $dist_xyz_freq \
         --shpnt_jitter $shpnt_jitter \
