@@ -123,9 +123,9 @@ class MvsPointsVolumetricModel(NeuralPointsVolumetricModel):
 
     def forward(self):
         if self.opt.mode != 2:#False(FT)，True(train from scratch)
-            points_xyz, points_embedding, points_colors, points_dirs, points_conf = self.net_mvs(self.input)
+            points_xyz, points_embedding, points_colors, points_dirs,points_dirsAux, points_conf = self.net_mvs(self.input)
             # print("volume_feature", volume_feature.shape)
-            self.neural_points.set_points(points_xyz, None,points_embedding, points_color=points_colors, points_dir=points_dirs, points_conf=points_conf, parameter=self.opt.feedforward==0) # if feedforward, no neural points optimization
+            self.neural_points.set_points(points_xyz, None,points_embedding, points_color=points_colors, points_dir=points_dirs, points_dirAux = points_dirsAux,points_conf=points_conf, parameter=self.opt.feedforward==0) # if feedforward, no neural points optimization
         self.output = self.run_network_models()#colmap go this way
         if "depths_h" in self.input:
             depth_gt = self.input["depths_h"][:,self.opt.trgt_id,...] if self.input["depths_h"].dim() > 3 else self.input["depths_h"]
@@ -168,9 +168,9 @@ class MvsPointsVolumetricModel(NeuralPointsVolumetricModel):
         self.top_ray_miss_loss = torch.zeros([self.num_probe + 1], dtype=torch.float32, device=self.device)
         self.top_ray_miss_ids = torch.arange(self.num_probe + 1, dtype=torch.int32, device=self.device)
 
-    def set_points(self, points_xyz, points_label, points_embedding, points_color=None, points_dir=None, points_conf=None, points_semantic=None,Rw2c=None, eulers=None, editing=False):
+    def set_points(self, points_xyz, points_label, points_embedding, points_color=None, points_dir=None,points_dirAux=None, points_conf=None, points_semantic=None,Rw2c=None, eulers=None, editing=False):
         if not editing:#True
-            self.neural_points.set_points(points_xyz, points_label,points_embedding, points_color=points_color, points_dir=points_dir, points_conf=points_conf, points_semantic= points_semantic,parameter=self.opt.feedforward == 0, Rw2c=Rw2c, eulers=eulers)
+            self.neural_points.set_points(points_xyz, points_label,points_embedding, points_color=points_color, points_dir=points_dir,points_dirAux=points_dirAux, points_conf=points_conf, points_semantic= points_semantic,parameter=self.opt.feedforward == 0, Rw2c=Rw2c, eulers=eulers)
         else:
             self.neural_points.editing_set_points(points_xyz, points_embedding, points_color=points_color, points_dir=points_dir, points_conf=points_conf, parameter=self.opt.feedforward == 0, Rw2c=Rw2c, eulers=eulers)
         if self.opt.feedforward == 0 and self.opt.is_train:

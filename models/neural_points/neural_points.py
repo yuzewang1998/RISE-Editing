@@ -241,7 +241,7 @@ class NeuralPoints(nn.Module):
 
         self.opt = opt
         self.grid_vox_sz = 0
-        self.points_conf, self.points_dir, self.points_color, self.eulers, self.Rw2c,self.points_label = None, None, None, None, None,None
+        self.points_conf, self.points_dir,self.points_dirAux, self.points_color, self.eulers, self.Rw2c,self.points_label = None,None, None, None, None, None,None
         self.device=device
         if self.opt.load_points ==1:#初始化时候没有，如果在pth里就有
             saved_features = None
@@ -290,7 +290,7 @@ class NeuralPoints(nn.Module):
                 # self.points_conf = nn.Parameter(points_conf) if points_conf is not None else None
                 self.points_conf = nn.Parameter(saved_features["neural_points.points_conf"]) if "neural_points.points_conf" in saved_features else None
                 # print("self.points_conf",self.points_conf)
-
+                self.points_dirAux = nn.Parameter(saved_features["neural_points.points_dirAux"]) if "neural_points.points_dirAux" in saved_features else None
                 self.points_dir = nn.Parameter(saved_features["neural_points.points_dir"]) if "neural_points.points_dir" in saved_features else None # None
                 self.points_color = nn.Parameter(saved_features["neural_points.points_color"]) if "neural_points.points_color" in saved_features else None # None
                 self.eulers = nn.Parameter(saved_features["neural_points.eulers"]) if "neural_points.eulers" in saved_features else None
@@ -326,6 +326,8 @@ class NeuralPoints(nn.Module):
                 self.points_conf.requires_grad = self.opt.conf_grad > 0
             if self.points_dir is not None:
                 self.points_dir.requires_grad = self.opt.dir_grad > 0
+            if self.points_dirAux is not None:
+                self.points_dirAux.requires_grad = self.opt.dir_grad > 0
             if self.points_color is not None:
                 self.points_color.requires_grad = self.opt.color_grad > 0
             if self.eulers is not None:
@@ -369,6 +371,9 @@ class NeuralPoints(nn.Module):
         if self.points_dir is not None:
             self.points_dir = nn.Parameter(self.points_dir[:, mask, :])
             self.points_dir.requires_grad = self.opt.dir_grad > 0
+        if self.points_dirAux is not None:
+            self.points_dirAux = nn.Parameter(self.points_dirAux[:, mask, :])
+            self.points_dirAux.requires_grad = self.opt.dir_grad > 0
         if self.points_color is not None:
             self.points_color = nn.Parameter(self.points_color[:, mask, :])
             self.points_color.requires_grad = self.opt.color_grad > 0
@@ -396,6 +401,9 @@ class NeuralPoints(nn.Module):
         if self.points_dir is not None:
             self.points_dir = nn.Parameter(torch.cat([self.points_dir, add_dir[None, ...]], dim=1))
             self.points_dir.requires_grad = self.opt.dir_grad > 0
+        if self.points_dirAux is not None:
+            self.points_dirAux = nn.Parameter(torch.cat([self.points_dirAux, add_dir[None, ...]], dim=1))
+            self.points_dirAux.requires_grad = self.opt.dir_grad > 0
 
         if self.points_color is not None:
             self.points_color = nn.Parameter(torch.cat([self.points_color, add_color[None, ...]], dim=1))
@@ -409,7 +417,7 @@ class NeuralPoints(nn.Module):
             self.Rw2c = nn.Parameter(torch.cat([self.Rw2c, add_Rw2c[None,...]], dim=1))
             self.Rw2c.requires_grad = False
 
-    def set_points(self, points_xyz, points_label,points_embeding, points_color=None, points_dir=None, points_conf=None,points_semantic=None, parameter=False, Rw2c=None, eulers=None):
+    def set_points(self, points_xyz, points_label,points_embeding, points_color=None, points_dir=None,points_dirAux = None, points_conf=None,points_semantic=None, parameter=False, Rw2c=None, eulers=None):
         if points_embeding.shape[-1] > self.opt.point_features_dim:#No
             points_embeding = points_embeding[..., :self.opt.point_features_dim]
         if self.opt.default_conf > 0.0 and self.opt.default_conf <= 1.0 and points_conf is not None:#No
@@ -430,11 +438,14 @@ class NeuralPoints(nn.Module):
 
             if points_dir is not None:
                 points_dir = nn.Parameter(points_dir)
+                points_dirAux = nn.Parameter(points_dirAux)
                 points_dir.requires_grad = self.opt.dir_grad > 0
+                points_dirAux.requires_grad = self.opt.dir_grad > 0
                 if "0" in list(self.opt.point_dir_mode):
                     points_embeding = torch.cat([points_dir, points_embeding], dim=-1)
                 if "1" in list(self.opt.point_dir_mode):
                     self.points_dir = points_dir
+                    self.points_dirAux = points_dirAux
 
             if points_color is not None:
                 points_color = nn.Parameter(points_color)
@@ -464,7 +475,7 @@ class NeuralPoints(nn.Module):
                     points_embeding = torch.cat([points_dir, points_embeding], dim=-1)
                 if "1" in list(self.opt.point_dir_mode):
                     self.points_dir = points_dir
-
+                    self.points_dirAux = points_dirAux
             if points_color is not None:
                 if "0" in list(self.opt.point_color_mode):
                     points_embeding = torch.cat([points_color, points_embeding], dim=-1)
@@ -563,9 +574,6 @@ class NeuralPoints(nn.Module):
         plt.figure()
         plt.imshow(gtbackground)
         plt.show()
-
-    # 需要更改，采样的时候采集语义点云
-
     def get_point_indices(self, inputs, cam_rot_tensor, cam_pos_tensor, pixel_idx_tensor, near_plane, far_plane, h, w, intrinsic, vox_query=False):
         '''
         cam_rot_tensor:[1,3,3]
@@ -741,6 +749,7 @@ class NeuralPoints(nn.Module):
 
 
 
+
     def forward(self, inputs):
 
         pixel_idx, camrotc2w, campos, near_plane, far_plane, h, w, intrinsic = inputs["pixel_idx"].to(torch.int32), inputs["camrotc2w"], inputs["campos"], inputs["near"], inputs["far"], inputs["h"], inputs["w"], inputs["intrinsic"]
@@ -762,14 +771,13 @@ class NeuralPoints(nn.Module):
         sampled_color = None if self.points_color is None else torch.index_select(self.points_color, 1, sample_pidx).view(B, R, SR, K, self.points_color.shape[2])
         # [1,784,24,8,3]
         sampled_dir = None if self.points_dir is None else torch.index_select(self.points_dir, 1, sample_pidx).view(B, R, SR, K, self.points_dir.shape[2])
+        sampled_dirAux = None  if self.points_dirAux is None else torch.index_select(self.points_dirAux, 1, sample_pidx).view(B, R, SR, K, self.points_dirAux.shape[2])
         # [1,784,24,8,3]
         sampled_conf = None if self.points_conf is None else torch.index_select(self.points_conf, 1, sample_pidx).view(B, R, SR, K, self.points_conf.shape[2])
         # [1,784,24,8,1]基本上全是1
         sampled_Rw2c = self.Rw2c if self.Rw2c.dim() == 2 else torch.index_select(self.Rw2c, 0, sample_pidx).view(B, R, SR, K, self.Rw2c.shape[1], self.Rw2c.shape[2])
 
         sampled_label = None if self.points_label is None else torch.index_select(self.points_label[None,...], 1, sample_pidx).view(B, R, SR, K, self.points_label[None,...].shape[2])
-
-
 
 
         #[3,3]-ones(3,3)
@@ -784,4 +792,4 @@ class NeuralPoints(nn.Module):
         # if self.points_embeding.grad is not None:
         #     print("points_embeding grad:", self.points_embeding.requires_grad, torch.max(self.points_embeding.grad))
         # print("points_embeding 3", torch.max(self.points_embeding), torch.min(self.points_embeding))
-        return sampled_color,sampled_label,sampled_Rw2c, sampled_dir, sampled_conf, sampled_embedding[..., 6:], sampled_embedding[..., 3:6], sampled_embedding[..., :3], sample_pnt_mask, sample_loc, sample_loc_w_tensor, sample_ray_dirs_tensor, sample_ray_labels_tensor,ray_mask_tensor, vsize, self.grid_vox_sz
+        return sampled_color,sampled_label,sampled_Rw2c, sampled_dir,sampled_dirAux, sampled_conf, sampled_embedding[..., 6:], sampled_embedding[..., 3:6], sampled_embedding[..., :3], sample_pnt_mask, sample_loc, sample_loc_w_tensor, sample_ray_dirs_tensor, sample_ray_labels_tensor,ray_mask_tensor, vsize, self.grid_vox_sz

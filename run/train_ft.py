@@ -733,9 +733,9 @@ def main():
             points_embedding_all = torch.zeros([1, 0, featuredim], device=unique_cam_ind.device, dtype=torch.float32)
             points_color_all = torch.zeros([1, 0, 3], device=unique_cam_ind.device, dtype=torch.float32)
             points_dir_all = torch.zeros([1, 0, 3], device=unique_cam_ind.device, dtype=torch.float32)
+            points_dirAux_all = torch.zeros([1, 0, 3], device=unique_cam_ind.device, dtype=torch.float32)
             points_conf_all = torch.zeros([1, 0, 1], device=unique_cam_ind.device, dtype=torch.float32)
             print("extract points embeding & colors", )
-            # fuse semantic information
             for i in tqdm(range(len(unique_cam_ind))):#对于每个camera，生成全局中离自己最近的点的特征
                 id = unique_cam_ind[i]
                 batch = train_dataset.get_item(id, full_img=True)
@@ -746,11 +746,12 @@ def main():
                 cam_xyz_all = (torch.cat([points_xyz_all[i], torch.ones_like(points_xyz_all[i][...,-1:])], dim=-1) @ w2c.transpose(0,1))[..., :3]
                 cam_label_all = points_label_all[i]
                 # embedding->图像卷积后的feature，点采样，过个mlp得到的
-                embedding, color, dir, conf = model.query_embedding(HDWD, cam_xyz_all[None,...], None, batch['images'].cuda(), c2w[None, None,...], w2c[None, None,...], intrinsic[:, None,...], 0, pointdir_w=True)
+                embedding, color, dir,dirAux, conf = model.query_embedding(HDWD, cam_xyz_all[None,...], None, batch['images'].cuda(), c2w[None, None,...], w2c[None, None,...], intrinsic[:, None,...], 0, pointdir_w=True)
                 conf = conf * opt.default_conf if opt.default_conf > 0 and opt.default_conf < 1.0 else conf
                 points_embedding_all = torch.cat([points_embedding_all, embedding], dim=1)
                 points_color_all = torch.cat([points_color_all, color], dim=1)
                 points_dir_all = torch.cat([points_dir_all, dir], dim=1)
+                points_dirAux_all = torch.cat([points_dirAux_all,dirAux],dim=1)
                 points_conf_all = torch.cat([points_conf_all, conf], dim=1)
                 # visualizer.save_neural_points(id, cam_xyz_all, color, batch, save_ref=True)
             points_xyz_all=torch.cat(points_xyz_all, dim=0)
@@ -777,11 +778,11 @@ def main():
                 points_dir_all = torch.cat([points_dir_all, gen_color], dim=1)
                 points_conf_all = torch.cat([points_conf_all, gen_conf], dim=1)
             model.set_points(points_xyz = points_xyz_all.cuda(),points_label = points_label_all.cuda(), points_embedding = points_embedding_all.cuda(), points_color=points_color_all.cuda(),
-                             points_dir=points_dir_all.cuda(), points_conf=points_conf_all.cuda(),
+                             points_dir=points_dir_all.cuda(),points_dirAux = points_dirAux_all.cuda(), points_conf=points_conf_all.cuda(),
                              Rw2c=normRw2c.cuda() if opt.load_points < 1 and opt.normview != 3 else None)
             epoch_count = 1
             total_steps = 0
-            del points_xyz_all, points_embedding_all, points_color_all, points_dir_all, points_conf_all
+            del points_xyz_all, points_embedding_all, points_color_all, points_dir_all,points_dirAux_all, points_conf_all
 
     model.setup(opt, train_len=len(train_dataset))
     model.train()

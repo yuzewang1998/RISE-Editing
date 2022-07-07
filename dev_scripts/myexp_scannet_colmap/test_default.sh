@@ -3,7 +3,7 @@ semantic_guidance=0
 novel_cam_trajectory="1"
 nrCheckpoint="../checkpoints"
 nrDataRoot="../data_src"
-name="03-scene0113__StrictSGS__1RIFEM__EDIT"
+name="01-scene0113__1RIFEM_NOSGS"
 
 resume_iter=latest # 20000 #latest
 data_root="${nrDataRoot}/scannet/scans/"
