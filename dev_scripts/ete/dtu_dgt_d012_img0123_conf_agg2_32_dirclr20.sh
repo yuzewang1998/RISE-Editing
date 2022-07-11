@@ -62,12 +62,13 @@ apply_pnt_mask=1
 shading_feature_mlp_layer0=1
 shading_feature_mlp_layer1=2
 shading_feature_mlp_layer2=0
-shading_feature_mlp_layer3=0
-shading_feature_mlp_layer4=1
+shading_feature_mlp_linear=2
+shading_feature_mlp_layer3=0 #0
+shading_feature_mlp_layer4=2 #1
 shading_feature_mlp_layer0_rotation_invariance_feature_extraction_module=2
 shading_feature_mlp_layer0_rotation_invariance_feature_extraction_dim=20
 shading_alpha_mlp_layer=1
-shading_color_mlp_layer=4
+shading_color_mlp_layer=2
 shading_feature_num=256
 dist_xyz_freq=5
 num_feat_freqs=3
@@ -183,6 +184,7 @@ python3 train.py \
         --shading_feature_mlp_layer0 $shading_feature_mlp_layer0 \
         --shading_feature_mlp_layer1 $shading_feature_mlp_layer1 \
         --shading_feature_mlp_layer2 $shading_feature_mlp_layer2 \
+        --shading_feature_mlp_linear $shading_feature_mlp_linear \
         --shading_feature_mlp_layer3 $shading_feature_mlp_layer3 \
         --shading_feature_mlp_layer4 $shading_feature_mlp_layer4 \
         --shading_feature_mlp_layer0_rotation_invariance_feature_extraction_module $shading_feature_mlp_layer0_rotation_invariance_feature_extraction_module\

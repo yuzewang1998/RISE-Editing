@@ -75,28 +75,25 @@ def visualize_dir_vector():
     from math import cos, sin, pi
     fig = plt.figure()
     # 创建3d绘图区域
-    dir1 = np.array([-2,2,1])
-    dir2 = np.array([1,2,1])
-    dir1 = dir1/np.sqrt(np.sum(dir1*dir1))
-    dir2 = dir2 / np.sqrt(np.sum(dir2 * dir2))
-    dir1_proxy = np.array([dir1[0],dir1[1],0])
-    dir2_proxy = np.array([dir2[0], dir2[1], 0])
-    clockwise = 1 if torch.cross(torch.Tensor(dir1_proxy),torch.Tensor(dir2_proxy))[2]>0 else -1
-    clockwiseangle = clockwise * torch.arccos(torch.sum(dir1_proxy*dir2_proxy/torch.norm(torch.Tensor(dir1_proxy))/torch.norm(torch.Tensor(dir2_proxy))))
-    print(clockwiseangle)
-    Rz = np.array([
-        [cos(clockwiseangle),-sin(clockwiseangle), 0],
-        [sin(clockwiseangle), cos(clockwiseangle), 0],
-        [         0,          0, 1]
-    ])
-    rot_dir1 = Rz@dir1
-    print(rot_dir1)
+    dir1 = np.array([1,0,0])
+    dir2 = np.array([0,1,0])
+    dir3 = np.array([0,0,1])
+    # dir1 = dir1/np.sqrt(np.sum(dir1*dir1))
+    # dir2 = dir2 / np.sqrt(np.sum(dir2 * dir2))
+    # dir1_proxy = np.array([dir1[0],dir1[1],0])
+    # dir2_proxy = np.array([dir2[0], dir2[1], 0])
+    # clockwise = 1 if torch.cross(torch.Tensor(dir1_proxy),torch.Tensor(dir2_proxy))[2]>0 else -1
+    # clockwiseangle = clockwise * torch.arccos(torch.sum(dir1_proxy*dir2_proxy/torch.norm(torch.Tensor(dir1_proxy))/torch.norm(torch.Tensor(dir2_proxy))))
+    # print(clockwiseangle)
+    # Rz = np.array([
+    #     [cos(clockwiseangle),-sin(clockwiseangle), 0],
+    #     [sin(clockwiseangle), cos(clockwiseangle), 0],
+    #     [         0,          0, 1]
+    # ])
+    # rot_dir1 = Rz@dir1
+    # print(rot_dir1)
 
     ax = plt.axes(projection='3d')
-    rot_x1 = np.linspace(0, rot_dir1[0], 100)
-    rot_y1 = np.linspace(0, rot_dir1[1], 100)
-    rot_z1 = np.linspace(0, rot_dir1[2], 100)
-    ax.plot3D(rot_x1, rot_y1, rot_z1, 'black')
 
     x1 = np.linspace(0, dir1[0], 100)
     y1 = np.linspace(0, dir1[1], 100)
@@ -106,6 +103,10 @@ def visualize_dir_vector():
     y2 = np.linspace(0, dir2[1], 100)
     z2 = np.linspace(0, dir2[2], 100)
     ax.plot3D(x2, y2, z2, 'blue')
+    x3 = np.linspace(0, dir3[0], 100)
+    y3 = np.linspace(0, dir3[1], 100)
+    z3 = np.linspace(0, dir3[2], 100)
+    ax.plot3D(x3, y3, z3, 'green')
     # #ax.plot_wireframe('X','Y','Z', color='black')
     # x3 = np.linspace(0, dir1_proxy[0], 100)
     # y3 = np.linspace(0, dir1_proxy[1], 100)
@@ -179,9 +180,10 @@ def interpolate_camera_pose(transM1,transM2,step,filedir,base=0):
         transMat = cauc_transformationMatrix(rotMat,np.array([x_range[i],y_range[i],z_range[i]]))
         save_camera_pose(filedir,"{}.txt".format(i+base),transMat)
 if __name__=='__main__':
-    mat1 = load_camera_pose('/home/slam/devdata/NSEPN/data_src/scannet/scans/scene0113_99/exported/pose', 'start.txt')
-    mat2 = load_camera_pose('/home/slam/devdata/NSEPN/data_src/scannet/scans/scene0113_99/exported/pose', 'end.txt')
-    interpolate_camera_pose(mat1, mat2, 60,'/home/slam/devdata/NSEPN/data_src/scannet/scans/scene0113_99/exported/pose')
+    visualize_dir_vector()
+    # mat1 = load_camera_pose('/home/slam/devdata/NSEPN/data_src/scannet/scans/scene0113_99/exported/pose', 'start.txt')
+    # mat2 = load_camera_pose('/home/slam/devdata/NSEPN/data_src/scannet/scans/scene0113_99/exported/pose', 'end.txt')
+    # interpolate_camera_pose(mat1, mat2, 60,'/home/slam/devdata/NSEPN/data_src/scannet/scans/scene0113_99/exported/pose')
     # R = cauc_RotationMatrix(75,45,0)
     # T = cauc_transformationMatrix(R,np.array([1,2,3]))
     # T_inverse = inverse_transformationMatirx(T)

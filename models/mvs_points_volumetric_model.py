@@ -123,9 +123,9 @@ class MvsPointsVolumetricModel(NeuralPointsVolumetricModel):
 
     def forward(self):
         if self.opt.mode != 2:#False(FT)，True(train from scratch)
-            points_xyz, points_embedding, points_colors, points_dirs,points_dirsAux, points_conf = self.net_mvs(self.input)
+            points_xyz, points_embedding, points_colors, points_dirsx,points_dirsy,points_dirsz, points_conf = self.net_mvs(self.input)
             # print("volume_feature", volume_feature.shape)
-            self.neural_points.set_points(points_xyz, None,points_embedding, points_color=points_colors, points_dir=points_dirs, points_dirAux = points_dirsAux,points_conf=points_conf, parameter=self.opt.feedforward==0) # if feedforward, no neural points optimization
+            self.neural_points.set_points(points_xyz, None,points_embedding, points_color=points_colors, points_dirx=points_dirsx, points_diry=points_dirsy,points_dirz=points_dirsz,points_conf=points_conf, parameter=self.opt.feedforward==0) # if feedforward, no neural points optimization
         self.output = self.run_network_models()#colmap go this way
         if "depths_h" in self.input:
             depth_gt = self.input["depths_h"][:,self.opt.trgt_id,...] if self.input["depths_h"].dim() > 3 else self.input["depths_h"]

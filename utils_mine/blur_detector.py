@@ -18,7 +18,7 @@ class Options:
         self.parse()
     def parse(self):
         parser = argparse.ArgumentParser(description="Demo of argparse")
-        parser.add_argument('--data_root',type=str, default='/home/slam/devdata/pointnerf/data_src/scannet/scans',help='root of dataset')
+        parser.add_argument('--data_root',type=str, default='/home/slam/devdata/NSEPN/data_src/scannet/scans',help='root of dataset')
         parser.add_argument('--scan',type=str, default='scene0000_000102-T-blur',help='room which to scan')
         parser.add_argument('--auto_or_manual', type=str, default='1', help='0:auto to detect blur;1:manual to detect blur')
         parser.add_argument('--num_of_remove', type=str, default='150', help='set how may blur image to be remove if use automatic')

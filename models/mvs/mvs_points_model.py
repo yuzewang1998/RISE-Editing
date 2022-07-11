@@ -225,10 +225,11 @@ class MvsPointsModel(nn.Module):
     def query_embedding(self, HDWD, cam_xyz, photometric_confidence, img_feats, c2ws, w2cs, intrinsics, cam_vid, pointdir_w=False):
         HD, WD = HDWD
         points_embedding = []
-        points_dirs = None
+        points_dirsx = None
         points_conf = None
         points_colors = None
-        points_dirsAux = None
+        points_dirsy = None
+        points_dirsz = None
         for feat_str in getattr(self.args, feature_str_lst[cam_vid]):
             if feat_str.startswith("imgfeat"):#True
                 _, view_ids, layer_ids = feat_str.split("_")#img_feat_0_0123:view_ids 0;later_ids:123
@@ -243,28 +244,32 @@ class MvsPointsModel(nn.Module):
                 cam_trans = w2cs[:, cam_vid, ...] # B, 4, 4; 4by4 translation matrix style like [[1,0,0,x],[0,1,0,y],[0,0,1,z],[0,0,0,1]]
                 cam_pos_cam = (cam_pos_world @ cam_trans.transpose(1, 2))[...,:3] # B, V, 4，主相机坐标系下的各个camera center，main camera[0,0,0]
                 points_dirs = cam_xyz[:,:, None, :] - cam_pos_cam[:, None, :, :] # B, N, V, 3 in current cam coord
-                points_dirs = points_dirs / (torch.linalg.norm(points_dirs, dim=-1, keepdims=True) + 1e-6)  # B, N, V, 3
-                points_dirs = points_dirs.view(cam_xyz.shape[0], -1, 3) @ c2ws[:, cam_vid, :3, :3].transpose(1, 2)
-                rot90byxaxis_Mat = torch.tensor([
-                    [1.0,0.0,0.0],
-                    [0.0,0.0,1.0],
-                    [0.0,1.0,0.0],
-                ],dtype = torch.float32,device=points_dirs.device)
-                points_dirsAux = points_dirs@rot90byxaxis_Mat
-                if not pointdir_w:
-                    points_dirs = points_dirs @ c2ws[:, self.args.ref_vid, :3, :3].transpose(1, 2) # in ref cam coord
-                    points_dirsAux = points_dirsAux @ c2ws[:, self.args.ref_vid, :3, :3].transpose(1, 2) # in ref cam coord
+                points_dirs  = points_dirs / (torch.linalg.norm(points_dirs, dim=-1, keepdims=True) + 1e-6)  # B, N, V, 3
+                points_dirsx = torch.ones_like(points_dirs)
+                points_dirsx[..., [1, 2]] = 0
+                points_dirsy = torch.ones_like(points_dirs)
+                points_dirsy[..., [0, 2]] = 0
+                points_dirsz = torch.ones_like(points_dirs)
+                points_dirsz[..., [0, 1]] = 0
+                # points_dirs = points_dirsx.view(cam_xyz.shape[0], -1, 3) @ c2ws[:, cam_vid, :3, :3].transpose(1, 2)
+                # points_dirsy = points_dirsy.view(cam_xyz.shape[0], -1, 3) @ c2ws[:, cam_vid, :3, :3].transpose(1, 2)
+                # points_dirsz = points_dirsx.view(cam_xyz.shape[0], -1, 3) @ c2ws[:, cam_vid, :3, :3].transpose(1, 2)
+                # if not pointdir_w:
+                #     points_dirsx = points_dirsx @ c2ws[:, self.args.ref_vid, :3, :3].transpose(1, 2) # in ref cam coord
+                #     points_dirsy = points_dirsy @ c2ws[:, self.args.ref_vid, :3, :3].transpose(1, 2)  # in ref cam coord
+                #     points_dirsz = points_dirsz @ c2ws[:, self.args.ref_vid, :3, :3].transpose(1, 2)  # in ref cam coord
                 # print("points_dirs", points_dirs.shape)
-                points_dirs = points_dirs.view(cam_xyz.shape[0], cam_xyz.shape[1], -1)
-                points_dirsAux = points_dirsAux.view(cam_xyz.shape[0], cam_xyz.shape[1], -1)
+                points_dirsx = points_dirsx.view(cam_xyz.shape[0], cam_xyz.shape[1], -1)
+                points_dirsy = points_dirsy.view(cam_xyz.shape[0], cam_xyz.shape[1], -1)
+                points_dirsz = points_dirsz.view(cam_xyz.shape[0], cam_xyz.shape[1], -1)
             elif feat_str.startswith("point_conf"):
                 if photometric_confidence is None:
                     photometric_confidence = torch.ones_like(points_embedding[0][...,0:1])
                 points_conf = photometric_confidence
         points_embedding = torch.cat(points_embedding, dim=-1)#[1,5126,56]
         if self.args.shading_feature_mlp_layer0 > 0:
-            points_embedding = self.premlp(torch.cat([points_embedding, points_colors, points_dirs, points_conf], dim=-1))#一个mlp，都输入，合成一个总的points_embedding,32D
-        return points_embedding, points_colors, points_dirs,points_dirsAux, points_conf
+            points_embedding = self.premlp(torch.cat([points_embedding, points_colors, points_dirsx,points_dirsy,points_dirsz, points_conf], dim=-1))#一个mlp，都输入，合成一个总的points_embedding,32D
+        return points_embedding, points_colors, points_dirsx,points_dirsy,points_dirsz, points_conf
 
 
     def gen_points(self, batch):
@@ -384,11 +389,12 @@ class MvsPointsModel(nn.Module):
         ref_xyz = torch.cat(xyz_ref_lst, dim=0)
         points_embedding = torch.cat([points_features[0] for points_features in points_features_lst], dim=1)
         points_colors = torch.cat([points_features[1] for points_features in points_features_lst], dim=1) if points_features_lst[0][1] is not None else None
-        points_ref_dirs = torch.cat([points_features[2] for points_features in points_features_lst], dim=1) if points_features_lst[0][2] is not None else None
-        points_ref_dirsAux = torch.cat([points_features[3] for points_features in points_features_lst], dim=1) if points_features_lst[0][3] is not None else None
-        points_conf = torch.cat([points_features[4] for points_features in points_features_lst], dim=1) if points_features_lst[0][3] is not None else None
+        points_ref_dirsx = torch.cat([points_features[2] for points_features in points_features_lst], dim=1) if points_features_lst[0][2] is not None else None
+        points_ref_dirsy = torch.cat([points_features[3] for points_features in points_features_lst], dim=1) if points_features_lst[0][3] is not None else None
+        points_ref_dirsz = torch.cat([points_features[4] for points_features in points_features_lst], dim=1) if points_features_lst[0][4] is not None else None
+        points_conf = torch.cat([points_features[5] for points_features in points_features_lst], dim=1) if points_features_lst[0][5] is not None else None
 
-        return ref_xyz, points_embedding, points_colors, points_ref_dirs,points_ref_dirsAux, points_conf
+        return ref_xyz, points_embedding, points_colors, points_ref_dirsx,points_ref_dirsy,points_ref_dirsz, points_conf
 
 
     def save_points(self, xyz, dir, total_steps):

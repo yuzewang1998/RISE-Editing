@@ -73,13 +73,13 @@ apply_pnt_mask=1
 shading_feature_mlp_layer0=1
 shading_feature_mlp_layer1=2
 shading_feature_mlp_layer2=0
-shading_feature_mlp_linear=0
+shading_feature_mlp_linear=2
 shading_feature_mlp_layer3=0 #0
-shading_feature_mlp_layer4=1 #1
-shading_feature_mlp_layer0_rotation_invariance_feature_extraction_module=2
+shading_feature_mlp_layer4=2 #1
+shading_feature_mlp_layer0_rotation_invariance_feature_extraction_module=1
 shading_feature_mlp_layer0_rotation_invariance_feature_extraction_dim=20
 shading_alpha_mlp_layer=1
-shading_color_mlp_layer=4
+shading_color_mlp_layer=3
 shading_feature_num=256
 dist_xyz_freq=5
 num_feat_freqs=3
@@ -120,7 +120,7 @@ resume_dir="${nrCheckpoint}/init/dtu_dgt_d012_img0123_conf_agg2_32_dirclr20"
 
 save_iter_freq=10000
 save_point_freq=10000 #301840 #1
-maximum_step=600000 #500000 #250000 #800000
+maximum_step=1000000 #500000 #250000 #800000
 
 niter=10000 #1000000
 niter_decay=10000 #250000

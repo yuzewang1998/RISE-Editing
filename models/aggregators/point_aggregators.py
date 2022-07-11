@@ -260,7 +260,7 @@ class PointAggregator(torch.nn.Module):
             self.shcomp = SphericalHarm(opt.sh_degree)
 
         self.opt = opt
-        self.dist_dim = (4 if self.opt.agg_dist_pers == 30 else 6 if self.opt.agg_dist_pers != 15 else 3) if self.opt.agg_dist_pers > 9 else 3
+        self.dist_dim = (4 if self.opt.agg_dist_pers == 30 else 6 if self.opt.agg_dist_pers != 15 else 4) if self.opt.agg_dist_pers > 9 else 3
         self.dist_func = getattr(self, opt.agg_distance_kernel, None)
         assert self.dist_func is not None, "InterpAggregator doesn't have disance_kernel {} ".format(opt.agg_distance_kernel)
 
@@ -352,7 +352,7 @@ class PointAggregator(torch.nn.Module):
             self.block3 = self.passfunc
         #layer4:rotatation invariance
         if opt.shading_feature_mlp_layer4 > 0:
-            in_channels = in_channels + 4*opt.num_viewdir_freqs+ (3 if "1" in list(opt.point_color_mode) else 0)
+            in_channels = in_channels + 2*3*opt.num_viewdir_freqs+ (3 if "1" in list(opt.point_color_mode) else 0)
             out_channels = opt.shading_feature_num
             block4 = []
             for i in range(opt.shading_feature_mlp_layer4):
@@ -434,7 +434,7 @@ class PointAggregator(torch.nn.Module):
         # xyz = xyz - ijk
         # x, y, z = xyz[:, 0], xyz[:, 1], xyz[:, 2]
         # Vxyz = (V000 * (1 - x) * (1 - y) * (1 - z)
-        #         + V100 * x * (1 - y) * (1 - z) +
+        #        b  + V100 * x * (1 - y) * (1 - z) +
         #         + V010 * (1 - x) * y * (1 - z) +
         #         + V001 * (1 - x) * (1 - y) * z +
         #         + V101 * x * (1 - y) * z +
@@ -543,7 +543,7 @@ class PointAggregator(torch.nn.Module):
         return weights, embedding[..., 7:]
 
 
-    def viewmlp(self, sampled_color, sampled_Rw2c, sampled_dir,sampled_dirAux, sampled_conf, sampled_embedding, sampled_xyz_pers, sampled_xyz, sample_pnt_mask, sample_loc, sample_loc_w, sample_ray_dirs, vsize, weight, pnt_mask_flat, pts, viewdirs, total_len, ray_valid, in_shape, dists):
+    def viewmlp(self, sampled_color, sampled_Rw2c, sampled_dirx,sampled_diry,sampled_dirz, sampled_conf, sampled_embedding, sampled_xyz_pers, sampled_xyz, sample_pnt_mask, sample_loc, sample_loc_w, sample_ray_dirs, vsize, weight, pnt_mask_flat, pts, viewdirs, total_len, ray_valid, in_shape, dists):
         # print("sampled_Rw2c", sampled_Rw2c.shape, sampled_xyz.shape)
         # assert sampled_Rw2c.dim() == 2
         B, R, SR, K, _ = dists.shape#B 1 R:784 K:8 SR:24
@@ -622,15 +622,15 @@ class PointAggregator(torch.nn.Module):
                 if self.opt.apply_pnt_mask > 0:
                     sampled_color = sampled_color[pnt_mask_flat, :]
                 feat = torch.cat([feat, sampled_color], dim=-1)#[35634,256+3]
-            if sampled_dir is not None:#True
-                sampled_dir = sampled_dir.view(-1, sampled_dir.shape[-1])
+            if sampled_dirx is not None:#True
+                sampled_dirx = sampled_dirx.view(-1, sampled_dirx.shape[-1])
                 if self.opt.apply_pnt_mask > 0:
-                    sampled_dir = sampled_dir[pnt_mask_flat, :]
-                    sampled_dir = sampled_dir @ sampled_Rw2c if uni_w2c else (sampled_dir[..., None, :] @ sampled_Rw2c).squeeze(-2)
+                    sampled_dir = sampled_dirx[pnt_mask_flat, :]
+                    sampled_dir = sampled_dir @ sampled_Rw2c if uni_w2c else (sampled_dirx[..., None, :] @ sampled_Rw2c).squeeze(-2)
                 ori_viewdirs = ori_viewdirs[..., None, :].repeat(1, K, 1).view(-1, ori_viewdirs.shape[-1])
                 if self.opt.apply_pnt_mask > 0:
                     ori_viewdirs = ori_viewdirs[pnt_mask_flat, :]
-                feat = torch.cat([feat, sampled_dir - ori_viewdirs, torch.sum(sampled_dir*ori_viewdirs, dim=-1, keepdim=True)], dim=-1)
+                feat = torch.cat([feat, sampled_dirx - ori_viewdirs, torch.sum(sampled_dirx*ori_viewdirs, dim=-1, keepdim=True)], dim=-1)
             feat = self.block3(feat)#[35634,256]
 
 
@@ -640,37 +640,39 @@ class PointAggregator(torch.nn.Module):
                 if self.opt.apply_pnt_mask > 0:
                     sampled_color = sampled_color[pnt_mask_flat, :]
                 feat = torch.cat([feat, sampled_color], dim=-1)  # [35634,256+3]
-            if sampled_dir is not None:  # True
-                sampled_dir = sampled_dir.view(-1, sampled_dir.shape[-1])
-                sampled_dirAux = sampled_dirAux.view(-1, sampled_dirAux.shape[-1])
+            if sampled_dirx is not None:  # True
+                sampled_dirx = sampled_dirx.view(-1, sampled_dirx.shape[-1])
+                sampled_diry = sampled_diry.view(-1, sampled_diry.shape[-1])
+                sampled_dirz = sampled_dirz.view(-1, sampled_dirz.shape[-1])
                 if self.opt.apply_pnt_mask > 0:
-                    sampled_dir = sampled_dir[pnt_mask_flat, :]
-                    sampled_dir = sampled_dir @ sampled_Rw2c if uni_w2c else (
-                                sampled_dir[..., None, :] @ sampled_Rw2c).squeeze(-2)
-                    sampled_dirAux = sampled_dirAux[pnt_mask_flat, :]
-                    sampled_dirAux = sampled_dirAux @ sampled_Rw2c if uni_w2c else (
-                                sampled_dirAux[..., None, :] @ sampled_Rw2c).squeeze(-2)
+                    sampled_dirx = sampled_dirx[pnt_mask_flat, :]
+                    # sampled_dir = sampled_dir @ sampled_Rw2c if uni_w2c else (sampled_dir[..., None, :] @ sampled_Rw2c).squeeze(-2)
+                    sampled_diry = sampled_diry[pnt_mask_flat, :]
+                    # sampled_dirAux = sampled_dirAux @ sampled_Rw2c if uni_w2c else (sampled_dirAux[..., None, :] @ sampled_Rw2c).squeeze(-2)
+                    sampled_dirz = sampled_dirz[pnt_mask_flat, :]
                 ori_viewdirs = ori_viewdirs[..., None, :].repeat(1, K, 1).view(-1, ori_viewdirs.shape[-1])
                 if self.opt.apply_pnt_mask > 0:
                     ori_viewdirs = ori_viewdirs[pnt_mask_flat, :]
 
 
-                cos_theta = torch.sum(sampled_dirAux*ori_viewdirs,dim = -1)/torch.norm(ori_viewdirs,dim=-1)/torch.norm(sampled_dirAux,dim=-1)#[37410]
+                cos_theta = torch.sum(sampled_dirx*ori_viewdirs,dim = -1)/torch.norm(ori_viewdirs,dim=-1)/torch.norm(sampled_dirx,dim=-1)#[37410]
                 cos_theta = torch.clamp(cos_theta, min=-1+1e-7, max=1-1e-7)
                 theta = torch.acos(cos_theta)
                 # clockwise_theta_msk = torch.where(proxy_sampled_dir[:,0]*proxy_ori_viewdirs[:,1]-proxy_sampled_dir[:,1]*proxy_ori_viewdirs[:,1]>0,1,-1)
                 # theta = clockwise_theta_msk*theta#[ptr]
-                cos_row = torch.sum(sampled_dir * ori_viewdirs, dim=-1) / torch.norm(ori_viewdirs,dim=-1) / torch.norm(sampled_dir, dim=-1)  # [37410]
+                cos_row = torch.sum(sampled_diry * ori_viewdirs, dim=-1) / torch.norm(ori_viewdirs,dim=-1) / torch.norm(sampled_diry, dim=-1)  # [37410]
                 cos_row = torch.clamp(cos_row, min=-1 + 1e-7, max=1 - 1e-7)
                 row = torch.acos(cos_row)
                 # clockwise_row_msk = torch.where(proxz_sampled_dir[:, 0] * proxz_ori_viewdirs[:, 1] - proxz_sampled_dir[:, 1] * proxz_ori_viewdirs[:,1] > 0, 1, -1)
                 # row = clockwise_row_msk * row  # [ptr]
+                cos_fai = torch.sum(sampled_dirz * ori_viewdirs, dim=-1) / torch.norm(ori_viewdirs,dim=-1) / torch.norm(sampled_dirz, dim=-1)  # [37410]
+                cos_fai = torch.clamp(cos_fai, min=-1 + 1e-7, max=1 - 1e-7)
+                fai = torch.acos(cos_fai)
 
-
-                row_theta_fai_feat = torch.cat([row[...,None],theta[...,None]], dim=-1)#12
-                row_theta_fai_feat = positional_encoding(row_theta_fai_feat,self.opt.num_viewdir_freqs)#12
+                row_theta_fai_feat = torch.cat([row[...,None],theta[...,None],fai[...,None]], dim=-1)#18
+                row_theta_fai_feat = positional_encoding(row_theta_fai_feat,self.opt.num_viewdir_freqs)#18
                 feat = torch.cat([feat, row_theta_fai_feat],dim= -1)
-            feat = self.block4(feat)  # [35634,256+12]
+            feat = self.block4(feat)  # [35634,256+18]
 
 
         if self.opt.agg_intrp_order == 1:#False
@@ -826,7 +828,7 @@ class PointAggregator(torch.nn.Module):
         return sampled_conf - diff.detach()
 
 
-    def forward(self, sampled_color, sampled_Rw2c, sampled_dir,sampled_dirAux, sampled_conf, sampled_embedding, sampled_xyz_pers, sampled_xyz, sample_pnt_mask, sample_loc, sample_loc_w, sample_ray_dirs, vsize, grid_vox_sz):
+    def forward(self, sampled_color, sampled_Rw2c, sampled_dirx,sampled_diry,sampled_dirz, sampled_conf, sampled_embedding, sampled_xyz_pers, sampled_xyz, sample_pnt_mask, sample_loc, sample_loc_w, sample_ray_dirs, vsize, grid_vox_sz):
         # return B * R * SR * channel
         '''
         sampled_color [1,784,24,8,3]
@@ -868,22 +870,25 @@ class PointAggregator(torch.nn.Module):
         elif self.opt.agg_dist_pers == 15:#CODE5:input derta clockwise angle and ||dist||
             det_dir = sampled_xyz - sample_loc_w[..., None, :]
             distanceL2 = torch.sum(torch.square(det_dir), dim=-1)
-            cos_fai = torch.sum(det_dir * sampled_dir, dim=-1) / torch.norm(det_dir,dim=-1) / torch.norm(sampled_dir, dim=-1)
+            cos_fai = torch.sum(det_dir * sampled_dirx, dim=-1) / torch.norm(det_dir,dim=-1) / torch.norm(sampled_dirx, dim=-1)
             cos_fai = torch.clamp(cos_fai, min=-1 + 1e-7, max=1 - 1e-7)
             fai = torch.acos(cos_fai)
-            cos_theta = torch.sum(det_dir * sampled_dirAux, dim=-1) / torch.norm(det_dir,dim=-1) / torch.norm(sampled_dirAux, dim=-1)
+            cos_theta = torch.sum(det_dir * sampled_diry, dim=-1) / torch.norm(det_dir,dim=-1) / torch.norm(sampled_diry, dim=-1)
             cos_theta = torch.clamp(cos_theta, min=-1 + 1e-7, max=1 - 1e-7)
             theta = torch.acos(cos_theta)
-            dists = torch.stack([distanceL2,theta, fai], dim=-1)
+            cos_row = torch.sum(det_dir * sampled_dirz, dim=-1) / torch.norm(det_dir,dim=-1) / torch.norm(sampled_dirz, dim=-1)
+            cos_row = torch.clamp(cos_row, min=-1 + 1e-7, max=1 - 1e-7)
+            row = torch.acos(cos_row)
+            dists = torch.stack([distanceL2,row,theta, fai], dim=-1)
         elif self.opt.agg_dist_pers == 16:#CODE5:input derta clockwise angle and ||dist||
             det_dir = sampled_xyz - sample_loc_w[..., None, :]
 
             proxy_det_dir = det_dir[...,:2]
-            proxy_sampled_dir = sampled_dir[...,:2]
+            proxy_sampled_dir = sampled_dirx[...,:2]
             proxz_det_dir = det_dir[...,1:]
-            proxz_sampled_dir = sampled_dir[..., 1:]
+            proxz_sampled_dir = sampled_dirx[..., 1:]
             proyz_det_dir = det_dir[...,[0,2]]
-            proyz_sampled_dir = sampled_dir[..., [0,2]]
+            proyz_sampled_dir = sampled_dirx[..., [0,2]]
             # proyz_det_dir = det_dir[...,[0,2]]
             # proyz_view_dir = view_dir[..., [0,2]]
             cos_fai = torch.sum(proyz_det_dir * proyz_sampled_dir, dim=-1) / torch.norm(proyz_det_dir,dim=-1) / torch.norm(proyz_sampled_dir, dim=-1)
@@ -953,7 +958,7 @@ class PointAggregator(torch.nn.Module):
         if sampled_conf is not None:#True
             conf_coefficient = self.gradiant_clamp(sampled_conf[..., 0], min=0.0001, max=1)#[1,784,24,8],all are 1
         #put data into nerual network at this line
-        output, _ = getattr(self, self.which_agg_model, None)(sampled_color, sampled_Rw2c, sampled_dir, sampled_dirAux,sampled_conf, sampled_embedding, sampled_xyz_pers, sampled_xyz, sample_pnt_mask, sample_loc, sample_loc_w, sample_ray_dirs, vsize, weight * conf_coefficient, pnt_mask_flat, pts, viewdirs, total_len, ray_valid, in_shape, dists)
+        output, _ = getattr(self, self.which_agg_model, None)(sampled_color, sampled_Rw2c, sampled_dirx, sampled_diry,sampled_dirz,sampled_conf, sampled_embedding, sampled_xyz_pers, sampled_xyz, sample_pnt_mask, sample_loc, sample_loc_w, sample_ray_dirs, vsize, weight * conf_coefficient, pnt_mask_flat, pts, viewdirs, total_len, ray_valid, in_shape, dists)
         #output[18816,4]
         if (self.opt.sparse_loss_weight <=0) and ("conf_coefficient" not in self.opt.zero_one_loss_items) and self.opt.prob == 0:#False
             weight, conf_coefficient = None, None

@@ -3,7 +3,7 @@ semantic_guidance=0
 novel_cam_trajectory="1"
 nrCheckpoint="../checkpoints"
 nrDataRoot="../data_src"
-name="01-scene0113__1RIFEM_NOSGS"
+name="01*-scene0113__NoSGS__1RIFEM__FIXBUG_TEST"
 
 resume_iter=latest # 20000 #latest
 data_root="${nrDataRoot}/scannet/scans/"
@@ -51,8 +51,8 @@ shading_feature_mlp_layer2=0
 shading_feature_mlp_linear=0
 shading_feature_mlp_layer3=0 #0
 shading_feature_mlp_layer4=1 #1
-shading_feature_mlp_layer0_rotation_invariance_feature_extraction_module=1
-shading_feature_mlp_layer0_rotation_invariance_feature_extraction_dim=60
+shading_feature_mlp_layer0_rotation_invariance_feature_extraction_module=2
+shading_feature_mlp_layer0_rotation_invariance_feature_extraction_dim=20
 
 shading_alpha_mlp_layer=1
 shading_color_mlp_layer=4
