@@ -3,7 +3,7 @@
 semantic_guidance=0
 nrCheckpoint="../checkpoints"
 nrDataRoot="../data_src"
-name='01*-scene0113__NoSGS__1RIFEM__FIXBUG'
+name='01*-scene0113__NoSGS__FIXBUG_020202113'
 
 resume_iter=latest #latest
 
@@ -65,12 +65,12 @@ act_type="LeakyReLU"
 
 agg_intrp_order=2
 agg_distance_kernel="linear_immediately" #"avg" #"feat_intrp"
-point_features_dim=32
+point_features_dim=56
 shpnt_jitter="passfunc" #"uniform" # uniform gaussian
 
 which_agg_model="viewmlp"
 apply_pnt_mask=1
-shading_feature_mlp_layer0=1
+shading_feature_mlp_layer0=0
 shading_feature_mlp_layer1=2
 shading_feature_mlp_layer2=0
 shading_feature_mlp_linear=2
