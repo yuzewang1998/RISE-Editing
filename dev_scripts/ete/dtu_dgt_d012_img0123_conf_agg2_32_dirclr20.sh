@@ -59,7 +59,7 @@ shpnt_jitter="passfunc" #"uniform" # uniform gaussian
 
 which_agg_model="viewmlp"
 apply_pnt_mask=1
-shading_feature_mlp_layer0=1
+shading_feature_mlp_layer0=0
 shading_feature_mlp_layer1=2
 shading_feature_mlp_layer2=0
 shading_feature_mlp_linear=2

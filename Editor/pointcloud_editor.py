@@ -32,8 +32,9 @@ class PointCloudEditor:
         neural_embeding = np.empty([pointsize_father,32])
         neural_conf = np.empty([pointsize_father])
         neural_label = np.empty([pointsize_father])
-        neural_dir = np.empty([pointsize_father,3])
-        neural_dirAux = np.empty([pointsize_father, 3])
+        neural_dirx = np.empty([pointsize_father,3])
+        neural_diry = np.empty([pointsize_father, 3])
+        neural_dirz = np.empty([pointsize_father, 3])
         print('Scale of father neural point cloud :',(pointsize_father))
         print('Scale of child neural point cloud:',(pointsize_child))
         idx = 0
@@ -46,18 +47,20 @@ class PointCloudEditor:
                 neural_embeding[idx] = npcd_father.embeding[i]
                 neural_conf[idx] = npcd_father.conf[i]
                 neural_label[idx] = npcd_father.label[i]
-                neural_dir[idx] = npcd_father.dir[i]
-                neural_dirAux[idx] = npcd_father.dirAux[i]
+                neural_dirx[idx] = npcd_father.dirx[i]
+                neural_diry[idx] = npcd_father.diry[i]
+                neural_dirz[idx] = npcd_father.dirz[i]
                 idx+=1
         neural_xyz = neural_xyz[:idx]
         neural_color = neural_color[:idx]
         neural_embeding = neural_embeding[:idx]
         neural_conf = neural_conf[:idx]
-        neural_dir = neural_dir[:idx]
-        neural_dirAux = neural_dirAux[:idx]
+        neural_dirx = neural_dirx[:idx]
+        neural_diry = neural_diry[:idx]
+        neural_dirz = neural_dirz[:idx]
         neural_label = neural_label[:idx]
         print('\ncrop done...neural point cloud scale:',idx)
-        npc.load_from_var(neural_xyz,neural_embeding,neural_conf,neural_dir,neural_dirAux,neural_color,neural_label)
+        npc.load_from_var(neural_xyz,neural_embeding,neural_conf,neural_dirx,neural_diry,neural_dirz,neural_color,neural_label)
         return npc
     def translation_point_cloud_global(self,npcd, transMatirx):#rotate by world coordinate
         res_npc = Neural_pointcloud(self.opt)
@@ -67,8 +70,9 @@ class PointCloudEditor:
         res_npc.color = npcd.color
         res_npc.embeding = npcd.embeding
         res_npc.conf = npcd.conf
-        res_npc.dir = npcd.dir@ rot_matrix
-        res_npc.dirAux = npcd.dirAux @ rot_matrix
+        res_npc.dirx = npcd.dirx@ rot_matrix
+        res_npc.diry = npcd.diry @ rot_matrix
+        res_npc.dirz = npcd.dirz @ rot_matrix
         res_npc.label = npcd.label
         return res_npc
     def translation_point_cloud_local(self,npcd,transMatirx):#rotate by self coordinate
@@ -81,8 +85,9 @@ class PointCloudEditor:
         res_npc.color = npcd.color
         res_npc.embeding = npcd.embeding
         res_npc.conf = npcd.conf
-        res_npc.dir = npcd.dir@ rot_matrix
-        res_npc.dirAux = npcd.dirAux @ rot_matrix
+        res_npc.dirx = npcd.dirx@ rot_matrix
+        res_npc.diry = npcd.diry@ rot_matrix
+        res_npc.dirz = npcd.dirz @ rot_matrix
         res_npc.label = npcd.label
         return res_npc
     def add_point_cloud(self,npcd_child,npcd_father):
@@ -91,7 +96,8 @@ class PointCloudEditor:
         res_npc.color = np.concatenate((npcd_child.color, npcd_father.color), axis=0)
         res_npc.embeding = np.concatenate((npcd_child.embeding, npcd_father.embeding), axis=0)
         res_npc.conf = np.concatenate((npcd_child.conf, npcd_father.conf), axis=0)
-        res_npc.dir = np.concatenate((npcd_child.dir, npcd_father.dir), axis=0)
-        res_npc.dirAux = np.concatenate((npcd_child.dirAux, npcd_father.dirAux), axis=0)
+        res_npc.dirx = np.concatenate((npcd_child.dirx, npcd_father.dirx), axis=0)
+        res_npc.diry = np.concatenate((npcd_child.diry, npcd_father.diry), axis=0)
+        res_npc.dirz = np.concatenate((npcd_child.dirz, npcd_father.dirz), axis=0)
         res_npc.label = np.concatenate((npcd_child.label, npcd_father.label), axis=0)
         return res_npc

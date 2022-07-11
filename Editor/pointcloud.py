@@ -41,20 +41,22 @@ class Neural_pointcloud(Base_pointcloud):
     ply:读取ply形式的点云信息，完备的
     meshlabfile:虽然也是ply形式的，但是失去了自定义的feature信息，需要人为的对其
     '''
-    def load_from_checkpoints(self,points_xyz,points_embeding,points_conf,points_dir,points_dirAux,points_color,points_label):
+    def load_from_checkpoints(self,points_xyz,points_embeding,points_conf,points_dirx,points_diry,points_dirz,points_color,points_label):
         self.xyz = points_xyz
         self.embeding = points_embeding
         self.conf = points_conf
-        self.dir = points_dir
+        self.dirx = points_dirx
+        self.diry = points_diry
+        self.dirz = points_dirz
         self.color = points_color
         self.label = points_label
-        self.dirAux = points_dirAux
-    def load_from_var(self,points_xyz,points_embeding,points_conf,points_dir,points_dirAux,points_color,points_label):
+    def load_from_var(self,points_xyz,points_embeding,points_conf,points_dirx,points_diry,points_dirz,points_color,points_label):
         self.xyz = points_xyz
         self.embeding = points_embeding
         self.conf = points_conf
-        self.dir = points_dir
-        self.dirAux = points_dirAux
+        self.dirx = points_dirx
+        self.diry = points_diry
+        self.dirz = points_dirz
         self.color = points_color
         self.label = points_label
     def load_from_ply(self,name='origin'):
@@ -71,14 +73,18 @@ class Neural_pointcloud(Base_pointcloud):
             plydata.elements[0].data["y"].astype(np.float32)), np.array(
             plydata.elements[0].data["z"].astype(np.float32))
         self.xyz = np.concatenate([x[..., np.newaxis], y[..., np.newaxis], z[..., np.newaxis]], axis=-1)
-        dirx, diry, dirz = np.array(plydata.elements[0].data["dirx"].astype(np.float32)), np.array(
-            plydata.elements[0].data["diry"].astype(np.float32)), np.array(
-            plydata.elements[0].data["dirz"].astype(np.float32))
-        self.dir = np.concatenate([dirx[..., np.newaxis], diry[..., np.newaxis], dirz[..., np.newaxis]], axis=-1)
-        dirAuxx, dirAuxy, dirAuxz = np.array(plydata.elements[0].data["dirAuxx"].astype(np.float32)), np.array(
-            plydata.elements[0].data["dirAuxy"].astype(np.float32)), np.array(
-            plydata.elements[0].data["dirAuxz"].astype(np.float32))
-        self.dirAux = np.concatenate([dirAuxx[..., np.newaxis], dirAuxy[..., np.newaxis], dirAuxz[..., np.newaxis]], axis=-1)
+        dirx0, dirx1, dirx2 = np.array(plydata.elements[0].data["dirx0"].astype(np.float32)), np.array(
+            plydata.elements[0].data["dirx1"].astype(np.float32)), np.array(
+            plydata.elements[0].data["dirx2"].astype(np.float32))
+        self.dirx = np.concatenate([dirx0[..., np.newaxis], dirx1[..., np.newaxis], dirx2[..., np.newaxis]], axis=-1)
+        diry0, diry1, diry2 = np.array(plydata.elements[0].data["diry0"].astype(np.float32)), np.array(
+            plydata.elements[0].data["diry1"].astype(np.float32)), np.array(
+            plydata.elements[0].data["diry2"].astype(np.float32))
+        self.diry = np.concatenate([diry0[..., np.newaxis], diry1[..., np.newaxis], diry2[..., np.newaxis]], axis=-1)
+        dirz0, dirz1, dirz2 = np.array(plydata.elements[0].data["dirz0"].astype(np.float32)), np.array(
+            plydata.elements[0].data["dirz1"].astype(np.float32)), np.array(
+            plydata.elements[0].data["dirz2"].astype(np.float32))
+        self.dirz = np.concatenate([dirz0[..., np.newaxis], dirz1[..., np.newaxis], dirz2[..., np.newaxis]], axis=-1)
         self.conf = np.array(plydata.elements[0].data["conf"].astype(np.float32))
         self.label = np.array(plydata.elements[0].data["label"].astype(np.int32))
         embedding = []
@@ -94,7 +100,9 @@ class Neural_pointcloud(Base_pointcloud):
         sv_color = self.color
         sv_embeding = self.embeding
         sv_conf = self.conf
-        sv_dir = self.dir
+        sv_dirx = self.dirx
+        sv_diry = self.diry
+        sv_dirz = self.dirz
         sv_label = self.label
         sv_dirAux = self.dirAux
         # sv_dir = self.points_dir.cpu().numpy()
@@ -107,12 +115,15 @@ class Neural_pointcloud(Base_pointcloud):
                 sv_color[i][1],  # green
                 sv_color[i][2],  # blue
                 sv_conf[i],
-                sv_dir[i][0],
-                sv_dir[i][1],
-                sv_dir[i][2],
-                sv_dirAux[i][0],
-                sv_dirAux[i][1],
-                sv_dirAux[i][2],
+                sv_dirx[i][0],
+                sv_dirx[i][1],
+                sv_dirx[i][2],
+                sv_diry[i][0],
+                sv_diry[i][1],
+                sv_diry[i][2],
+                sv_dirz[i][0],
+                sv_dirz[i][1],
+                sv_dirz[i][2],
                 sv_embeding[i][0],
                 sv_embeding[i][1],
                 sv_embeding[i][2],
@@ -158,12 +169,15 @@ class Neural_pointcloud(Base_pointcloud):
                 ("green", np.dtype("float32")),
                 ("blue", np.dtype("float32")),
                 ("conf", np.dtype("float32")),
-                ("dirx", np.dtype("float32")),
-                ("diry", np.dtype("float32")),
-                ("dirz", np.dtype("float32")),
-                ("dirAuxx", np.dtype("float32")),
-                ("dirAuxy", np.dtype("float32")),
-                ("dirAuxz", np.dtype("float32")),
+                ("dirx0", np.dtype("float32")),
+                ("dirx1", np.dtype("float32")),
+                ("dirx2", np.dtype("float32")),
+                ("diry0", np.dtype("float32")),
+                ("diry1", np.dtype("float32")),
+                ("diry2", np.dtype("float32")),
+                ("dirz0", np.dtype("float32")),
+                ("dirz1", np.dtype("float32")),
+                ("dirz2", np.dtype("float32")),
                 ("embeding0", np.dtype("float32")),
                 ("embeding1", np.dtype("float32")),
                 ("embeding2", np.dtype("float32")),
@@ -239,8 +253,9 @@ class Meshlab_pointcloud(Base_pointcloud):
         neural_color = np.empty([pointsize,3])
         neural_embeding = np.empty([pointsize,32])
         neural_conf = np.empty([pointsize])
-        neural_dir = np.empty([pointsize,3])
-        neural_dirAux = np.empty([pointsize,3])
+        neural_dirx = np.empty([pointsize,3])
+        neural_diry = np.empty([pointsize,3])
+        neural_dirz = np.empty([pointsize, 3])
         neural_label = np.empty([pointsize])
         print('Scale of neural point cloud :',len(scene_neural_pcd))
         print('Scale of meshlab point cloud:',pointsize)
@@ -253,12 +268,13 @@ class Meshlab_pointcloud(Base_pointcloud):
                 neural_color[idx] = scene_neural_pcd.color[i]
                 neural_embeding[idx] = scene_neural_pcd.embeding[i]
                 neural_conf[idx] = scene_neural_pcd.conf[i]
-                neural_dir[idx] = scene_neural_pcd.dir[i]
-                neural_dirAux[idx] = scene_neural_pcd.dirAux[i]
+                neural_dirx[idx] = scene_neural_pcd.dirx[i]
+                neural_diry[idx] = scene_neural_pcd.diry[i]
+                neural_dirz[idx] = scene_neural_pcd.dirz[i]
                 neural_label[idx] = scene_neural_pcd.label[i]
                 idx+=1
         print('\ncvt done...neural point cloud scale:',idx)
-        npc.load_from_var(neural_xyz,neural_embeding,neural_conf,neural_dir,neural_dirAux,neural_color,neural_label)
+        npc.load_from_var(neural_xyz,neural_embeding,neural_conf,neural_dirx,neural_diry,neural_dirz,neural_color,neural_label)
         return npc
 
 
