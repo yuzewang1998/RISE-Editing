@@ -29,7 +29,7 @@ class PointCloudEditor:
         pointsize_father = npcd_father.xyz.shape[0]
         neural_xyz = np.empty([pointsize_father,3])
         neural_color = np.empty([pointsize_father,3])
-        neural_embeding = np.empty([pointsize_father,32])
+        neural_embeding = np.empty([pointsize_father,56])
         neural_conf = np.empty([pointsize_father])
         neural_label = np.empty([pointsize_father])
         neural_dirx = np.empty([pointsize_father,3])

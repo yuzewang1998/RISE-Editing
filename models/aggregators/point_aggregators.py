@@ -603,7 +603,7 @@ class PointAggregator(torch.nn.Module):
 
         if self.opt.agg_feat_xyz_mode != "None":#False
             feat = torch.cat([feat, pts], dim=-1)
-        # print("feat",feat.shape) # 501
+
         feat = self.block1(feat)#Equation 3 ,Neural Network F 。input[28162,284]->output[28162,256]
 
         if self.opt.shading_feature_mlp_layer2>0:#Flase

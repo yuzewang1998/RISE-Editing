@@ -3,7 +3,7 @@
 semantic_guidance=0
 nrCheckpoint="../checkpoints"
 nrDataRoot="../data_src"
-name='01*-scene0113__NoSGS__FIXBUG_020202113'
+name='01*-scene0113__NoSGS__FIXBUG_020202113_Pretrain'
 
 resume_iter=latest #latest
 

@@ -32,7 +32,7 @@ class CheckpointsController:
         network_paras = torch.load(self.latest_file_path, map_location=torch.device('cpu'))
         print('loading checkpoints...',self.latest_file_path)
         self.points_xyz = network_paras["neural_points.xyz"].view(-1,3).cpu().numpy()
-        self.points_embeding = network_paras["neural_points.points_embeding"].view(-1,32).cpu().numpy()
+        self.points_embeding = network_paras["neural_points.points_embeding"].view(-1,56).cpu().numpy()
         self.points_conf= network_paras["neural_points.points_conf"].view(-1,1).cpu().numpy()
         self.points_dirx = network_paras["neural_points.points_dirx"].view(-1,3).cpu().numpy()
         self.points_diry = network_paras["neural_points.points_diry"].view(-1, 3).cpu().numpy()
