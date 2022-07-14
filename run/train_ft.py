@@ -267,10 +267,15 @@ def test(model, dataset, visualizer, opt, bg_info, test_steps=0, gen_vid=False, 
     for i in range(0, total_num, opt.test_num_step): # 1 if test_steps == 10000 else opt.test_num_step
         data = dataset.get_item(i)
         raydir = data['raydir'].clone()
-        raylabel = data['raylabel'].clone()
+        try:
+            raylabel = data['raylabel'].clone()
+        except:
+            raylabel = None
         pixel_label = None
-        if data['pixel_label'] is not None :
+        try:
             pixel_label = data['pixel_label'].view(data['pixel_label'].shape[0], -1, data['pixel_label'].shape[3]).clone()
+        except:
+            pass
         pixel_idx = data['pixel_idx'].view(data['pixel_idx'].shape[0], -1, data['pixel_idx'].shape[3]).clone()
         edge_mask = torch.zeros([height, width], dtype=torch.bool)
         edge_mask[pixel_idx[0,...,1].to(torch.long), pixel_idx[0,...,0].to(torch.long)] = 1
@@ -474,7 +479,10 @@ def probe_hole(model, dataset, visualizer, opt, bg_info, test_steps=0, opacity_t
             bg = data['bg_color'][None, :].cuda()
             raydir = data['raydir'].clone()
             pixel_idx = data['pixel_idx'].view(data['pixel_idx'].shape[0], -1, data['pixel_idx'].shape[3]).clone()
-            pixel_label = data['pixel_label'].view(data['pixel_label'].shape[0], -1,data['pixel_label'].shape[3]).clone()
+            try:
+                pixel_label = data['pixel_label'].view(data['pixel_label'].shape[0], -1,data['pixel_label'].shape[3]).clone()
+            except:
+                pixel_label = None
             edge_mask = torch.zeros([height, width], dtype=torch.bool, device='cuda')
             edge_mask[pixel_idx[0, ..., 1].to(torch.long), pixel_idx[0, ..., 0].to(torch.long)] = 1
             edge_mask = edge_mask.reshape(-1) > 0
@@ -488,7 +496,8 @@ def probe_hole(model, dataset, visualizer, opt, bg_info, test_steps=0, opacity_t
                 end = min([k + chunk_size, totalpixel])
                 data['raydir'] = raydir[:, start:end, :]
                 data["pixel_idx"] = pixel_idx[:, start:end, :]
-                data["pixel_label"] = pixel_label[:, start:end, :]
+                if pixel_label is not None:
+                    data["pixel_label"] = pixel_label[:, start:end, :]
                 model.set_input(data)
                 output = model.test()
                 chunk_pixel_id = data["pixel_idx"].to(torch.long)

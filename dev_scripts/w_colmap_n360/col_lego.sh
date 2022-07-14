@@ -118,8 +118,8 @@ checkpoints_dir="${nrCheckpoint}/col_nerfsynth/"
 resume_dir="${nrCheckpoint}/init/dtu_dgt_d012_img0123_conf_agg2_32_dirclr20"
 
 save_iter_freq=10000
-save_point_freq=10000 #301840 #1
-maximum_step=800000 #800000
+save_point_freq=1000 #301840 #1
+maximum_step=100000 #800000
 
 niter=10000 #1000000
 niter_decay=10000 #250000
@@ -132,7 +132,7 @@ print_freq=100
 test_num_step=10
 
 far_thresh=-1 #0.005
-prob_freq=10001 #10000 #2000 #1000 is bad #10001
+prob_freq=1000001 #10000 #2000 #1000 is bad #10001
 prob_num_step=25
 prob_thresh=0.7
 prob_mul=0.4
