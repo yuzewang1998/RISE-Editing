@@ -738,7 +738,7 @@ def main():
             points_xyz_all = [points_xyz_all[cam_ind[:,0]==unique_cam_ind[i], :] for i in range(len(unique_cam_ind))]#按照camera list 分开points_xyz_all
             if points_label_all is not None:
                 points_label_all = [points_label_all[cam_ind[:,0]==unique_cam_ind[i], :] for i in range(len(unique_cam_ind))]
-            featuredim = opt.point_features_dim
+            featuredim = opt.point_features_dim+24
             points_embedding_all = torch.zeros([1, 0, featuredim], device=unique_cam_ind.device, dtype=torch.float32)
             points_color_all = torch.zeros([1, 0, 3], device=unique_cam_ind.device, dtype=torch.float32)
             points_dirx_all = torch.zeros([1, 0, 3], device=unique_cam_ind.device, dtype=torch.float32)

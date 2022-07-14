@@ -103,8 +103,8 @@ gpu_ids='0'
 checkpoints_dir="${nrCheckpoint}/init"
 resume_dir="${checkpoints_dir}/${name}"
 
-save_iter_freq=30184
-save_point_freq=30184 #30184 #1
+save_iter_freq=100 #30184
+save_point_freq=10000 #30184 #1
 maximum_step=800000 #800000
 niter=10000 #1000000
 niter_decay=10000 #250000
