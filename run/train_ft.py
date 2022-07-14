@@ -268,7 +268,9 @@ def test(model, dataset, visualizer, opt, bg_info, test_steps=0, gen_vid=False, 
         data = dataset.get_item(i)
         raydir = data['raydir'].clone()
         raylabel = data['raylabel'].clone()
-        pixel_label = data['pixel_label'].view(data['pixel_label'].shape[0], -1, data['pixel_label'].shape[3]).clone()
+        pixel_label = None
+        if data['pixel_label'] is not None :
+            pixel_label = data['pixel_label'].view(data['pixel_label'].shape[0], -1, data['pixel_label'].shape[3]).clone()
         pixel_idx = data['pixel_idx'].view(data['pixel_idx'].shape[0], -1, data['pixel_idx'].shape[3]).clone()
         edge_mask = torch.zeros([height, width], dtype=torch.bool)
         edge_mask[pixel_idx[0,...,1].to(torch.long), pixel_idx[0,...,0].to(torch.long)] = 1
@@ -290,8 +292,8 @@ def test(model, dataset, visualizer, opt, bg_info, test_steps=0, gen_vid=False, 
             end = min([k + chunk_size, totalpixel])
             data['raydir'] = raydir[:, start:end, :]
             data["pixel_idx"] = pixel_idx[:, start:end, :]
-            data["pixel_label"] = pixel_label[:, start:end, :]
-            data["raylabel"] = raylabel[:, start:end, :]
+            if pixel_label is not None:
+                data["pixel_label"] = pixel_label[:, start:end, :]
             model.set_input(data)
             if opt.bgmodel.endswith("plane"):
                 img_lst, c2ws_lst, w2cs_lst, intrinsics_all, HDWD_lst, fg_masks, bg_ray_lst = bg_info

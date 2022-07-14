@@ -281,7 +281,10 @@ class NeuralPoints(nn.Module):
             # np.savetxt(filepath, self.xyz.reshape(-1, 3).detach().cpu().numpy(), delimiter=";")
 
             if checkpoint:#谁要学，nn.par谁，反正都存pth里面，这个实现方式还是不错的
-                self.points_label = nn.Parameter(saved_features["neural_points.points_label"], requires_grad=False)
+                try:
+                    self.points_label = nn.Parameter(saved_features["neural_points.points_label"], requires_grad=False)
+                except:
+                    self.points_label = None
                 self.points_embeding = nn.Parameter(saved_features["neural_points.points_embeding"]) if "neural_points.points_embeding" in saved_features else None
                 print("self.points_embeding", self.points_embeding.shape)
                 # points_conf = saved_features["neural_points.points_conf"] if "neural_points.points_conf" in saved_features else None
