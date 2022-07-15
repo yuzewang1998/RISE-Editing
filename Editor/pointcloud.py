@@ -17,6 +17,7 @@ class Base_pointcloud:
     def __init__(self, opt):
         self.opt = opt
         self.edit_dir = os.path.join(opt.checkpoints_root, 'edit')
+        self.if_has_semantic_label = opt.has_semantic_label
         if 'edit' not in os.listdir(opt.checkpoints_root):
             os.makedirs(os.path.join(self.edit_dir))
         self.xyz = []
@@ -41,7 +42,7 @@ class Neural_pointcloud(Base_pointcloud):
     ply:读取ply形式的点云信息，完备的
     meshlabfile:虽然也是ply形式的，但是失去了自定义的feature信息，需要人为的对其
     '''
-    def load_from_checkpoints(self,points_xyz,points_embeding,points_conf,points_dirx,points_diry,points_dirz,points_color,points_label):
+    def load_from_checkpoints(self,points_xyz,points_embeding,points_conf,points_dirx,points_diry,points_dirz,points_color,points_label=None):
         self.xyz = points_xyz
         self.embeding = points_embeding
         self.conf = points_conf
@@ -50,7 +51,7 @@ class Neural_pointcloud(Base_pointcloud):
         self.dirz = points_dirz
         self.color = points_color
         self.label = points_label
-    def load_from_var(self,points_xyz,points_embeding,points_conf,points_dirx,points_diry,points_dirz,points_color,points_label):
+    def load_from_var(self,points_xyz,points_embeding,points_conf,points_dirx,points_diry,points_dirz,points_color,points_label=None):
         self.xyz = points_xyz
         self.embeding = points_embeding
         self.conf = points_conf
@@ -86,7 +87,8 @@ class Neural_pointcloud(Base_pointcloud):
             plydata.elements[0].data["dirz2"].astype(np.float32))
         self.dirz = np.concatenate([dirz0[..., np.newaxis], dirz1[..., np.newaxis], dirz2[..., np.newaxis]], axis=-1)
         self.conf = np.array(plydata.elements[0].data["conf"].astype(np.float32))
-        self.label = np.array(plydata.elements[0].data["label"].astype(np.int32))
+        if self.if_has_semantic_label:
+            self.label = np.array(plydata.elements[0].data["label"].astype(np.int32))
         embedding = []
         for i in range(56):
             embedding.append(np.array(plydata.elements[0].data["embeding"+str(i)].astype(np.float32))[...,np.newaxis])
@@ -104,163 +106,317 @@ class Neural_pointcloud(Base_pointcloud):
         sv_diry = self.diry
         sv_dirz = self.dirz
         sv_label = self.label
-        sv_dirAux = self.dirAux
         # sv_dir = self.points_dir.cpu().numpy()
-        for i in tqdm(range(sv_xyz.shape[0])):
-            vertex.append((
-                sv_xyz[i][0],  # x
-                sv_xyz[i][1],  # y
-                sv_xyz[i][2],  # z
-                sv_color[i][0],  # red
-                sv_color[i][1],  # green
-                sv_color[i][2],  # blue
-                sv_conf[i],
-                sv_dirx[i][0],
-                sv_dirx[i][1],
-                sv_dirx[i][2],
-                sv_diry[i][0],
-                sv_diry[i][1],
-                sv_diry[i][2],
-                sv_dirz[i][0],
-                sv_dirz[i][1],
-                sv_dirz[i][2],
-                sv_embeding[i][0],
-                sv_embeding[i][1],
-                sv_embeding[i][2],
-                sv_embeding[i][3],
-                sv_embeding[i][4],
-                sv_embeding[i][5],
-                sv_embeding[i][6],
-                sv_embeding[i][7],
-                sv_embeding[i][8],
-                sv_embeding[i][9],
-                sv_embeding[i][10],
-                sv_embeding[i][11],
-                sv_embeding[i][12],
-                sv_embeding[i][13],
-                sv_embeding[i][14],
-                sv_embeding[i][15],
-                sv_embeding[i][16],
-                sv_embeding[i][17],
-                sv_embeding[i][18],
-                sv_embeding[i][19],
-                sv_embeding[i][20],
-                sv_embeding[i][21],
-                sv_embeding[i][22],
-                sv_embeding[i][23],
-                sv_embeding[i][24],
-                sv_embeding[i][25],
-                sv_embeding[i][26],
-                sv_embeding[i][27],
-                sv_embeding[i][28],
-                sv_embeding[i][29],
-                sv_embeding[i][30],
-                sv_embeding[i][31],
-                sv_embeding[i][32],
-                sv_embeding[i][33],
-                sv_embeding[i][34],
-                sv_embeding[i][35],
-                sv_embeding[i][36],
-                sv_embeding[i][37],
-                sv_embeding[i][38],
-                sv_embeding[i][39],
-                sv_embeding[i][40],
-                sv_embeding[i][41],
-                sv_embeding[i][42],
-                sv_embeding[i][43],
-                sv_embeding[i][44],
-                sv_embeding[i][45],
-                sv_embeding[i][46],
-                sv_embeding[i][47],
-                sv_embeding[i][48],
-                sv_embeding[i][49],
-                sv_embeding[i][50],
-                sv_embeding[i][51],
-                sv_embeding[i][52],
-                sv_embeding[i][53],
-                sv_embeding[i][54],
-                sv_embeding[i][55],
-                sv_label[i]
-            ))
-        #ply的格式，没写循环、增加可读性
-        vertex = np.array(
-            vertex,
-            dtype=[
-                ("x", np.dtype("float32")),
-                ("y", np.dtype("float32")),
-                ("z", np.dtype("float32")),
-                ("red", np.dtype("float32")),
-                ("green", np.dtype("float32")),
-                ("blue", np.dtype("float32")),
-                ("conf", np.dtype("float32")),
-                ("dirx0", np.dtype("float32")),
-                ("dirx1", np.dtype("float32")),
-                ("dirx2", np.dtype("float32")),
-                ("diry0", np.dtype("float32")),
-                ("diry1", np.dtype("float32")),
-                ("diry2", np.dtype("float32")),
-                ("dirz0", np.dtype("float32")),
-                ("dirz1", np.dtype("float32")),
-                ("dirz2", np.dtype("float32")),
-                ("embeding0", np.dtype("float32")),
-                ("embeding1", np.dtype("float32")),
-                ("embeding2", np.dtype("float32")),
-                ("embeding3", np.dtype("float32")),
-                ("embeding4", np.dtype("float32")),
-                ("embeding5", np.dtype("float32")),
-                ("embeding6", np.dtype("float32")),
-                ("embeding7", np.dtype("float32")),
-                ("embeding8", np.dtype("float32")),
-                ("embeding9", np.dtype("float32")),
-                ("embeding10", np.dtype("float32")),
-                ("embeding11", np.dtype("float32")),
-                ("embeding12", np.dtype("float32")),
-                ("embeding13", np.dtype("float32")),
-                ("embeding14", np.dtype("float32")),
-                ("embeding15", np.dtype("float32")),
-                ("embeding16", np.dtype("float32")),
-                ("embeding17", np.dtype("float32")),
-                ("embeding18", np.dtype("float32")),
-                ("embeding19", np.dtype("float32")),
-                ("embeding20", np.dtype("float32")),
-                ("embeding21", np.dtype("float32")),
-                ("embeding22", np.dtype("float32")),
-                ("embeding23", np.dtype("float32")),
-                ("embeding24", np.dtype("float32")),
-                ("embeding25", np.dtype("float32")),
-                ("embeding26", np.dtype("float32")),
-                ("embeding27", np.dtype("float32")),
-                ("embeding28", np.dtype("float32")),
-                ("embeding29", np.dtype("float32")),
-                ("embeding30", np.dtype("float32")),
-                ("embeding31", np.dtype("float32")),
-                ("embeding32", np.dtype("float32")),
-                ("embeding33", np.dtype("float32")),
-                ("embeding34", np.dtype("float32")),
-                ("embeding35", np.dtype("float32")),
-                ("embeding36", np.dtype("float32")),
-                ("embeding37", np.dtype("float32")),
-                ("embeding38", np.dtype("float32")),
-                ("embeding39", np.dtype("float32")),
-                ("embeding40", np.dtype("float32")),
-                ("embeding41", np.dtype("float32")),
-                ("embeding42", np.dtype("float32")),
-                ("embeding43", np.dtype("float32")),
-                ("embeding44", np.dtype("float32")),
-                ("embeding45", np.dtype("float32")),
-                ("embeding46", np.dtype("float32")),
-                ("embeding47", np.dtype("float32")),
-                ("embeding48", np.dtype("float32")),
-                ("embeding49", np.dtype("float32")),
-                ("embeding50", np.dtype("float32")),
-                ("embeding51", np.dtype("float32")),
-                ("embeding52", np.dtype("float32")),
-                ("embeding53", np.dtype("float32")),
-                ("embeding54", np.dtype("float32")),
-                ("embeding55", np.dtype("float32")),
-                ("label",np.dtype("uint8"))
-            ]
-        )
+        if self.if_has_semantic_label:
+            for i in tqdm(range(sv_xyz.shape[0])):
+                vertex.append((
+                    sv_xyz[i][0],  # x
+                    sv_xyz[i][1],  # y
+                    sv_xyz[i][2],  # z
+                    sv_color[i][0],  # red
+                    sv_color[i][1],  # green
+                    sv_color[i][2],  # blue
+                    sv_conf[i],
+                    sv_dirx[i][0],
+                    sv_dirx[i][1],
+                    sv_dirx[i][2],
+                    sv_diry[i][0],
+                    sv_diry[i][1],
+                    sv_diry[i][2],
+                    sv_dirz[i][0],
+                    sv_dirz[i][1],
+                    sv_dirz[i][2],
+                    sv_embeding[i][0],
+                    sv_embeding[i][1],
+                    sv_embeding[i][2],
+                    sv_embeding[i][3],
+                    sv_embeding[i][4],
+                    sv_embeding[i][5],
+                    sv_embeding[i][6],
+                    sv_embeding[i][7],
+                    sv_embeding[i][8],
+                    sv_embeding[i][9],
+                    sv_embeding[i][10],
+                    sv_embeding[i][11],
+                    sv_embeding[i][12],
+                    sv_embeding[i][13],
+                    sv_embeding[i][14],
+                    sv_embeding[i][15],
+                    sv_embeding[i][16],
+                    sv_embeding[i][17],
+                    sv_embeding[i][18],
+                    sv_embeding[i][19],
+                    sv_embeding[i][20],
+                    sv_embeding[i][21],
+                    sv_embeding[i][22],
+                    sv_embeding[i][23],
+                    sv_embeding[i][24],
+                    sv_embeding[i][25],
+                    sv_embeding[i][26],
+                    sv_embeding[i][27],
+                    sv_embeding[i][28],
+                    sv_embeding[i][29],
+                    sv_embeding[i][30],
+                    sv_embeding[i][31],
+                    sv_embeding[i][32],
+                    sv_embeding[i][33],
+                    sv_embeding[i][34],
+                    sv_embeding[i][35],
+                    sv_embeding[i][36],
+                    sv_embeding[i][37],
+                    sv_embeding[i][38],
+                    sv_embeding[i][39],
+                    sv_embeding[i][40],
+                    sv_embeding[i][41],
+                    sv_embeding[i][42],
+                    sv_embeding[i][43],
+                    sv_embeding[i][44],
+                    sv_embeding[i][45],
+                    sv_embeding[i][46],
+                    sv_embeding[i][47],
+                    sv_embeding[i][48],
+                    sv_embeding[i][49],
+                    sv_embeding[i][50],
+                    sv_embeding[i][51],
+                    sv_embeding[i][52],
+                    sv_embeding[i][53],
+                    sv_embeding[i][54],
+                    sv_embeding[i][55],
+                    sv_label[i]
+                ))
+            #ply的格式，没写循环、增加可读性
+            vertex = np.array(
+                vertex,
+                dtype=[
+                    ("x", np.dtype("float32")),
+                    ("y", np.dtype("float32")),
+                    ("z", np.dtype("float32")),
+                    ("red", np.dtype("float32")),
+                    ("green", np.dtype("float32")),
+                    ("blue", np.dtype("float32")),
+                    ("conf", np.dtype("float32")),
+                    ("dirx0", np.dtype("float32")),
+                    ("dirx1", np.dtype("float32")),
+                    ("dirx2", np.dtype("float32")),
+                    ("diry0", np.dtype("float32")),
+                    ("diry1", np.dtype("float32")),
+                    ("diry2", np.dtype("float32")),
+                    ("dirz0", np.dtype("float32")),
+                    ("dirz1", np.dtype("float32")),
+                    ("dirz2", np.dtype("float32")),
+                    ("embeding0", np.dtype("float32")),
+                    ("embeding1", np.dtype("float32")),
+                    ("embeding2", np.dtype("float32")),
+                    ("embeding3", np.dtype("float32")),
+                    ("embeding4", np.dtype("float32")),
+                    ("embeding5", np.dtype("float32")),
+                    ("embeding6", np.dtype("float32")),
+                    ("embeding7", np.dtype("float32")),
+                    ("embeding8", np.dtype("float32")),
+                    ("embeding9", np.dtype("float32")),
+                    ("embeding10", np.dtype("float32")),
+                    ("embeding11", np.dtype("float32")),
+                    ("embeding12", np.dtype("float32")),
+                    ("embeding13", np.dtype("float32")),
+                    ("embeding14", np.dtype("float32")),
+                    ("embeding15", np.dtype("float32")),
+                    ("embeding16", np.dtype("float32")),
+                    ("embeding17", np.dtype("float32")),
+                    ("embeding18", np.dtype("float32")),
+                    ("embeding19", np.dtype("float32")),
+                    ("embeding20", np.dtype("float32")),
+                    ("embeding21", np.dtype("float32")),
+                    ("embeding22", np.dtype("float32")),
+                    ("embeding23", np.dtype("float32")),
+                    ("embeding24", np.dtype("float32")),
+                    ("embeding25", np.dtype("float32")),
+                    ("embeding26", np.dtype("float32")),
+                    ("embeding27", np.dtype("float32")),
+                    ("embeding28", np.dtype("float32")),
+                    ("embeding29", np.dtype("float32")),
+                    ("embeding30", np.dtype("float32")),
+                    ("embeding31", np.dtype("float32")),
+                    ("embeding32", np.dtype("float32")),
+                    ("embeding33", np.dtype("float32")),
+                    ("embeding34", np.dtype("float32")),
+                    ("embeding35", np.dtype("float32")),
+                    ("embeding36", np.dtype("float32")),
+                    ("embeding37", np.dtype("float32")),
+                    ("embeding38", np.dtype("float32")),
+                    ("embeding39", np.dtype("float32")),
+                    ("embeding40", np.dtype("float32")),
+                    ("embeding41", np.dtype("float32")),
+                    ("embeding42", np.dtype("float32")),
+                    ("embeding43", np.dtype("float32")),
+                    ("embeding44", np.dtype("float32")),
+                    ("embeding45", np.dtype("float32")),
+                    ("embeding46", np.dtype("float32")),
+                    ("embeding47", np.dtype("float32")),
+                    ("embeding48", np.dtype("float32")),
+                    ("embeding49", np.dtype("float32")),
+                    ("embeding50", np.dtype("float32")),
+                    ("embeding51", np.dtype("float32")),
+                    ("embeding52", np.dtype("float32")),
+                    ("embeding53", np.dtype("float32")),
+                    ("embeding54", np.dtype("float32")),
+                    ("embeding55", np.dtype("float32")),
+                    ("label",np.dtype("uint8"))
+                ]
+            )
+        else:
+            for i in tqdm(range(sv_xyz.shape[0])):
+                vertex.append((
+                    sv_xyz[i][0],  # x
+                    sv_xyz[i][1],  # y
+                    sv_xyz[i][2],  # z
+                    sv_color[i][0],  # red
+                    sv_color[i][1],  # green
+                    sv_color[i][2],  # blue
+                    sv_conf[i],
+                    sv_dirx[i][0],
+                    sv_dirx[i][1],
+                    sv_dirx[i][2],
+                    sv_diry[i][0],
+                    sv_diry[i][1],
+                    sv_diry[i][2],
+                    sv_dirz[i][0],
+                    sv_dirz[i][1],
+                    sv_dirz[i][2],
+                    sv_embeding[i][0],
+                    sv_embeding[i][1],
+                    sv_embeding[i][2],
+                    sv_embeding[i][3],
+                    sv_embeding[i][4],
+                    sv_embeding[i][5],
+                    sv_embeding[i][6],
+                    sv_embeding[i][7],
+                    sv_embeding[i][8],
+                    sv_embeding[i][9],
+                    sv_embeding[i][10],
+                    sv_embeding[i][11],
+                    sv_embeding[i][12],
+                    sv_embeding[i][13],
+                    sv_embeding[i][14],
+                    sv_embeding[i][15],
+                    sv_embeding[i][16],
+                    sv_embeding[i][17],
+                    sv_embeding[i][18],
+                    sv_embeding[i][19],
+                    sv_embeding[i][20],
+                    sv_embeding[i][21],
+                    sv_embeding[i][22],
+                    sv_embeding[i][23],
+                    sv_embeding[i][24],
+                    sv_embeding[i][25],
+                    sv_embeding[i][26],
+                    sv_embeding[i][27],
+                    sv_embeding[i][28],
+                    sv_embeding[i][29],
+                    sv_embeding[i][30],
+                    sv_embeding[i][31],
+                    sv_embeding[i][32],
+                    sv_embeding[i][33],
+                    sv_embeding[i][34],
+                    sv_embeding[i][35],
+                    sv_embeding[i][36],
+                    sv_embeding[i][37],
+                    sv_embeding[i][38],
+                    sv_embeding[i][39],
+                    sv_embeding[i][40],
+                    sv_embeding[i][41],
+                    sv_embeding[i][42],
+                    sv_embeding[i][43],
+                    sv_embeding[i][44],
+                    sv_embeding[i][45],
+                    sv_embeding[i][46],
+                    sv_embeding[i][47],
+                    sv_embeding[i][48],
+                    sv_embeding[i][49],
+                    sv_embeding[i][50],
+                    sv_embeding[i][51],
+                    sv_embeding[i][52],
+                    sv_embeding[i][53],
+                    sv_embeding[i][54],
+                    sv_embeding[i][55],
+                ))
+            #ply的格式，没写循环、增加可读性
+            vertex = np.array(
+                vertex,
+                dtype=[
+                    ("x", np.dtype("float32")),
+                    ("y", np.dtype("float32")),
+                    ("z", np.dtype("float32")),
+                    ("red", np.dtype("float32")),
+                    ("green", np.dtype("float32")),
+                    ("blue", np.dtype("float32")),
+                    ("conf", np.dtype("float32")),
+                    ("dirx0", np.dtype("float32")),
+                    ("dirx1", np.dtype("float32")),
+                    ("dirx2", np.dtype("float32")),
+                    ("diry0", np.dtype("float32")),
+                    ("diry1", np.dtype("float32")),
+                    ("diry2", np.dtype("float32")),
+                    ("dirz0", np.dtype("float32")),
+                    ("dirz1", np.dtype("float32")),
+                    ("dirz2", np.dtype("float32")),
+                    ("embeding0", np.dtype("float32")),
+                    ("embeding1", np.dtype("float32")),
+                    ("embeding2", np.dtype("float32")),
+                    ("embeding3", np.dtype("float32")),
+                    ("embeding4", np.dtype("float32")),
+                    ("embeding5", np.dtype("float32")),
+                    ("embeding6", np.dtype("float32")),
+                    ("embeding7", np.dtype("float32")),
+                    ("embeding8", np.dtype("float32")),
+                    ("embeding9", np.dtype("float32")),
+                    ("embeding10", np.dtype("float32")),
+                    ("embeding11", np.dtype("float32")),
+                    ("embeding12", np.dtype("float32")),
+                    ("embeding13", np.dtype("float32")),
+                    ("embeding14", np.dtype("float32")),
+                    ("embeding15", np.dtype("float32")),
+                    ("embeding16", np.dtype("float32")),
+                    ("embeding17", np.dtype("float32")),
+                    ("embeding18", np.dtype("float32")),
+                    ("embeding19", np.dtype("float32")),
+                    ("embeding20", np.dtype("float32")),
+                    ("embeding21", np.dtype("float32")),
+                    ("embeding22", np.dtype("float32")),
+                    ("embeding23", np.dtype("float32")),
+                    ("embeding24", np.dtype("float32")),
+                    ("embeding25", np.dtype("float32")),
+                    ("embeding26", np.dtype("float32")),
+                    ("embeding27", np.dtype("float32")),
+                    ("embeding28", np.dtype("float32")),
+                    ("embeding29", np.dtype("float32")),
+                    ("embeding30", np.dtype("float32")),
+                    ("embeding31", np.dtype("float32")),
+                    ("embeding32", np.dtype("float32")),
+                    ("embeding33", np.dtype("float32")),
+                    ("embeding34", np.dtype("float32")),
+                    ("embeding35", np.dtype("float32")),
+                    ("embeding36", np.dtype("float32")),
+                    ("embeding37", np.dtype("float32")),
+                    ("embeding38", np.dtype("float32")),
+                    ("embeding39", np.dtype("float32")),
+                    ("embeding40", np.dtype("float32")),
+                    ("embeding41", np.dtype("float32")),
+                    ("embeding42", np.dtype("float32")),
+                    ("embeding43", np.dtype("float32")),
+                    ("embeding44", np.dtype("float32")),
+                    ("embeding45", np.dtype("float32")),
+                    ("embeding46", np.dtype("float32")),
+                    ("embeding47", np.dtype("float32")),
+                    ("embeding48", np.dtype("float32")),
+                    ("embeding49", np.dtype("float32")),
+                    ("embeding50", np.dtype("float32")),
+                    ("embeding51", np.dtype("float32")),
+                    ("embeding52", np.dtype("float32")),
+                    ("embeding53", np.dtype("float32")),
+                    ("embeding54", np.dtype("float32")),
+                    ("embeding55", np.dtype("float32")),
+                ]
+            )
         ply_pc = PlyElement.describe(vertex, "vertex")
         ply_pc = PlyData([ply_pc])
         ply_pc.write(os.path.join(self.edit_dir, name+'_neuralpcd.ply'))
@@ -304,7 +460,8 @@ class Meshlab_pointcloud(Base_pointcloud):
         neural_dirx = np.empty([pointsize,3])
         neural_diry = np.empty([pointsize,3])
         neural_dirz = np.empty([pointsize, 3])
-        neural_label = np.empty([pointsize])
+        if self.if_has_semantic_label:
+            neural_label = np.empty([pointsize])
         print('Scale of neural point cloud :',len(scene_neural_pcd))
         print('Scale of meshlab point cloud:',pointsize)
         idx = 0
@@ -319,7 +476,8 @@ class Meshlab_pointcloud(Base_pointcloud):
                 neural_dirx[idx] = scene_neural_pcd.dirx[i]
                 neural_diry[idx] = scene_neural_pcd.diry[i]
                 neural_dirz[idx] = scene_neural_pcd.dirz[i]
-                neural_label[idx] = scene_neural_pcd.label[i]
+                if self.if_has_semantic_label:
+                    neural_label[idx] = scene_neural_pcd.label[i]
                 idx+=1
         print('\ncvt done...neural point cloud scale:',idx)
         npc.load_from_var(neural_xyz,neural_embeding,neural_conf,neural_dirx,neural_diry,neural_dirz,neural_color,neural_label)

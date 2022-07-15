@@ -30,7 +30,10 @@ class Options:
                             type=str,
                             default='0',
                             help='gpu ids: e.g. 0  0,1,2, 0,2')
-
+        parser.add_argument('--has_semantic_label',
+                            type=bool,
+                            default=True,
+                            help='if save semantic')
         self.opt = parser.parse_args()
 
         # print(self.opt.dataset_dir)

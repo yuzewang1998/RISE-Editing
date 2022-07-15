@@ -16,6 +16,7 @@ from tqdm import tqdm
 class CheckpointsController:
     def __init__(self,opt):
         self.opt = opt
+        self.if_has_semantic_label = opt.has_semantic_label
         self.edit_dir = os.path.join(opt.checkpoints_root,'edit')
         if 'edit' not in os.listdir(opt.checkpoints_root):
             os.makedirs(os.path.join(self.edit_dir))
@@ -38,7 +39,10 @@ class CheckpointsController:
         self.points_diry = network_paras["neural_points.points_diry"].view(-1, 3).cpu().numpy()
         self.points_dirz = network_paras["neural_points.points_dirz"].view(-1, 3).cpu().numpy()
         self.points_color = network_paras["neural_points.points_color"].view(-1,3).cpu().numpy()
-        self.points_label = network_paras["neural_points.points_label"].view(-1, 1).cpu().numpy()
+        if "neural_points.points_label" in network_paras.keys():
+            self.points_label = network_paras["neural_points.points_label"].view(-1, 1).cpu().numpy()
+        else:
+            self.points_label = None
         print('point cloud scale:',self.points_color.shape,type(self.points_color))
         neural_pcd = Neural_pointcloud(self.opt)
         neural_pcd.load_from_checkpoints(self.points_xyz,self.points_embeding,self.points_conf,self.points_dirx,self.points_diry,self.points_dirz,self.points_color,self.points_label)
@@ -53,6 +57,7 @@ class CheckpointsController:
         network_paras["neural_points.points_diry"] = torch.unsqueeze(torch.Tensor(neural_pcd.diry),dim=0)#[1,ptr,3]
         network_paras["neural_points.points_dirz"] = torch.unsqueeze(torch.Tensor(neural_pcd.dirz), dim=0)  # [1,ptr,3]
         network_paras["neural_points.points_color"] = torch.unsqueeze(torch.Tensor(neural_pcd.color),dim=0) #[1,ptr,3]
-        network_paras["neural_points.points_label"] = torch.Tensor(neural_pcd.label[...,np.newaxis])  # [ptr,3]
+        if len(neural_pcd.label)!=0:
+            network_paras["neural_points.points_label"] = torch.Tensor(neural_pcd.label[...,np.newaxis])  # [ptr,3]
         torch.save(network_paras,os.path.join(self.checkpoints_root,'edit',self.latest_iters+'_net_ray_marching_Edited_'+name+'.pth'))# find the latest pth file)
         print('Saving checkpoints done')
