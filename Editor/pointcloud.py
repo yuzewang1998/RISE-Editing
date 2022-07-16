@@ -90,9 +90,9 @@ class Neural_pointcloud(Base_pointcloud):
         if self.if_has_semantic_label:
             self.label = np.array(plydata.elements[0].data["label"].astype(np.int32))
         embedding = []
-        for i in range(56):
+        for i in range(32):
             embedding.append(np.array(plydata.elements[0].data["embeding"+str(i)].astype(np.float32))[...,np.newaxis])
-        self.embeding =np.concatenate([embedding[0],embedding[1],embedding[2],embedding[3],embedding[4],embedding[5],embedding[6],embedding[7],embedding[8],embedding[9],embedding[10],embedding[11],embedding[12],embedding[13],embedding[14],embedding[15],embedding[16],embedding[17],embedding[18],embedding[19],embedding[20],embedding[21],embedding[22],embedding[23],embedding[24],embedding[25],embedding[26],embedding[27],embedding[28],embedding[29],embedding[30],embedding[31],embedding[32],embedding[33],embedding[34],embedding[35],embedding[36],embedding[37],embedding[38],embedding[39],embedding[40],embedding[41],embedding[42],embedding[43],embedding[44],embedding[45],embedding[46],embedding[47],embedding[48],embedding[49],embedding[50],embedding[51],embedding[52],embedding[53],embedding[54],embedding[55]],axis = -1)
+        self.embeding =np.concatenate([embedding[0],embedding[1],embedding[2],embedding[3],embedding[4],embedding[5],embedding[6],embedding[7],embedding[8],embedding[9],embedding[10],embedding[11],embedding[12],embedding[13],embedding[14],embedding[15],embedding[16],embedding[17],embedding[18],embedding[19],embedding[20],embedding[21],embedding[22],embedding[23],embedding[24],embedding[25],embedding[26],embedding[27],embedding[28],embedding[29],embedding[30],embedding[31]],axis = -1)
         print('loading done. Scale of neural point cloud:',self.embeding.shape[0])
     def save_as_ply(self,name='origin_save'):
         assert self.xyz is not None, '[ERROR]Save before load,check it!'
@@ -158,30 +158,6 @@ class Neural_pointcloud(Base_pointcloud):
                     sv_embeding[i][29],
                     sv_embeding[i][30],
                     sv_embeding[i][31],
-                    sv_embeding[i][32],
-                    sv_embeding[i][33],
-                    sv_embeding[i][34],
-                    sv_embeding[i][35],
-                    sv_embeding[i][36],
-                    sv_embeding[i][37],
-                    sv_embeding[i][38],
-                    sv_embeding[i][39],
-                    sv_embeding[i][40],
-                    sv_embeding[i][41],
-                    sv_embeding[i][42],
-                    sv_embeding[i][43],
-                    sv_embeding[i][44],
-                    sv_embeding[i][45],
-                    sv_embeding[i][46],
-                    sv_embeding[i][47],
-                    sv_embeding[i][48],
-                    sv_embeding[i][49],
-                    sv_embeding[i][50],
-                    sv_embeding[i][51],
-                    sv_embeding[i][52],
-                    sv_embeding[i][53],
-                    sv_embeding[i][54],
-                    sv_embeding[i][55],
                     sv_label[i]
                 ))
             #ply的格式，没写循环、增加可读性
@@ -236,30 +212,6 @@ class Neural_pointcloud(Base_pointcloud):
                     ("embeding29", np.dtype("float32")),
                     ("embeding30", np.dtype("float32")),
                     ("embeding31", np.dtype("float32")),
-                    ("embeding32", np.dtype("float32")),
-                    ("embeding33", np.dtype("float32")),
-                    ("embeding34", np.dtype("float32")),
-                    ("embeding35", np.dtype("float32")),
-                    ("embeding36", np.dtype("float32")),
-                    ("embeding37", np.dtype("float32")),
-                    ("embeding38", np.dtype("float32")),
-                    ("embeding39", np.dtype("float32")),
-                    ("embeding40", np.dtype("float32")),
-                    ("embeding41", np.dtype("float32")),
-                    ("embeding42", np.dtype("float32")),
-                    ("embeding43", np.dtype("float32")),
-                    ("embeding44", np.dtype("float32")),
-                    ("embeding45", np.dtype("float32")),
-                    ("embeding46", np.dtype("float32")),
-                    ("embeding47", np.dtype("float32")),
-                    ("embeding48", np.dtype("float32")),
-                    ("embeding49", np.dtype("float32")),
-                    ("embeding50", np.dtype("float32")),
-                    ("embeding51", np.dtype("float32")),
-                    ("embeding52", np.dtype("float32")),
-                    ("embeding53", np.dtype("float32")),
-                    ("embeding54", np.dtype("float32")),
-                    ("embeding55", np.dtype("float32")),
                     ("label",np.dtype("uint8"))
                 ]
             )
@@ -314,30 +266,6 @@ class Neural_pointcloud(Base_pointcloud):
                     sv_embeding[i][29],
                     sv_embeding[i][30],
                     sv_embeding[i][31],
-                    sv_embeding[i][32],
-                    sv_embeding[i][33],
-                    sv_embeding[i][34],
-                    sv_embeding[i][35],
-                    sv_embeding[i][36],
-                    sv_embeding[i][37],
-                    sv_embeding[i][38],
-                    sv_embeding[i][39],
-                    sv_embeding[i][40],
-                    sv_embeding[i][41],
-                    sv_embeding[i][42],
-                    sv_embeding[i][43],
-                    sv_embeding[i][44],
-                    sv_embeding[i][45],
-                    sv_embeding[i][46],
-                    sv_embeding[i][47],
-                    sv_embeding[i][48],
-                    sv_embeding[i][49],
-                    sv_embeding[i][50],
-                    sv_embeding[i][51],
-                    sv_embeding[i][52],
-                    sv_embeding[i][53],
-                    sv_embeding[i][54],
-                    sv_embeding[i][55],
                 ))
             #ply的格式，没写循环、增加可读性
             vertex = np.array(
@@ -391,30 +319,6 @@ class Neural_pointcloud(Base_pointcloud):
                     ("embeding29", np.dtype("float32")),
                     ("embeding30", np.dtype("float32")),
                     ("embeding31", np.dtype("float32")),
-                    ("embeding32", np.dtype("float32")),
-                    ("embeding33", np.dtype("float32")),
-                    ("embeding34", np.dtype("float32")),
-                    ("embeding35", np.dtype("float32")),
-                    ("embeding36", np.dtype("float32")),
-                    ("embeding37", np.dtype("float32")),
-                    ("embeding38", np.dtype("float32")),
-                    ("embeding39", np.dtype("float32")),
-                    ("embeding40", np.dtype("float32")),
-                    ("embeding41", np.dtype("float32")),
-                    ("embeding42", np.dtype("float32")),
-                    ("embeding43", np.dtype("float32")),
-                    ("embeding44", np.dtype("float32")),
-                    ("embeding45", np.dtype("float32")),
-                    ("embeding46", np.dtype("float32")),
-                    ("embeding47", np.dtype("float32")),
-                    ("embeding48", np.dtype("float32")),
-                    ("embeding49", np.dtype("float32")),
-                    ("embeding50", np.dtype("float32")),
-                    ("embeding51", np.dtype("float32")),
-                    ("embeding52", np.dtype("float32")),
-                    ("embeding53", np.dtype("float32")),
-                    ("embeding54", np.dtype("float32")),
-                    ("embeding55", np.dtype("float32")),
                 ]
             )
         ply_pc = PlyElement.describe(vertex, "vertex")
@@ -455,13 +359,15 @@ class Meshlab_pointcloud(Base_pointcloud):
 
         neural_xyz = np.empty([pointsize,3])
         neural_color = np.empty([pointsize,3])
-        neural_embeding = np.empty([pointsize,56])
+        neural_embeding = np.empty([pointsize,32])
         neural_conf = np.empty([pointsize])
         neural_dirx = np.empty([pointsize,3])
         neural_diry = np.empty([pointsize,3])
         neural_dirz = np.empty([pointsize, 3])
         if self.if_has_semantic_label:
             neural_label = np.empty([pointsize])
+        else:
+            neural_label = None
         print('Scale of neural point cloud :',len(scene_neural_pcd))
         print('Scale of meshlab point cloud:',pointsize)
         idx = 0

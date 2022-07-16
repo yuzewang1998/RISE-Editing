@@ -147,8 +147,10 @@ def test(model, dataset, visualizer, opt, bg_info, test_steps=0, gen_vid=True, l
     for i in range(0, total_num, opt.test_num_step):  # 1 if test_steps == 10000 else opt.test_num_step
         data = dataset.get_item(i)
         raydir = data['raydir'].clone()
-        raylabel = data['raylabel'].clone()
-        pixel_label = data['pixel_label'].view(data['pixel_label'].shape[0], -1, data['pixel_label'].shape[3]).clone()
+        if 'raylabel' in data.keys():
+            raylabel = data['raylabel'].clone()
+        if 'pixel_label' in data.keys():
+            pixel_label = data['pixel_label'].view(data['pixel_label'].shape[0], -1, data['pixel_label'].shape[3]).clone()
         pixel_idx = data['pixel_idx'].view(data['pixel_idx'].shape[0], -1, data['pixel_idx'].shape[3]).clone()
         edge_mask = torch.zeros([height, width], dtype=torch.bool)
         edge_mask[pixel_idx[0, ..., 1].to(torch.long), pixel_idx[0, ..., 0].to(torch.long)] = 1
@@ -169,9 +171,11 @@ def test(model, dataset, visualizer, opt, bg_info, test_steps=0, gen_vid=True, l
             start = k
             end = min([k + chunk_size, totalpixel])
             data['raydir'] = raydir[:, start:end, :]
-            data['raylabel'] = raylabel[:, start:end, :]
+            if 'raylabel' in data.keys():
+                data['raylabel'] = raylabel[:, start:end, :]
             data["pixel_idx"] = pixel_idx[:, start:end, :]
-            data["pixel_label"] = pixel_label[:, start:end, :]
+            if 'pixel_label' in data.keys():
+                data["pixel_label"] = pixel_label[:, start:end, :]
 
             model.set_input(data)
             if opt.bgmodel.endswith("plane"):

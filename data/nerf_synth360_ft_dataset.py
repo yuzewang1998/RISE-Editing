@@ -125,7 +125,7 @@ class NerfSynth360FtDataset(BaseDataset):
         self.data_dir = opt.data_root
         self.scan = opt.scan
         self.split = opt.split
-
+        self.novel_cam_trajectory = (opt.novel_cam_trajectory == '1')
         self.img_wh = (int(800 * downSample), int(800 * downSample))
         self.downSample = downSample
 
@@ -223,6 +223,12 @@ class NerfSynth360FtDataset(BaseDataset):
             type=str,
             default="scan1",
             help=''
+        )
+        parser.add_argument(
+            '--novel_cam_trajectory',
+            type=str,
+            default='0',
+            help='if use novel camera trajectory to rendering ,default not!Mention that if you want to use this option,just alter the scan option at the same time ;for example train scan is scene0000_00 ,So I want to render a new cam trace ,i set this option to 1 and change scan option to scene0000_01'
         )
         parser.add_argument(
                     '--full_comb',

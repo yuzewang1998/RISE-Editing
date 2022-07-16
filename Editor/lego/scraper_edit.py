@@ -24,7 +24,7 @@ class Options:
         parser = argparse.ArgumentParser(description="Argparse of  point_editor")
         parser.add_argument('--checkpoints_root',
                             type=str,
-                            default='/home/slam/devdata/NSEPN/checkpoints/scannet/01*-scene0113__NoSGS__FIXBUG_020202113_Pretrain_edit',#/home/slam/devdata/pointnerf/checkpoints/scannet/scene000-T
+                            default='/home/slam/devdata/NSEPN/checkpoints/col_nerfsynth/lego',#/home/slam/devdata/pointnerf/checkpoints/scannet/scene000-T
                             help='root of checkpoints datasets')
         parser.add_argument('--gpu_ids',
                             type=str,
@@ -32,8 +32,12 @@ class Options:
                             help='gpu ids: e.g. 0  0,1,2, 0,2')
         parser.add_argument('--has_semantic_label',
                             type=bool,
-                            default=True,
+                            default=False,
                             help='if save semantic')
+        parser.add_argument('--points_feature_dim',
+                            type=int,
+                            default=32,
+                            help='dim of points embedding ')
         self.opt = parser.parse_args()
 
         # print(self.opt.dataset_dir)
@@ -45,52 +49,35 @@ def test_load_checkpoints_save_as_ply(opt,savename):
     cpc = CheckpointsController(opt)
     neural_pcd = cpc.load_checkpoints_as_nerualpcd()
     neural_pcd.save_as_ply(savename)
+
 def test_edit(opt):
     cpc = CheckpointsController(opt)
     scene_npcd = Neural_pointcloud(opt)
     scene_npcd.load_from_ply('scene_origin')
     object_mpcd = Meshlab_pointcloud(opt)
-    object_mpcd.load_from_meshlabfile('sofa1')
+    object_mpcd.load_from_meshlabfile('scraper')
     object_npcd = object_mpcd.meshlabpcd2neuralpcd(scene_npcd)
-    object_npcd.save_as_ply('sofa1')
-    cpc.save_checkpoints_from_neuralpcd(object_npcd, 'sofa1')
+    object_npcd.save_as_ply('scraper')
+    cpc.save_checkpoints_from_neuralpcd(object_npcd, 'scraper')
     pce = PointCloudEditor(opt)
-    R = cauc_RotationMatrix(0, 0, 0)
-    transMatrix = cauc_transformationMatrix(R, np.array([0, -0.8, 0]))
-    transed_sofa = pce.translation_point_cloud_local(object_npcd,transMatrix)
-    transed_sofa.save_as_ply('sofa1_trans(0,0,0)(0,-0.8,0)')
-    new_scene = pce.add_point_cloud(transed_sofa,scene_npcd)
-    new_scene.save_as_ply('scene_add_sofa1(0,0,0)(0,-0.8,0)')
-    cpc.save_checkpoints_from_neuralpcd(new_scene,'scene_add_sofa1(0,0,0)(0,-0.8,0)')
+    R = cauc_RotationMatrix(15, 0, 0)
+    transMatrix = cauc_transformationMatrix(R, np.array([0,0, 0]))
+    transed_scraper = pce.translation_point_cloud_global(object_npcd,transMatrix,np.array([0,0,0.5]))
+    transed_scraper.save_as_ply('15_0.5_transed_scraper')
     bg_npcd = pce.crop_point_cloud(object_npcd, scene_npcd)
-    cpc.save_checkpoints_from_neuralpcd(bg_npcd, 'bg_nosofa1')
-def test_edit_9012(opt):
-    cpc = CheckpointsController(opt)
-    scene_npcd = Neural_pointcloud(opt)
-    scene_npcd.load_from_ply('scene_origin')
-    object_mpcd = Meshlab_pointcloud(opt)
-    object_mpcd.load_from_meshlabfile('sofa1')
-    object_npcd = object_mpcd.meshlabpcd2neuralpcd(scene_npcd)
-    object_npcd.save_as_ply('sofa1')
-    cpc.save_checkpoints_from_neuralpcd(object_npcd, 'sofa1')
-    pce = PointCloudEditor(opt)
-    R = cauc_RotationMatrix(0, 0, 90)
-    transMatrix = cauc_transformationMatrix(R, np.array([0, -1.2, 0]))
-    transed_sofa = pce.translation_point_cloud_local(object_npcd,transMatrix)
-    transed_sofa.save_as_ply('sofa1_trans(0,0,90)(0,-1.2,0)')
-    new_scene = pce.add_point_cloud(transed_sofa,scene_npcd)
-    new_scene.save_as_ply('scene_add_sofa1(0,0,90)(0,-1.2,0)')
-    cpc.save_checkpoints_from_neuralpcd(new_scene,'scene_add_sofa1(0,0,90)(0,-1.2,0)')
+    new_scene = pce.add_point_cloud(transed_scraper,bg_npcd)
+    new_scene.save_as_ply('15_0.5_lego')
+    cpc.save_checkpoints_from_neuralpcd(new_scene,'15_0.5_lego')
 
 
 
 def main():
     sparse = Options()
     opt = sparse.opt
-    test_load_checkpoints_save_as_ply(opt,'scene_origin')
+    # test_load_checkpoints_save_as_ply(opt,'scene_origin')
     # 测试读ply:这一步中间，用mesh手抠一个物体，命名为sofa_meshlabpcd.ply~！~！~！~！~！~！~！~！
     # test_edit_9012(opt)
-
+    test_edit(opt)
 
 
 if __name__=="__main__":

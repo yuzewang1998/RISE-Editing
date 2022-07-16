@@ -30,10 +30,12 @@ class PointCloudEditor:
         pointsize_father = npcd_father.xyz.shape[0]
         neural_xyz = np.empty([pointsize_father,3])
         neural_color = np.empty([pointsize_father,3])
-        neural_embeding = np.empty([pointsize_father,56])
+        neural_embeding = np.empty([pointsize_father,32])
         neural_conf = np.empty([pointsize_father])
         if self.if_has_semantic_label:
             neural_label = np.empty([pointsize_father])
+        else :
+            neural_label = None
         neural_dirx = np.empty([pointsize_father,3])
         neural_diry = np.empty([pointsize_father, 3])
         neural_dirz = np.empty([pointsize_father, 3])
@@ -66,16 +68,16 @@ class PointCloudEditor:
         print('\ncrop done...neural point cloud scale:',idx)
         npc.load_from_var(neural_xyz,neural_embeding,neural_conf,neural_dirx,neural_diry,neural_dirz,neural_color,neural_label)
         return npc
-    def translation_point_cloud_global(self,npcd, transMatirx):#rotate by world coordinate
+    def translation_point_cloud_global(self,npcd, transMatirx,centerpoint=np.array([0,0,0])):#rotate by world coordinate
         res_npc = Neural_pointcloud(self.opt)
         rot_matrix = transMatirx[:3, :3]
         trans_vector = transMatirx[:3, 3]
-        res_npc.xyz = npcd.xyz @ rot_matrix + trans_vector
+        res_npc.xyz = (npcd.xyz-centerpoint) @ rot_matrix + trans_vector + centerpoint
         res_npc.color = npcd.color
         res_npc.embeding = npcd.embeding
         res_npc.conf = npcd.conf
         res_npc.dirx = npcd.dirx@ rot_matrix
-        res_npc.diry = npcd.diry @ rot_matrix
+        res_npc.diry = npcd.diry@ rot_matrix
         res_npc.dirz = npcd.dirz @ rot_matrix
         if self.if_has_semantic_label:
             res_npc.label = npcd.label

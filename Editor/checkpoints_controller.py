@@ -16,6 +16,7 @@ from tqdm import tqdm
 class CheckpointsController:
     def __init__(self,opt):
         self.opt = opt
+        self.points_embeding_dim = opt.points_feature_dim
         self.if_has_semantic_label = opt.has_semantic_label
         self.edit_dir = os.path.join(opt.checkpoints_root,'edit')
         if 'edit' not in os.listdir(opt.checkpoints_root):
@@ -33,7 +34,8 @@ class CheckpointsController:
         network_paras = torch.load(self.latest_file_path, map_location=torch.device('cpu'))
         print('loading checkpoints...',self.latest_file_path)
         self.points_xyz = network_paras["neural_points.xyz"].view(-1,3).cpu().numpy()
-        self.points_embeding = network_paras["neural_points.points_embeding"].view(-1,56).cpu().numpy()
+        print(self.points_xyz.shape)
+        self.points_embeding = network_paras["neural_points.points_embeding"].view(-1,self.points_embeding_dim).cpu().numpy()
         self.points_conf= network_paras["neural_points.points_conf"].view(-1,1).cpu().numpy()
         self.points_dirx = network_paras["neural_points.points_dirx"].view(-1,3).cpu().numpy()
         self.points_diry = network_paras["neural_points.points_diry"].view(-1, 3).cpu().numpy()
@@ -57,7 +59,7 @@ class CheckpointsController:
         network_paras["neural_points.points_diry"] = torch.unsqueeze(torch.Tensor(neural_pcd.diry),dim=0)#[1,ptr,3]
         network_paras["neural_points.points_dirz"] = torch.unsqueeze(torch.Tensor(neural_pcd.dirz), dim=0)  # [1,ptr,3]
         network_paras["neural_points.points_color"] = torch.unsqueeze(torch.Tensor(neural_pcd.color),dim=0) #[1,ptr,3]
-        if len(neural_pcd.label)!=0:
+        if self.if_has_semantic_label :
             network_paras["neural_points.points_label"] = torch.Tensor(neural_pcd.label[...,np.newaxis])  # [ptr,3]
         torch.save(network_paras,os.path.join(self.checkpoints_root,'edit',self.latest_iters+'_net_ray_marching_Edited_'+name+'.pth'))# find the latest pth file)
         print('Saving checkpoints done')
