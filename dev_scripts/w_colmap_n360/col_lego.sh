@@ -2,7 +2,7 @@
 semantic_guidance=0
 nrCheckpoint="../checkpoints"
 nrDataRoot="../data_src"
-name='lego'
+name='lego-prune_and_grow'
 resume_iter=best #
 data_root="${nrDataRoot}/nerf/nerf_synthetic_colmap/"
 scan="lego"
@@ -14,9 +14,9 @@ dir_grad=0
 color_grad=1
 vox_res=320
 normview=0
-prune_thresh=-1
-prune_iter=-1
-prune_max_iter=-1
+prune_thresh=0.1
+prune_iter=30001
+prune_max_iter=200000
 
 feedforward=0
 ref_vid=0
@@ -127,13 +127,13 @@ n_threads=1
 
 train_and_test=0 #1
 test_num=10
-test_freq=10000 #1200 #1200 #30184 #30184 #50000
+test_freq=2000000 #1200 #1200 #30184 #30184 #50000
 print_freq=100
 test_num_step=10
 
 far_thresh=-1 #0.005
-prob_freq=1000000 #10000 #2000 #1000 is bad #10001
-prob_num_step=1000000
+prob_freq=10010 #10000 #2000 #1000 is bad #10001
+prob_num_step=25
 prob_thresh=0.7
 prob_mul=0.4
 prob_kernel_size=" 3 3 3 1 1 1 "

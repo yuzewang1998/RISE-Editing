@@ -398,7 +398,8 @@ class NeuralPoints(nn.Module):
         # print(self.xyz.shape, self.points_conf.shape, self.points_embeding.shape, self.points_dir.shape, self.points_color.shape)
         self.xyz = nn.Parameter(torch.cat([self.xyz, add_xyz], dim=0))
         self.xyz.requires_grad = self.opt.xyz_grad > 0
-        self.points_label = nn.Parameter(torch.cat([self.points_label,add_label],dim=0))
+        if self.points_label is not None:
+            self.points_label = nn.Parameter(torch.cat([self.points_label,add_label],dim=0))
         if self.points_embeding is not None:
             self.points_embeding = nn.Parameter(torch.cat([self.points_embeding, add_embedding[None, ...]], dim=1))
             self.points_embeding.requires_grad = self.opt.feat_grad > 0
@@ -407,13 +408,13 @@ class NeuralPoints(nn.Module):
             self.points_conf = nn.Parameter(torch.cat([self.points_conf, add_conf[None, ...]], dim=1))
             self.points_conf.requires_grad = self.opt.conf_grad > 0
         if self.points_dirx is not None:
-            self.points_dirx = nn.Parameter(torch.cat([self.points_dir, add_dirx[None, ...]], dim=1))
+            self.points_dirx = nn.Parameter(torch.cat([self.points_dirx, add_dirx[None, ...]], dim=1))
             self.points_dirx.requires_grad = self.opt.dir_grad > 0
         if self.points_diry is not None:
-            self.points_diry = nn.Parameter(torch.cat([self.points_dir, add_diry[None, ...]], dim=1))
+            self.points_diry = nn.Parameter(torch.cat([self.points_diry, add_diry[None, ...]], dim=1))
             self.points_diry.requires_grad = self.opt.dir_grad > 0
         if self.points_dirz is not None:
-            self.points_dirz = nn.Parameter(torch.cat([self.points_dir, add_dirz[None, ...]], dim=1))
+            self.points_dirz = nn.Parameter(torch.cat([self.points_dirz, add_dirz[None, ...]], dim=1))
             self.points_dirz.requires_grad = self.opt.dir_grad > 0
 
         if self.points_color is not None:

@@ -117,7 +117,7 @@ class NeuralPointsVolumetricModel(BaseRenderingModel):
 
         if self.opt.prob == 1 and "ray_max_shading_opacity" in output:#False
             # print("ray_inds", ray_inds.shape, torch.sum(output["ray_mask"]))
-            output = self.unmask(ray_inds, output, ["ray_max_sample_loc_w","ray_max_sample_label","ray_max_shading_opacity", "shading_avg_color", "shading_avg_dir", "shading_avg_conf", "shading_avg_embedding", "ray_max_far_dist"], B, OR)
+            output = self.unmask(ray_inds, output, ["ray_max_sample_loc_w","ray_max_sample_label","ray_max_shading_opacity", "shading_avg_color", "shading_avg_dirx", "shading_avg_diry", "shading_avg_dirz", "shading_avg_conf", "shading_avg_embedding", "ray_max_far_dist"], B, OR)
         return output
 
     def unmask(self, ray_inds, output, names, B, OR):
@@ -359,12 +359,16 @@ class NeuralPointsRayMarching(nn.Module):
                 output["ray_max_far_dist"] = torch.min(torch.norm(sampled_xyz_max_opacity - output["ray_max_sample_loc_w"][..., None,:], dim=-1), axis=-1, keepdim=True)[0]
 
                 sampled_color = torch.gather(sampled_color, 2, opacity_ind.expand(-1, -1, -1, sampled_color.shape[-2], sampled_color.shape[-1])).squeeze(2) if sampled_color is not None else None # 1, 1024, 8, 3
-                sampled_dir = torch.gather(sampled_dir, 2, opacity_ind.expand(-1, -1, -1, sampled_dir.shape[-2], sampled_dir.shape[-1])).squeeze(2)  if sampled_dir is not None else None # 1, 1024, 8, 3
+                sampled_dirx = torch.gather(sampled_dirx, 2, opacity_ind.expand(-1, -1, -1, sampled_dirx.shape[-2], sampled_dirx.shape[-1])).squeeze(2)  if sampled_dirx is not None else None # 1, 1024, 8, 3
+                sampled_diry = torch.gather(sampled_diry, 2, opacity_ind.expand(-1, -1, -1, sampled_diry.shape[-2], sampled_diry.shape[-1])).squeeze(2)  if sampled_diry is not None else None # 1, 1024, 8, 3
+                sampled_dirz = torch.gather(sampled_dirz, 2, opacity_ind.expand(-1, -1, -1, sampled_dirz.shape[-2], sampled_dirz.shape[-1])).squeeze(2)  if sampled_dirz is not None else None # 1, 1024, 8, 3
                 sampled_conf = torch.gather(sampled_conf, 2, opacity_ind.expand(-1, -1, -1, sampled_conf.shape[-2], sampled_conf.shape[-1])).squeeze(2)  if sampled_conf is not None else None # 1, 1024, 8, 1
                 sampled_embedding = torch.gather(sampled_embedding, 2, opacity_ind.expand(-1, -1, -1, sampled_embedding.shape[-2], sampled_embedding.shape[-1])).squeeze(2) # 1, 1024, 8, 1
 
                 output["shading_avg_color"] = torch.sum(sampled_color * weight, dim=-2)  if sampled_color is not None else None
-                output["shading_avg_dir"] = torch.sum(sampled_dir * weight, dim=-2) if sampled_dir is not None else None
+                output["shading_avg_dirx"] = torch.sum(sampled_dirx * weight, dim=-2) if sampled_dirx is not None else None
+                output["shading_avg_diry"] = torch.sum(sampled_diry * weight,dim=-2) if sampled_diry is not None else None
+                output["shading_avg_dirz"] = torch.sum(sampled_dirz * weight,dim=-2) if sampled_dirz is not None else None
                 output["shading_avg_conf"] = torch.sum(sampled_conf * weight, dim=-2) if sampled_conf is not None else None
                 output["ray_max_sample_label"] = torch.zeros_like(output["shading_avg_conf"])   # I dont know whether is ok!
                 output["shading_avg_embedding"] = torch.sum(sampled_embedding * weight, dim=-2)
@@ -375,7 +379,9 @@ class NeuralPointsRayMarching(nn.Module):
                     "ray_max_sample_label": torch.zeros([0, 0, 1], device="cuda"),
                     "ray_max_far_dist": torch.zeros([0, 0, 1], device="cuda"),
                     "shading_avg_color": torch.zeros([0, 0, 3], device="cuda"),
-                    "shading_avg_dir": torch.zeros([0, 0, 3], device="cuda"),
+                    "shading_avg_dirx": torch.zeros([0, 0, 3], device="cuda"),
+                    "shading_avg_diry": torch.zeros([0, 0, 3], device="cuda"),
+                    "shading_avg_dirz": torch.zeros([0, 0, 3], device="cuda"),
                     "shading_avg_conf": torch.zeros([0, 0, 1], device="cuda"),
                     "shading_avg_embedding": torch.zeros([0, 0, sampled_embedding.shape[-1]], device="cuda"),
                 })
