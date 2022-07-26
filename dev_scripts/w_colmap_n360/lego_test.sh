@@ -1,7 +1,7 @@
 #!/bin/bash
 nrCheckpoint="../checkpoints"
 nrDataRoot="../data_src"
-name='lg1'
+name='edit_something'
 
 resume_iter=best # 20000
 data_root="${nrDataRoot}/nerf/nerf_synthetic_colmap/"
