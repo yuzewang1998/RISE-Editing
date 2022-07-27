@@ -765,9 +765,6 @@ class NeuralPoints(nn.Module):
         return input
 
 
-
-
-
     def forward(self, inputs):
 
         pixel_idx, camrotc2w, campos, near_plane, far_plane, h, w, intrinsic = inputs["pixel_idx"].to(torch.int32), inputs["camrotc2w"], inputs["campos"], inputs["near"], inputs["far"], inputs["h"], inputs["w"], inputs["intrinsic"]
@@ -797,8 +794,6 @@ class NeuralPoints(nn.Module):
         sampled_Rw2c = self.Rw2c if self.Rw2c.dim() == 2 else torch.index_select(self.Rw2c, 0, sample_pidx).view(B, R, SR, K, self.Rw2c.shape[1], self.Rw2c.shape[2])
 
         sampled_label = None if self.points_label is None else torch.index_select(self.points_label[None,...], 1, sample_pidx).view(B, R, SR, K, self.points_label[None,...].shape[2])
-
-
         #[3,3]-ones(3,3)
         # filepath = "./sampled_xyz_full.txt"
         # np.savetxt(filepath, self.xyz.reshape(-1, 3).detach().cpu().numpy(), delimiter=";")
