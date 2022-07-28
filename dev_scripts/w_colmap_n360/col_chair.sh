@@ -39,7 +39,7 @@ agg_alpha_xyz_mode="None"
 agg_color_xyz_mode="None"
 feature_init_method="rand" #"rand" # "zeros"
 agg_axis_weight=" 1. 1. 1."
-agg_dist_pers=20
+agg_dist_pers=15
 radius_limit_scale=4
 depth_limit_scale=0
 alpha_range=0
@@ -152,7 +152,6 @@ cd run
 for i in $(seq 1 $prob_freq $maximum_step)
 
 do
-#python3 gen_pnts.py \
 python3 train_ft.py \
         --name $name \
         --scan $scan \

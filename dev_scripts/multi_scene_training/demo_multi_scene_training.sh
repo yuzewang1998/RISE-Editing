@@ -2,7 +2,7 @@
 semantic_guidance=0
 nrCheckpoint="../checkpoints"
 nrDataRoot="../data_src"
-name='multi_scene_training/lego'
+name='train_multi_scene/lego'
 resume_iter=best #
 data_root="${nrDataRoot}/nerf/nerf_synthetic_colmap/"
 scan="lego"
@@ -19,7 +19,7 @@ color_grad=1
 vox_res=320
 normview=0
 prune_thresh=0.1
-prune_iter=30001
+prune_iter=10001
 prune_max_iter=200000
 
 feedforward=0
@@ -121,7 +121,7 @@ gpu_ids='0'
 checkpoints_dir="${nrCheckpoint}/col_nerfsynth/"
 resume_dir="${nrCheckpoint}/init/dtu_dgt_d012_img0123_conf_agg2_32_dirclr20"
 
-save_iter_freq=200
+save_iter_freq=${train_step}
 save_point_freq=1000 #301840 #1
 maximum_step=1000000 #800000
 

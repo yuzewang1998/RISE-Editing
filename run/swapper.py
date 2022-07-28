@@ -37,28 +37,48 @@ def main():
     swap_num = opt.swap_num
     train_step = opt.train_step
     #这里是整体网络的opt需要更新的option
+    filename_0 = 'lego'
     scene0 = {
-        "name": "train_multi_scene/lego",
-        "scan": "lego",
-        "K": 8,
+        "name": os.path.join(opt.name.split('/')[0],filename_0),
+        "scan": filename_0,
+        "ranges": [-0.638,-1.141,-0.346,0.634,1.149,1.141] ,
         "train_step": train_step,
-        "cpc_opt":{'editor_checkpoints_root':'/home/slam/devdata/NSEPN/checkpoints/col_nerfsynth/train_multi_scene',
-                   'editor_checkpoints_scans':'lego'}
+        "cpc_opt":{'editor_checkpoints_root': os.path.join(opt.checkpoints_dir,opt.name.split('/')[0]),
+                   'editor_checkpoints_scans':filename_0}
     }
-
+    filename_1 = 'chair'
     scene1 = {
-        "name": "train_multi_scene/chair",
-        "scan": "chair",
-        "K":10,
+        "name": os.path.join(opt.name.split('/')[0],filename_1),
+        "scan": filename_1,
+        "ranges": [-0.721,-0.695,-0.995,0.658,0.706,1.050],
         "train_step": train_step,
-        "cpc_opt":{'editor_checkpoints_root':'/home/slam/devdata/NSEPN/checkpoints/col_nerfsynth/train_multi_scene',
-                   'editor_checkpoints_scans':'chair'}
+        "cpc_opt":{'editor_checkpoints_root': os.path.join(opt.checkpoints_dir,opt.name.split('/')[0]),
+                   'editor_checkpoints_scans':filename_1}
     }
-
+    filename_2 = 'mic'
+    scene2 = {
+        "name": os.path.join(opt.name.split('/')[0],filename_2),
+        "scan": filename_2,
+        "ranges": [-1.252, -0.910 ,-0.742 ,0.767 ,1.082 ,1.151 ],
+        "train_step": train_step,
+        "cpc_opt":{'editor_checkpoints_root': os.path.join(opt.checkpoints_dir,opt.name.split('/')[0]),
+                   'editor_checkpoints_scans':filename_2}
+    }
+    filename_3 = 'hotdog'
+    scene3 = {
+        "name": os.path.join(opt.name.split('/')[0],filename_3),
+        "scan": filename_3,
+        "ranges": [ -1.198 ,-1.286, -0.190,  1.198, 1.110, 0.312],
+        "train_step": train_step,
+        "cpc_opt":{'editor_checkpoints_root': os.path.join(opt.checkpoints_dir,opt.name.split('/')[0]),
+                   'editor_checkpoints_scans':filename_3}
+    }
     # 所有场景都放在这一个dict中
     scene_list = {
         0: scene0,
-        1: scene1
+        1: scene1,
+        2: scene2,
+        3: scene3
     }
     sceneListSize = len(scene_list)
     #这个opt应该是cpc的opt
