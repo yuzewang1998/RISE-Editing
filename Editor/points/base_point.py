@@ -5,7 +5,7 @@ from copy import deepcopy
 from utils_mine.occ2ptr2occ import build_occ
 class BasePoint:
     def __init__(self,opt):
-        self.file_dir = os.path.join(opt.checkpoints_root,opt.checkpoints_scans)
+        self.file_dir = os.path.join(opt.editor_checkpoints_root,opt.editor_checkpoints_scans)
         self.opt = opt
         self.xyz = None
 

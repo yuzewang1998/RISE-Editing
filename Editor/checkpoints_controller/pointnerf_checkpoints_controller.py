@@ -20,5 +20,5 @@ class PointNerfCheckpointsController(BaseCheckpointsController):
         self.network_paras["neural_points.points_conf"] =  torch.unsqueeze(torch.Tensor(pointnerf_neuralpoint.conf[...,np.newaxis]),dim=0)#[1,ptr,1]
         self.network_paras["neural_points.points_dir"] = torch.unsqueeze(torch.Tensor(pointnerf_neuralpoint.dirx),dim=0)#[1,ptr,3]
         self.network_paras["neural_points.points_color"] = torch.unsqueeze(torch.Tensor(pointnerf_neuralpoint.color),dim=0) #[1,ptr,3]
-        torch.save(self.network_paras,os.path.join(self.opt.checkpoints_root,self.opt.checkpoints_scans,self.checkpoints_name+'_'+edit_name +'.pth'))# find the latest pth file)
+        torch.save(self.network_paras,os.path.join(self.opt.editor_checkpoints_root,self.opt.editor_checkpoints_scans,self.checkpoints_name+'_'+edit_name +'.pth'))# find the latest pth file)
         print('Saving checkpoints done')

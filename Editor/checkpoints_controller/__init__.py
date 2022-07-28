@@ -1,10 +1,7 @@
 import importlib
 from Editor.checkpoints_controller.base_checkpoints_controller import  BaseCheckpointsController
 #对model的多继承,选择合适的model进行import
-def find_model_class_by_name(controller_name):
-    # PointNerf
-    # the file "models/modelname_model.py"
-    # will be imported.
+def find_checkpointcontroller_class_by_name(controller_name):
     checkpoints_controller_filename = "Editor.checkpoints_controller." + controller_name+"_checkpoints_controller" #In general: mvs_points_volumetric_model
     modellib = importlib.import_module(checkpoints_controller_filename)
 
@@ -27,7 +24,7 @@ def find_model_class_by_name(controller_name):
 
 
 def create_checkpointscontroller(opt,classname,filename):
-    model = find_model_class_by_name(classname)
+    model = find_checkpointcontroller_class_by_name(classname)
     instance = model(opt,filename)
     return instance
 

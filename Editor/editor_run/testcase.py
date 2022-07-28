@@ -13,7 +13,7 @@ import numpy as np
 
 
 def tc0_cpc2mp(opt):
-    cpc = create_checkpointscontroller(opt,'penerf','250000_net_ray_marching')
+    cpc = create_checkpointscontroller(opt,'penerf',None)
     neural_point_whole_scene = cpc.cvt_2_neuralPoint()
     neural_point_whole_scene.save_as_ply("a")
 def tc1_mp2np(opt):
@@ -69,4 +69,4 @@ def tc5_changescale(opt):
 if __name__=="__main__":
     sparse = Options()
     opt = sparse.opt
-    tc5_changescale(opt)
+    tc0_cpc2mp(opt)

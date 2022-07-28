@@ -2,6 +2,7 @@ import argparse
 import os
 from models import find_model_class_by_name
 from data import find_dataset_class_by_name
+from Editor.checkpoints_controller.base_checkpoints_controller import BaseCheckpointsController
 import torch
 
 
@@ -130,7 +131,7 @@ class BaseOptions:
             find_dataset_class_by_name(
                 dataset_name).modify_commandline_options(
                     parser, self.is_train)
-
+        BaseCheckpointsController.modify_commandline_options(parser, self.is_train)
         self.parser = parser
 
         return parser.parse_args()
@@ -179,3 +180,15 @@ class BaseOptions:
 
         self.opt = opt
         return self.opt
+    def update_parse(self,update_opt):
+        assert self.opt is not None, 'Plz init before update'
+        for key in update_opt.keys():
+            self.opt.__setattr__(key,update_opt[key])
+# if __name__=='__main__':
+#     BO = BaseOptions()
+#     BO.is_train = True
+#     opt = BO.parse()
+#     print(opt)
+#     update_opt= {'K':10 ,'NN':33}
+#     BO.update_parse(update_opt)
+#     print(opt)

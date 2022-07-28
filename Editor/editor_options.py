@@ -10,11 +10,11 @@ class Options:
         self.parse()
     def parse(self):
         parser = argparse.ArgumentParser(description="Argparse of  point_editor")
-        parser.add_argument('--checkpoints_scans',
+        parser.add_argument('--editor_checkpoints_scans',
                             type=str,
                             default='edit_something',#/home/slam/devdata/pointnerf/checkpoints/scannet/scene000-T
                             help='scans of checkpoints')
-        parser.add_argument('--checkpoints_root',
+        parser.add_argument('--editor_checkpoints_root',
                             type=str,
                             default='/home/slam/devdata/NSEPN/checkpoints/col_nerfsynth',#/home/slam/devdata/pointnerf/checkpoints/scannet/scene000-T
                             help='root of checkpoints datasets')
