@@ -235,7 +235,11 @@ class PointAggregator(torch.nn.Module):
             default=1,
             # default="LeakyReLU",
             help='1 to use softplus and widden sigmoid for last activation')
-
+        parser.add_argument(
+            '--renderer_required_grad',
+            type=int,
+            default=1,
+            help='will be set as 0 for normal traing and 1 for prob, ')
     def __init__(self, opt):
 
         super(PointAggregator, self).__init__()
@@ -308,6 +312,7 @@ class PointAggregator(torch.nn.Module):
                 block0_rotation_invariance_feature_extraction.append(self.act(inplace=True))
                 rotation_in_channel = rotation_out_channel
             self.block0_rotation_invariance_feature_extraction = nn.Sequential(*block0_rotation_invariance_feature_extraction)
+            self.block0_rotation_invariance_feature_extraction.requires_grad = opt.renderer_required_grad > 0
             block_init_lst.append(self.block0_rotation_invariance_feature_extraction)
         if opt.shading_feature_mlp_layer1 > 0:#2
             out_channels = opt.shading_feature_num
@@ -317,6 +322,7 @@ class PointAggregator(torch.nn.Module):
                 block1.append(self.act(inplace=True))
                 in_channels = out_channels
             self.block1 = nn.Sequential(*block1)
+            self.block1.requires_grad = opt.renderer_required_grad > 0
             block_init_lst.append(self.block1)
         else:
             self.block1 = self.passfunc
@@ -332,6 +338,7 @@ class PointAggregator(torch.nn.Module):
                 block2.append(self.act(inplace=True))
                 in_channels = out_channels
             self.block2 = nn.Sequential(*block2)
+            self.block2.requires_grad = opt.renderer_required_grad > 0
             block_init_lst.append(self.block2)
         else:
             self.block2 = self.passfunc
@@ -347,6 +354,7 @@ class PointAggregator(torch.nn.Module):
                 block3.append(self.act(inplace=True))
                 in_channels = out_channels
             self.block3 = nn.Sequential(*block3)
+            self.block3.requires_grad = opt.renderer_required_grad > 0
             block_init_lst.append(self.block3)
         else:
             self.block3 = self.passfunc
@@ -360,6 +368,7 @@ class PointAggregator(torch.nn.Module):
                 block4.append(self.act(inplace=True))
                 in_channels = out_channels
             self.block4 = nn.Sequential(*block4)
+            self.block4.requires_grad = opt.renderer_required_grad > 0
             block_init_lst.append(self.block4)
         else:
             self.block4 = self.passfunc
@@ -373,6 +382,7 @@ class PointAggregator(torch.nn.Module):
                 block_linear.append(self.act(inplace=True))
                 in_channels = out_channels
             self.block_linear = nn.Sequential(*block_linear)
+            self.block_linear.requires_grad = opt.renderer_required_grad > 0
             block_init_lst.append(self.block_linear)
         else:
             self.block_linear = self.passfunc
@@ -385,6 +395,7 @@ class PointAggregator(torch.nn.Module):
             in_channels = out_channels
         alpha_block.append(nn.Linear(in_channels, 1))
         self.alpha_branch = nn.Sequential(*alpha_block)
+        self.alpha_branch.requires_grad = opt.renderer_required_grad > 0
         block_init_lst.append(self.alpha_branch)
 
         color_block = []
@@ -397,6 +408,7 @@ class PointAggregator(torch.nn.Module):
             in_channels = out_channels
         color_block.append(nn.Linear(in_channels, 3))
         self.color_branch = nn.Sequential(*color_block)
+        self.color_branch.requires_grad = opt.renderer_required_grad > 0
         block_init_lst.append(self.color_branch)
 
         for m in block_init_lst:

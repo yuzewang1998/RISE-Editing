@@ -12,11 +12,11 @@ class Options:
         parser = argparse.ArgumentParser(description="Argparse of  point_editor")
         parser.add_argument('--editor_checkpoints_scans',
                             type=str,
-                            default='edit_something',#/home/slam/devdata/pointnerf/checkpoints/scannet/scene000-T
+                            default='edit',#/home/slam/devdata/pointnerf/checkpoints/scannet/scene000-T
                             help='scans of checkpoints')
         parser.add_argument('--editor_checkpoints_root',
                             type=str,
-                            default='/home/slam/devdata/NSEPN/checkpoints/col_nerfsynth',#/home/slam/devdata/pointnerf/checkpoints/scannet/scene000-T
+                            default='/home/slam/devdata/NSEPN/checkpoints/col_nerfsynth/train_multi_scene',#/home/slam/devdata/pointnerf/checkpoints/scannet/scene000-T
                             help='root of checkpoints datasets')
         parser.add_argument('--gpu_ids',
                             type=str,

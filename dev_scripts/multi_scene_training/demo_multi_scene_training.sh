@@ -131,7 +131,7 @@ n_threads=1
 
 train_and_test=0 #1
 test_num=100
-test_freq=2000000 #1200 #1200 #30184 #30184 #50000
+test_freq=150000 #1200 #1200 #30184 #30184 #50000
 print_freq=100
 test_num_step=10
 

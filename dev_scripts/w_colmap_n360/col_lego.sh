@@ -2,7 +2,7 @@
 semantic_guidance=0
 nrCheckpoint="../checkpoints"
 nrDataRoot="../data_src"
-name='lego-prune_and_grow'
+name='train_multi_scene/lego_finetune'
 resume_iter=best #
 data_root="${nrDataRoot}/nerf/nerf_synthetic_colmap/"
 scan="lego"
