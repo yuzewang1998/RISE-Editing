@@ -7,7 +7,7 @@ resume_iter=best #
 data_root="${nrDataRoot}/nerf/nerf_synthetic_colmap/"
 scan="lego"
 
-train_step=200
+train_step=100
 maximum_swap=20000
 
 
@@ -54,7 +54,7 @@ kernel_size=" 3 3 3 "
 query_size=" 3 3 3 "
 vsize=" 0.004 0.004 0.004 " #" 0.005 0.005 0.005 "
 wcoord_query=1
-z_depth_dim=400
+z_depth_dim=100
 max_o=600000 #2000000
 ranges=" -0.638 -1.141 -0.346 0.634 1.149 1.141 "
 SR=80
@@ -75,10 +75,10 @@ apply_pnt_mask=1
 shading_feature_mlp_layer0=0
 shading_feature_mlp_layer1=2
 shading_feature_mlp_layer2=0
-shading_feature_mlp_linear=3
+shading_feature_mlp_linear=2
 shading_feature_mlp_layer3=0 #0
-shading_feature_mlp_layer4=3 #1
-shading_feature_mlp_layer0_rotation_invariance_feature_extraction_module=4
+shading_feature_mlp_layer4=1 #1
+shading_feature_mlp_layer0_rotation_invariance_feature_extraction_module=1
 shading_feature_mlp_layer0_rotation_invariance_feature_extraction_dim=30
 shading_alpha_mlp_layer=1
 shading_color_mlp_layer=2

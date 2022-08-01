@@ -55,30 +55,30 @@ def main():
         "cpc_opt":{'editor_checkpoints_root': os.path.join(opt.checkpoints_dir,opt.name.split('/')[0]),
                    'editor_checkpoints_scans':filename_1}
     }
-    filename_2 = 'mic'
-    scene2 = {
-        "name": os.path.join(opt.name.split('/')[0],filename_2),
-        "scan": filename_2,
-        "ranges": [-1.252, -0.910 ,-0.742 ,0.767 ,1.082 ,1.151 ],
-        "train_step": train_step,
-        "cpc_opt":{'editor_checkpoints_root': os.path.join(opt.checkpoints_dir,opt.name.split('/')[0]),
-                   'editor_checkpoints_scans':filename_2}
-    }
-    filename_3 = 'hotdog'
-    scene3 = {
-        "name": os.path.join(opt.name.split('/')[0],filename_3),
-        "scan": filename_3,
-        "ranges": [ -1.198 ,-1.286, -0.190,  1.198, 1.110, 0.312],
-        "train_step": train_step,
-        "cpc_opt":{'editor_checkpoints_root': os.path.join(opt.checkpoints_dir,opt.name.split('/')[0]),
-                   'editor_checkpoints_scans':filename_3}
-    }
+    # filename_2 = 'mic'
+    # scene2 = {
+    #     "name": os.path.join(opt.name.split('/')[0],filename_2),
+    #     "scan": filename_2,
+    #     "ranges": [-1.252, -0.910 ,-0.742 ,0.767 ,1.082 ,1.151 ],
+    #     "train_step": train_step,
+    #     "cpc_opt":{'editor_checkpoints_root': os.path.join(opt.checkpoints_dir,opt.name.split('/')[0]),
+    #                'editor_checkpoints_scans':filename_2}
+    # }
+    # filename_3 = 'hotdog'
+    # scene3 = {
+    #     "name": os.path.join(opt.name.split('/')[0],filename_3),
+    #     "scan": filename_3,
+    #     "ranges": [ -1.198 ,-1.286, -0.190,  1.198, 1.110, 0.312],
+    #     "train_step": train_step,
+    #     "cpc_opt":{'editor_checkpoints_root': os.path.join(opt.checkpoints_dir,opt.name.split('/')[0]),
+    #                'editor_checkpoints_scans':filename_3}
+    # }
     # 所有场景都放在这一个dict中
     scene_list = {
         0: scene0,
         1: scene1,
-        2: scene2,
-        3: scene3
+        # 2: scene2,
+        # 3: scene3
     }
     sceneListSize = len(scene_list)
     #这个opt应该是cpc的opt
@@ -109,8 +109,6 @@ def main():
         cpcnext.aggrator_paras_copy(cpcbase)
         update_opt = scene_list[nextInd]
         train_ft_ms.train_one_scene(update_opt)
-
-
 
 if __name__ == '__main__':
     main()

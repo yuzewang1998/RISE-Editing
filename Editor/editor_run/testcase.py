@@ -68,10 +68,15 @@ def tc5_changescale(opt):
     a_shear.save_as_ply('a_scale_shear')
 def tc6_spaw_renderer(opt):
     cpc0 = create_checkpointscontroller(opt, 'penerf', 'chair')
-    cpc1 = create_checkpointscontroller(opt, 'penerf', '143000_net_ray_marching')
+    cpc1 = create_checkpointscontroller(opt, 'penerf', '143400_net_ray_marching')
+    cpc1.aggrator_paras_copy(cpc0)
+    cpc1.set_and_save(penerf_neuralpoint=None,edit_name="1")
+def tc6_spaw_renderer111(opt):
+    cpc0 = create_checkpointscontroller(opt, 'penerf', 'chair')
+    cpc1 = create_checkpointscontroller(opt, 'penerf', '11600_net_ray_marching')
     cpc1.aggrator_paras_copy(cpc0)
     cpc1.set_and_save(penerf_neuralpoint=None,edit_name="1")
 if __name__=="__main__":
     sparse = Options()
     opt = sparse.opt
-    tc6_spaw_renderer(opt)
+    tc6_spaw_renderer111(opt)

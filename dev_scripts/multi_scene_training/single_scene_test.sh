@@ -5,7 +5,7 @@ name='train_multi_scene/edit'
 
 resume_iter=best # 20000
 data_root="${nrDataRoot}/nerf/nerf_synthetic_colmap/"
-scan="chair" #dui biao de shu ju ji
+scan="lego" #dui biao de shu ju ji
 
 normview=0
 
@@ -33,7 +33,7 @@ vsize=" 0.004 0.004 0.004 " #" 0.005 0.005 0.005 "
 wcoord_query=1
 z_depth_dim=400
 max_o=830000 #2000000
-ranges="-0.721 -0.695 -0.995 0.658 0.706 1.050"
+ranges="-0.638 -1.141 -0.346 0.634 1.149 1.141"
 SR=80
 K=8
 P=9 #120

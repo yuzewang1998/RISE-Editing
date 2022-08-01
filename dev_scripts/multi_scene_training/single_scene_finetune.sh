@@ -1,12 +1,12 @@
 #!/bin/bash
 semantic_guidance=0
+renderer_required_grad=0
 nrCheckpoint="../checkpoints"
 nrDataRoot="../data_src"
 name='train_multi_scene/lego_finetune'
 resume_iter=best #
 data_root="${nrDataRoot}/nerf/nerf_synthetic_colmap/"
 scan="lego"
-renderer_required_grad=0
 load_points=1
 feat_grad=1
 conf_grad=1
@@ -160,7 +160,7 @@ cd run
 for i in $(seq 1 $prob_freq $maximum_step)
 
 do
-python3 train_ft.py \
+python3 train_ft_ms_singlescene_finetune_scene_representation.py \
        --name $name \
         --scan $scan \
         --data_root $data_root \
