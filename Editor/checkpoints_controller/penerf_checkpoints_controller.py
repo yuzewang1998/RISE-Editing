@@ -29,6 +29,6 @@ class PeNerfCheckpointsController(BaseCheckpointsController):
         print('Saving checkpoints done')
     def aggrator_paras_copy(self,cpc_other):
         for key in cpc_other.network_paras.keys():
-            if not key.startswith('neural_points'):
+            if  key.startswith('aggregator'):
                 self.network_paras[key] = cpc_other.network_paras[key]
 

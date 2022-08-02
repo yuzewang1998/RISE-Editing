@@ -985,7 +985,7 @@ def main():
                     xyz_world_sect_plane = mvs_utils.gen_bg_points(model.input)
                     bg_ray, fg_masks = model.set_bg(xyz_world_sect_plane, img_lst, c2ws_lst, w2cs_lst, intrinsics_all, HDWD_lst, fg_masks=fg_masks)
                 data["bg_ray"] = bg_ray
-            model.test()
+            model.train()
             model.optimize_parameters(total_steps=total_steps) #
             losses = model.get_current_losses()#{'total': tensor(0.0206, device='cuda:0', grad_fn=<AddBackward0>), 'ray_masked_coarse_raycolor': tensor(0.0213, device='cuda:0', grad_fn=<MseLossBackward>), 'ray_miss_coarse_raycolor': tensor(0., device='cuda:0'), 'coarse_raycolor': tensor(0.0213, device='cuda:0', grad_fn=<MseLossBackward>), 'conf_coefficient': tensor(-6.9088, device='cuda:0', grad_fn=<MeanBackward0>)}
             visualizer.accumulate_losses(losses)

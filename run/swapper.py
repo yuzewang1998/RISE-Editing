@@ -31,6 +31,8 @@ class CPC_Paramter:
 
 
 def main():
+
+
     # 在这里定义有几个场景，进行多次训练
     TO = TrainOptions()
     opt = TO.parse()
@@ -43,6 +45,7 @@ def main():
         "scan": filename_0,
         "ranges": [-0.638,-1.141,-0.346,0.634,1.149,1.141] ,
         "train_step": train_step,
+        "renderer_required_grad": '1',
         "cpc_opt":{'editor_checkpoints_root': os.path.join(opt.checkpoints_dir,opt.name.split('/')[0]),
                    'editor_checkpoints_scans':filename_0}
     }
@@ -52,6 +55,7 @@ def main():
         "scan": filename_1,
         "ranges": [-0.721,-0.695,-0.995,0.658,0.706,1.050],
         "train_step": train_step,
+        "renderer_required_grad": '1',
         "cpc_opt":{'editor_checkpoints_root': os.path.join(opt.checkpoints_dir,opt.name.split('/')[0]),
                    'editor_checkpoints_scans':filename_1}
     }
@@ -61,6 +65,7 @@ def main():
     #     "scan": filename_2,
     #     "ranges": [-1.252, -0.910 ,-0.742 ,0.767 ,1.082 ,1.151 ],
     #     "train_step": train_step,
+    #     "renderer_required_grad": '1',
     #     "cpc_opt":{'editor_checkpoints_root': os.path.join(opt.checkpoints_dir,opt.name.split('/')[0]),
     #                'editor_checkpoints_scans':filename_2}
     # }
@@ -70,6 +75,7 @@ def main():
     #     "scan": filename_3,
     #     "ranges": [ -1.198 ,-1.286, -0.190,  1.198, 1.110, 0.312],
     #     "train_step": train_step,
+    #     "renderer_required_grad": '1',
     #     "cpc_opt":{'editor_checkpoints_root': os.path.join(opt.checkpoints_dir,opt.name.split('/')[0]),
     #                'editor_checkpoints_scans':filename_3}
     # }
@@ -108,6 +114,10 @@ def main():
         # 把cpcbase的参数赋值给cpcnext
         cpcnext.aggrator_paras_copy(cpcbase)
         update_opt = scene_list[nextInd]
+        if (swap_num % 100 > 20) or swap_num>1000 :
+            update_opt['renderer_required_grad'] = '0'
+        else:
+            update_opt['renderer_required_grad'] = '1'
         train_ft_ms.train_one_scene(update_opt)
 
 if __name__ == '__main__':

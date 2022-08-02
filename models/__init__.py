@@ -34,7 +34,7 @@ def get_option_setter(model_name):
 # In general :mvs_points_volumetric_model
 def create_model(opt):
     model = find_model_class_by_name(opt.model)
-    instance = model()
+    instance = model()  
     instance.initialize(opt)
     print("model [{}] was created".format(instance.name()))
     return instance

@@ -1,5 +1,6 @@
 #!/bin/bash
 semantic_guidance=0
+
 nrCheckpoint="../checkpoints"
 nrDataRoot="../data_src"
 name='train_multi_scene/lego'
@@ -75,10 +76,10 @@ apply_pnt_mask=1
 shading_feature_mlp_layer0=0
 shading_feature_mlp_layer1=2
 shading_feature_mlp_layer2=0
-shading_feature_mlp_linear=2
+shading_feature_mlp_linear=3
 shading_feature_mlp_layer3=0 #0
-shading_feature_mlp_layer4=1 #1
-shading_feature_mlp_layer0_rotation_invariance_feature_extraction_module=1
+shading_feature_mlp_layer4=3 #1
+shading_feature_mlp_layer0_rotation_invariance_feature_extraction_module=4
 shading_feature_mlp_layer0_rotation_invariance_feature_extraction_dim=30
 shading_alpha_mlp_layer=1
 shading_color_mlp_layer=2
@@ -131,7 +132,7 @@ n_threads=1
 
 train_and_test=0 #1
 test_num=100
-test_freq=150000 #1200 #1200 #30184 #30184 #50000
+test_freq=50000 #1200 #1200 #30184 #30184 #50000
 print_freq=100
 test_num_step=10
 

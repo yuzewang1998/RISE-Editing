@@ -78,7 +78,7 @@ class MvsPointsVolumetricModel(NeuralPointsVolumetricModel):
                                               betas=(0.9, 0.999))
             self.optimizers.append(self.mvs_optimizer)
 
-        if len(net_params) > 0:
+        if len(net_params) and opt.renderer_required_grad > 0:
             self.optimizer = torch.optim.Adam(net_params,
                                           lr=opt.lr,
                                           betas=(0.9, 0.999))
@@ -115,8 +115,9 @@ class MvsPointsVolumetricModel(NeuralPointsVolumetricModel):
                 if self.opt.alter_step == 0 or int(iters / self.opt.alter_step) % 2 == 1:
                     self.mvs_optimizer.step()
             else:
-                if self.opt.alter_step == 0 or int(iters / self.opt.alter_step) % 2 == 0:
-                    self.optimizer.step()
+                if self.opt.renderer_required_grad>0:
+                    if self.opt.alter_step == 0 or int(iters / self.opt.alter_step) % 2 == 0:
+                        self.optimizer.step()
                 if self.opt.alter_step == 0 or int(iters / self.opt.alter_step) % 2 == 1:
                     self.neural_point_optimizer.step()
 
@@ -187,7 +188,9 @@ class MvsPointsVolumetricModel(NeuralPointsVolumetricModel):
         self.neural_params.clear()
         self.mvs_params.clear()
         # self.optimizer.cpu(), self.neural_point_optimizer.cpu()
-        del self.optimizer, self.neural_point_optimizer, self.optimizers, self.schedulers, self.mvs_params, self.neural_params
+        if self.opt.renderer_required_grad>0:
+            del self.optimizer
+        del self.neural_point_optimizer, self.optimizers, self.schedulers, self.mvs_params, self.neural_params
 
 
     def reset_optimizer(self, opt):
@@ -199,7 +202,9 @@ class MvsPointsVolumetricModel(NeuralPointsVolumetricModel):
         self.net_params.clear()
         self.neural_params.clear()
         self.mvs_params.clear()
-        del self.optimizer, self.neural_point_optimizer, self.net_params, self.neural_params, self.mvs_params
+        if self.opt.renderer_required_grad>0:
+            del self.optimizer
+        del self.neural_point_optimizer, self.net_params, self.neural_params, self.mvs_params
 
     def clean_scheduler(self):
         for scheduler in self.schedulers:

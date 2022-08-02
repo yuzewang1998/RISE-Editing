@@ -977,7 +977,7 @@ def train_one_scene(updated_opt):
                         'nothing to probe, max ray miss is only {}'.format(model.top_ray_miss_loss[0]))
             if opt.train_step >0 and real_start != total_steps and (total_steps - real_start) % opt.train_step == 0 and total_steps < (opt.maximum_step - 1) and total_steps > 0:
                 print("finish train step, now exit")
-                exit()
+                sys.exit()
             total_steps += 1
             model.set_input(data)
             if opt.bgmodel.endswith("plane"):#False
