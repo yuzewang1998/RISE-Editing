@@ -41,7 +41,7 @@ class BaseModel:
         if not  self.is_train or opt.resume_dir:
             print("opt.resume_iter!!!!!!!!!", opt.resume_iter)
             self.load_networks(opt.resume_iter)
-        self.print_networks(opt.verbose)
+        #self.print_networks(opt.verbose)
 
     def eval(self):
         '''turn on eval mode'''

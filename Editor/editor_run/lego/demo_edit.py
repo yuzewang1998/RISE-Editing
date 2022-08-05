@@ -11,7 +11,7 @@ from tqdm import tqdm
 from Editor.editor_options import Options
 import numpy as np
 def extract_neural_point(opt):
-    cpc = create_checkpointscontroller(opt, 'penerf', '650000_net_ray_marching')
+    cpc = create_checkpointscontroller(opt, 'penerf', 'lego')
     neural_point_whole_scene = cpc.cvt_2_neuralPoint()
     neural_point_whole_scene.save_as_ply("origin_lego")
 def meshlab_point_2_neural_point(opt):
@@ -60,7 +60,7 @@ def edit2_scaleup_scraper(opt):
 def main():
     sparse = Options()
     opt = sparse.opt
-    # extract_neural_point(opt)
-    edit2_scaleup_scraper(opt)
+    extract_neural_point(opt)
+    # edit2_scaleup_scraper(opt)
 if __name__=="__main__":
     main()

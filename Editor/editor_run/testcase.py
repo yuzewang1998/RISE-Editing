@@ -67,16 +67,16 @@ def tc5_changescale(opt):
     a_shear = a.change_scale(scale_factor=[1,3,1])
     a_shear.save_as_ply('a_scale_shear')
 def tc6_spaw_renderer(opt):
-    cpc0 = create_checkpointscontroller(opt, 'penerf', 'chair')
-    cpc1 = create_checkpointscontroller(opt, 'penerf', '143400_net_ray_marching')
-    cpc1.aggrator_paras_copy(cpc0)
-    cpc1.set_and_save(penerf_neuralpoint=None,edit_name="1")
-def tc6_spaw_renderer111(opt):
-    cpc0 = create_checkpointscontroller(opt, 'penerf', 'chair')
-    cpc1 = create_checkpointscontroller(opt, 'penerf', '146300_net_ray_marching')
-    cpc1.aggrator_paras_copy(cpc0)
-    cpc1.set_and_save(penerf_neuralpoint=None,edit_name="1")
+    lego_paras = create_checkpointscontroller(opt, 'penerf', '10600_net_ray_marching')
+    chair_paras = create_checkpointscontroller(opt, 'penerf', 'chair')
+    lego_paras.aggrator_paras_copy(chair_paras)
+    lego_paras.set_and_save(penerf_neuralpoint=None,edit_name="1")
+# def tc6_spaw_renderer2(opt):
+#     cpc0 = create_checkpointscontroller(opt,'penerf','7600_net_ray_marching')
+#     neup = cpc0.cvt_2_neuralPoint()
+#     cpc1 = create_checkpointscontroller(opt, 'penerf', 'chair')
+#     cpc1.set_and_save(penerf_neuralpoint=neup,edit_name="1")
 if __name__=="__main__":
     sparse = Options()
     opt = sparse.opt
-    tc6_spaw_renderer111(opt)
+    tc6_spaw_renderer(opt)

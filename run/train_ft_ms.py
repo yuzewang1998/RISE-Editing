@@ -8,7 +8,7 @@ import torch
 import numpy as np
 import time
 from options import TrainOptions
-from data import create_data_loader, create_dataset
+from data import create_data_loader,create_dataset
 from models import create_model
 from models.mvs.mvs_points_model import MvsPointsModel
 from models.mvs import mvs_utils, filter_utils
@@ -611,12 +611,6 @@ def train_one_scene(updated_opt):
 
     if opt.debug:
         torch.autograd.set_detect_anomaly(True)
-        print(fmt.RED +
-              '++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
-        print('Debug Mode')
-        print(
-            '++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++' +
-            fmt.END)
     visualizer = Visualizer(opt)
     train_dataset = create_dataset(opt) # In defalu scannet: /data/scannet_ft_dataset.py
     normRw2c = train_dataset.norm_w2c[:3,:3] # torch.eye(3, device="cuda") # eye
@@ -625,7 +619,6 @@ def train_one_scene(updated_opt):
     best_iter=0
     points_xyz_all=None
     with torch.no_grad():
-        print(opt.checkpoints_dir + opt.name + "/*_net_ray_marching.pth")
         if len([n for n in glob.glob(opt.checkpoints_dir + opt.name + "/*_net_ray_marching.pth") if os.path.isfile(n)]) > 0:#has raymarching
             #Here maybe rendering a plane ,not 360
             if opt.bgmodel.endswith("plane"):
@@ -633,14 +626,12 @@ def train_one_scene(updated_opt):
                 _, _, _, _, _, img_lst, c2ws_lst, w2cs_lst, intrinsics_all, HDWD_lst = gen_points_filter_embeddings(train_dataset, visualizer, opt)
 
             resume_dir = os.path.join(opt.checkpoints_dir, opt.name)
-            print("!!!resume_dir{}".format(resume_dir))
             if opt.resume_iter == "best":
                 opt.resume_iter = "latest"
             resume_iter = opt.resume_iter if opt.resume_iter != "latest" else get_latest_epoch(resume_dir)
             if resume_iter is None:
                 epoch_count = 1
                 total_steps = 0
-                visualizer.print_details("No previous checkpoints, start from scratch!!!!")
             else:#True
                 opt.resume_iter = resume_iter
                 states = torch.load(
@@ -650,10 +641,7 @@ def train_one_scene(updated_opt):
                 best_PSNR = states['best_PSNR'] if 'best_PSNR' in states else best_PSNR
                 best_iter = states['best_iter'] if 'best_iter' in states else best_iter
                 best_PSNR = best_PSNR.item() if torch.is_tensor(best_PSNR) else best_PSNR
-                visualizer.print_details('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
-                visualizer.print_details('Continue training from {} epoch'.format(opt.resume_iter))
-                visualizer.print_details(f"Iter: {total_steps}")#0
-                visualizer.print_details('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
+
                 del states
             # 0 for both mvs and pointnerf, 1 for only mvs, 2 for only pointnerf；由于MVS-NeRF已经初始化好了，所以只做pointnerf部分
             opt.mode = 2
@@ -683,8 +671,7 @@ def train_one_scene(updated_opt):
                 points_xyz_all = train_dataset.load_init_depth_points(device="cuda", vox_res=100)
             if load_points == 3:#False
                 depth_xyz_all = train_dataset.load_init_depth_points(device="cuda", vox_res=80)#重建深度图
-                print("points_xyz_all",points_xyz_all.shape)
-                print("depth_xyz_all", depth_xyz_all.shape)
+
                 filter_res = 100
                 pc_grid_id, _, pc_space_min, pc_space_max = mvs_utils.construct_vox_points_ind(points_xyz_all, filter_res)
                 d_grid_id, depth_inds, _, _ = mvs_utils.construct_vox_points_ind(depth_xyz_all, filter_res, space_min=pc_space_min, space_max=pc_space_max)
@@ -699,7 +686,6 @@ def train_one_scene(updated_opt):
                 depth_maskinds = mask[depth_maskinds[...,0], depth_maskinds[...,1], depth_maskinds[...,2]]
                 depth_xyz_all = depth_xyz_all[depth_maskinds > 0]
                 visualizer.save_neural_points("dep_filtered", depth_xyz_all, None, None, save_ref=False)
-                print("vis depth; after pc mask depth_xyz_all",depth_xyz_all.shape)
                 points_xyz_all = [points_xyz_all, depth_xyz_all] if opt.vox_res > 0 else torch.cat([points_xyz_all, depth_xyz_all],dim=0)
                 del depth_xyz_all, depth_maskinds, mask, pc_maskgrid_id, max_id_lst, max_id, min_id, all_grid
 
@@ -724,12 +710,12 @@ def train_one_scene(updated_opt):
                     if points_label_all is not None:
                         points_label = points_label_all[i]
                     vox_res = opt.vox_res // (1.5**i)
-                    print("load points_xyz", points_xyz.shape)
+
                     _, sparse_grid_idx, sampled_pnt_idx = mvs_utils.construct_vox_points_closest(points_xyz.cuda() if len(points_xyz) < 80000000 else points_xyz[::(len(points_xyz) // 80000000 + 1), ...].cuda(), vox_res)
                     points_xyz = points_xyz[sampled_pnt_idx, :]
                     if points_label_all is not None:
                         points_label = points_label[sampled_pnt_idx, :]
-                    print("after voxelize:", points_xyz.shape)
+
                     points_xyz_holder = torch.cat([points_xyz_holder, points_xyz], dim=0)
                     if points_label_all is not None:
                         points_label_holder = torch.cat([points_label_holder,points_label], dim=0)
@@ -748,7 +734,7 @@ def train_one_scene(updated_opt):
             campos, camdir = train_dataset.get_campos_ray()
             cam_ind = nearest_view(campos, camdir, points_xyz_all, train_dataset.id_list)#找到每个点其最近camera
             unique_cam_ind = torch.unique(cam_ind)
-            print("unique_cam_ind", unique_cam_ind.shape)
+
             points_xyz_all = [points_xyz_all[cam_ind[:,0]==unique_cam_ind[i], :] for i in range(len(unique_cam_ind))]#按照camera list 分开points_xyz_all
             if points_label_all is not None:
                 points_label_all = [points_label_all[cam_ind[:,0]==unique_cam_ind[i], :] for i in range(len(unique_cam_ind))]
@@ -759,7 +745,7 @@ def train_one_scene(updated_opt):
             points_diry_all = torch.zeros([1, 0, 3], device=unique_cam_ind.device, dtype=torch.float32)
             points_dirz_all = torch.zeros([1, 0, 3], device=unique_cam_ind.device, dtype=torch.float32)
             points_conf_all = torch.zeros([1, 0, 1], device=unique_cam_ind.device, dtype=torch.float32)
-            print("extract points embeding & colors", )
+
             for i in tqdm(range(len(unique_cam_ind))):#对于每个camera，生成全局中离自己最近的点的特征
                 id = unique_cam_ind[i]
                 batch = train_dataset.get_item(id, full_img=True)
@@ -817,7 +803,7 @@ def train_one_scene(updated_opt):
     model.train()
     data_loader = create_data_loader(opt, dataset=train_dataset)
     dataset_size = len(data_loader)
-    visualizer.print_details('# training images = {}'.format(dataset_size))
+
 
     # create test loader
     test_opt = copy.deepcopy(opt)
