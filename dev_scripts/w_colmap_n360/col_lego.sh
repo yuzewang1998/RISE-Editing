@@ -136,7 +136,7 @@ prob_freq=10010 #10000 #2000 #1000 is bad #10001
 prob_num_step=25
 prob_thresh=0.7
 prob_mul=0.4
-prob_kernel_size=" 3 3 3 1 1 1 "
+prob_kernel_size=" 1 1 1 "
 prob_tiers=" 120000 160000 "
 
 zero_epsilon=1e-3

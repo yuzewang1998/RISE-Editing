@@ -1,5 +1,4 @@
 #!/bin/bash
-semantic_guidance=0
 renderer_required_grad=0
 nrCheckpoint="../checkpoints"
 nrDataRoot="../data_src"
@@ -52,7 +51,7 @@ vsize=" 0.004 0.004 0.004 " #" 0.005 0.005 0.005 "
 wcoord_query=1
 z_depth_dim=400
 max_o=600000 #2000000
-ranges=" -0.638 -1.141 -0.346 0.634 1.149 1.141 "
+ranges="-0.638 -1.141 -0.346 0.634 1.149 1.141"
 SR=80
 K=8
 P=13 #120
@@ -78,8 +77,7 @@ shading_feature_mlp_layer0_rotation_invariance_feature_extraction_module=0
 shading_feature_mlp_layer0_rotation_invariance_feature_extraction_dim=999
 shading_alpha_mlp_layer=1
 shading_color_mlp_layer=2
-shading_alpha_mlp_layer=1
-shading_color_mlp_layer=2
+
 shading_feature_num=256
 dist_xyz_freq=5
 num_feat_freqs=3
@@ -118,7 +116,7 @@ gpu_ids='0'
 checkpoints_dir="${nrCheckpoint}/col_nerfsynth/"
 resume_dir="${nrCheckpoint}/init/dtu_dgt_d012_img0123_conf_agg2_32_dirclr20"
 
-save_iter_freq=1000
+save_iter_freq=5000
 save_point_freq=1000 #301840 #1
 maximum_step=1000000 #800000
 
@@ -133,7 +131,7 @@ print_freq=100
 test_num_step=10
 
 far_thresh=-1 #0.005
-prob_freq=1001000000 #10000 #2000 #1000 is bad #10001
+prob_freq=10010 #10000 #2000 #1000 is bad #10001
 prob_num_step=25
 prob_thresh=0.7
 prob_mul=0.4
@@ -284,7 +282,6 @@ python3 train_ft_ms_singlescene_finetune_scene_representation.py \
         --prune_max_iter $prune_max_iter \
         --far_thresh $far_thresh \
         --debug \
-        --semantic_guidance $semantic_guidance \
         --renderer_required_grad $renderer_required_grad
 done
 #        --zero_one_loss_items $zero_one_loss_items \

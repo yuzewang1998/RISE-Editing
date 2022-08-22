@@ -25,7 +25,11 @@ class PeNerfCheckpointsController(BaseCheckpointsController):
             self.network_paras["neural_points.points_diry"] = torch.unsqueeze(torch.Tensor(penerf_neuralpoint.diry),dim=0)#[1,ptr,3]
             self.network_paras["neural_points.points_dirz"] = torch.unsqueeze(torch.Tensor(penerf_neuralpoint.dirz), dim=0)  # [1,ptr,3]
             self.network_paras["neural_points.points_color"] = torch.unsqueeze(torch.Tensor(penerf_neuralpoint.color),dim=0) #[1,ptr,3]
-        torch.save(self.network_paras,os.path.join(self.opt.editor_checkpoints_root,self.opt.editor_checkpoints_scans,self.checkpoints_name+'_'+edit_name +'.pth'))# find the latest pth file)
+        if edit_name != None:
+            torch.save(self.network_paras,os.path.join(self.opt.editor_checkpoints_root,self.opt.editor_checkpoints_scans,self.checkpoints_name+'_'+edit_name +'.pth'))# find the latest pth file)
+        else :
+            torch.save(self.network_paras,
+                       os.path.join(self.opt.editor_checkpoints_root, self.opt.editor_checkpoints_scans,self.checkpoints_name + '.pth'))
         print('Saving checkpoints done')
     def aggrator_paras_copy(self,cpc_other):
         for key in cpc_other.network_paras.keys():

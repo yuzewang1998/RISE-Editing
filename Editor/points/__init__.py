@@ -31,7 +31,7 @@ def create_neural_point(opt,classname):
     instance = neural_point(opt)
     return instance
 
-def find_neural_point_id(meshlab_ptr,neural_ptr,voxel_size = np.array([0.016,0.016,0.016]),max_ptr_in_a_occ = 64):
+def find_neural_point_id(meshlab_ptr,neural_ptr,voxel_size = np.array([0.008,0.008,0.008]),max_ptr_in_a_occ = 64):
     '''
     ptr: np.array [n,3]
     '''

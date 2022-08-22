@@ -59,66 +59,66 @@ def main():
         "cpc_opt":{'editor_checkpoints_root': os.path.join(opt.checkpoints_dir,opt.name.split('/')[0]),
                    'editor_checkpoints_scans':filename_1}
     }
-    # filename_2 = 'mic'
-    # scene2 = {
-    #     "name": os.path.join(opt.name.split('/')[0],filename_2),
-    #     "scan": filename_2,
-    #     "ranges": [-1.252, -0.910 ,-0.742 ,0.767 ,1.082 ,1.151 ],
-    #     "train_step": train_step,
-    #     "renderer_required_grad": 1,
-    #     "cpc_opt":{'editor_checkpoints_root': os.path.join(opt.checkpoints_dir,opt.name.split('/')[0]),
-    #                'editor_checkpoints_scans':filename_2}
-    # }
-    # filename_3 = 'hotdog'
-    # scene3 = {
-    #     "name": os.path.join(opt.name.split('/')[0],filename_3),
-    #     "scan": filename_3,
-    #     "ranges": [ -1.198 ,-1.286, -0.190,  1.198, 1.110, 0.312],
-    #     "train_step": train_step,
-    #     "renderer_required_grad": 0,
-    #     "cpc_opt":{'editor_checkpoints_root': os.path.join(opt.checkpoints_dir,opt.name.split('/')[0]),
-    #                'editor_checkpoints_scans':filename_3}
-    # }
-    # filename_4 = 'drums'
-    # scene4 = {
-    #     "name": os.path.join(opt.name.split('/')[0],filename_4),
-    #     "scan": filename_4,
-    #     "ranges": [ -1.126, -0.746 ,-0.492, 1.122 ,0.962 ,0.939 ],
-    #     "train_step": train_step,
-    #     "renderer_required_grad": 1,
-    #     "cpc_opt":{'editor_checkpoints_root': os.path.join(opt.checkpoints_dir,opt.name.split('/')[0]),
-    #                'editor_checkpoints_scans':filename_4}
-    # }
-    # filename_5 = 'ficus'
-    # scene5 = {
-    #     "name": os.path.join(opt.name.split('/')[0],filename_5),
-    #     "scan": filename_5,
-    #     "ranges": [ -0.377, -0.858, -1.034, 0.555 ,0.578 ,1.141 ],
-    #     "train_step": train_step,
-    #     "renderer_required_grad": 1,
-    #     "cpc_opt":{'editor_checkpoints_root': os.path.join(opt.checkpoints_dir,opt.name.split('/')[0]),
-    #                'editor_checkpoints_scans':filename_5}
-    # }
-    # filename_6 = 'materials'
-    # scene6 = {
-    #     "name": os.path.join(opt.name.split('/')[0],filename_6),
-    #     "scan": filename_6,
-    #     "ranges": [ -1.123 , -0.759 ,-0.232 , 1.072 ,0.986, 0.200  ],
-    #     "train_step": train_step,
-    #     "renderer_required_grad": 1,
-    #     "cpc_opt":{'editor_checkpoints_root': os.path.join(opt.checkpoints_dir,opt.name.split('/')[0]),
-    #                'editor_checkpoints_scans':filename_6}
-    # }
+    filename_2 = 'mic'
+    scene2 = {
+        "name": os.path.join(opt.name.split('/')[0],filename_2),
+        "scan": filename_2,
+        "ranges": [-1.252, -0.910 ,-0.742 ,0.767 ,1.082 ,1.151 ],
+        "train_step": train_step,
+        "renderer_required_grad": 1,
+        "cpc_opt":{'editor_checkpoints_root': os.path.join(opt.checkpoints_dir,opt.name.split('/')[0]),
+                   'editor_checkpoints_scans':filename_2}
+    }
+    filename_3 = 'hotdog'
+    scene3 = {
+        "name": os.path.join(opt.name.split('/')[0],filename_3),
+        "scan": filename_3,
+        "ranges": [ -1.198 ,-1.286, -0.190,  1.198, 1.110, 0.312],
+        "train_step": train_step,
+        "renderer_required_grad": 0,
+        "cpc_opt":{'editor_checkpoints_root': os.path.join(opt.checkpoints_dir,opt.name.split('/')[0]),
+                   'editor_checkpoints_scans':filename_3}
+    }
+    filename_4 = 'drums'
+    scene4 = {
+        "name": os.path.join(opt.name.split('/')[0],filename_4),
+        "scan": filename_4,
+        "ranges": [ -1.126, -0.746 ,-0.492, 1.122 ,0.962 ,0.939 ],
+        "train_step": train_step,
+        "renderer_required_grad": 1,
+        "cpc_opt":{'editor_checkpoints_root': os.path.join(opt.checkpoints_dir,opt.name.split('/')[0]),
+                   'editor_checkpoints_scans':filename_4}
+    }
+    filename_5 = 'ficus'
+    scene5 = {
+        "name": os.path.join(opt.name.split('/')[0],filename_5),
+        "scan": filename_5,
+        "ranges": [ -0.377, -0.858, -1.034, 0.555 ,0.578 ,1.141 ],
+        "train_step": train_step,
+        "renderer_required_grad": 1,
+        "cpc_opt":{'editor_checkpoints_root': os.path.join(opt.checkpoints_dir,opt.name.split('/')[0]),
+                   'editor_checkpoints_scans':filename_5}
+    }
+    filename_6 = 'materials'
+    scene6 = {
+        "name": os.path.join(opt.name.split('/')[0],filename_6),
+        "scan": filename_6,
+        "ranges": [ -1.123 , -0.759 ,-0.232 , 1.072 ,0.986, 0.200  ],
+        "train_step": train_step,
+        "renderer_required_grad": 1,
+        "cpc_opt":{'editor_checkpoints_root': os.path.join(opt.checkpoints_dir,opt.name.split('/')[0]),
+                   'editor_checkpoints_scans':filename_6}
+    }
 
     # 所有场景都放在这一个dict中
     scene_list = {
         0: scene0,
         1: scene1,
-        # 2: scene2,
-        # 3: scene3,
-        # 4: scene4,
-        # 5: scene5,
-        # 6: scene6,
+        2: scene2,
+        3: scene3,
+        4: scene4,
+        5: scene5,
+        6: scene6,
     }
     sceneListSize = len(scene_list)
     #这个opt应该是cpc的opt
@@ -152,6 +152,7 @@ def main():
         print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
         # 把cpcbase的参数赋值给cpcnext
         cpcnext.aggrator_paras_copy(cpcbase)
+        cpcnext.set_and_save(penerf_neuralpoint=None,edit_name=None)
         update_opt = scene_list[nextInd]
         # if (swap_num % 100 > 20) or swap_num>1000 :
         #     update_opt['renderer_required_grad'] = 1

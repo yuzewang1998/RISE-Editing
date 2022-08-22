@@ -50,7 +50,7 @@ radius_limit_scale=4
 depth_limit_scale=0
 alpha_range=0
 
-vscale=" 3 3 3 "
+vscale=" 2 2 2 "
 kernel_size=" 3 3 3 "
 query_size=" 3 3 3 "
 vsize=" 0.004 0.004 0.004 " #" 0.005 0.005 0.005 "
@@ -141,8 +141,8 @@ prob_freq=10010 #10000 #2000 #1000 is bad #10001
 prob_num_step=25
 prob_thresh=0.7
 prob_mul=0.4
-prob_kernel_size=" 3 3 3 1 1 1 "
-prob_tiers=" 120000 160000 "
+prob_kernel_size=" 1 1 1 "
+prob_tiers=" 60000 "
 
 zero_epsilon=1e-3
 
@@ -155,7 +155,7 @@ color_loss_weights=" 1.0 0.0 0.0 "
 color_loss_items='ray_masked_coarse_raycolor ray_miss_coarse_raycolor coarse_raycolor'
 test_color_loss_items='coarse_raycolor ray_miss_coarse_raycolor ray_masked_coarse_raycolor'
 
-vid=250000
+
 
 bg_color="white" #"0.0,0.0,0.0,1.0,1.0,1.0"
 split="train"
@@ -283,7 +283,6 @@ python3 swapper.py \
         --prob_tiers $prob_tiers \
         --alpha_range $alpha_range \
         --ranges $ranges \
-        --vid $vid \
         --vsize $vsize \
         --wcoord_query $wcoord_query \
         --max_o $max_o \
