@@ -118,7 +118,7 @@ resume_dir="${nrCheckpoint}/init/dtu_dgt_d012_img0123_conf_agg2_32_dirclr20"
 
 save_iter_freq=5000
 save_point_freq=1000 #301840 #1
-maximum_step=1000000 #800000
+maximum_step=200000 #800000
 
 niter=10000 #1000000
 niter_decay=10000 #250000

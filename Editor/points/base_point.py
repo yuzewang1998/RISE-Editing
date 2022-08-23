@@ -27,3 +27,6 @@ class BasePoint:
         barycenter = np.sum(new_ptr.xyz, axis=0) / self.xyz.shape[0]
         new_ptr.xyz = (new_ptr.xyz-barycenter)*scale_factor+barycenter
         return new_ptr
+
+    def down_sample(self,voxel_size = np.array([0.008,0.008,0.008]),max_ptr_in_a_occ = 64,is_interpolate_feature=False):
+        raise NotImplementedError

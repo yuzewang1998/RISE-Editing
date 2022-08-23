@@ -19,3 +19,5 @@ class BaseNeuralPoint(BasePoint):
 
     def save_as_ply(self,name):
         raise NotImplementedError
+    def down_sample(self,voxel_size = np.array([0.008,0.008,0.008]),max_ptr_in_a_occ = 64,is_interpolate_feature=False):
+        raise NotImplementedError

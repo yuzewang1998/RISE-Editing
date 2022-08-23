@@ -1,11 +1,11 @@
 #!/bin/bash
 nrCheckpoint="../checkpoints"
 nrDataRoot="../data_src"
-name='train_multi_scene/edit'
-
+#name='train_multi_scene/edit'
+name='testcase'
 resume_iter=best # 20000
 data_root="${nrDataRoot}/nerf/nerf_synthetic_colmap/"
-scan="chair" #dui biao de shu ju ji
+scan="lego" #dui biao de shu ju ji
 
 normview=0
 
@@ -33,7 +33,7 @@ vsize=" 0.004 0.004 0.004 " #" 0.005 0.005 0.005 "
 wcoord_query=1
 z_depth_dim=400
 max_o=830000 #2000000
-ranges="-0.721 -0.695 -0.995 0.658 0.706 1.050"
+ranges=" -0.638 -1.141 -0.346 0.634 1.149 1.141 "
 SR=80
 K=8
 P=9 #120
@@ -55,8 +55,8 @@ shading_feature_mlp_layer2=0
 shading_feature_mlp_linear=2
 shading_feature_mlp_layer3=0 #0
 shading_feature_mlp_layer4=2 #1
-shading_feature_mlp_layer0_rotation_invariance_feature_extraction_module=4
-shading_feature_mlp_layer0_rotation_invariance_feature_extraction_dim=30
+shading_feature_mlp_layer0_rotation_invariance_feature_extraction_module=0
+shading_feature_mlp_layer0_rotation_invariance_feature_extraction_dim=999
 shading_alpha_mlp_layer=1
 shading_color_mlp_layer=2
 shading_feature_num=256

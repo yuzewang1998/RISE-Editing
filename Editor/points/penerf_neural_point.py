@@ -166,3 +166,110 @@ class PenerfNeuralPoint(BaseNeuralPoint):
         new_ptr.dirz = new_ptr.dirz @ rot_matrix
         return new_ptr
 
+    def down_sample(self,voxel_size = np.array([0.003,0.003,0.003]),max_ptr_in_a_occ = 4,down_sample_func='random'):
+        lower = np.min(self.xyz, axis=0)
+        upper = np.max(self.xyz, axis=0)
+        bbox = np.concatenate([lower[..., None], upper[..., None]], axis=-1)
+        occ_shift = bbox[:,0]-1e-9
+        xyz = deepcopy(self.xyz)
+        embeding = deepcopy(self.embeding)
+        color = deepcopy(self.color)
+        conf = deepcopy(self.conf)
+        dirx = deepcopy(self.dirx)
+        diry = deepcopy(self.diry)
+        dirz = deepcopy(self.dirz)
+        shifted_neural_ptr = xyz - occ_shift
+        shifted_neural_ptr_occ_coord = np.floor(shifted_neural_ptr / voxel_size).astype(int)  # [n,3] int
+        occ_shape = np.ceil((bbox[:, 1] - bbox[:, 0]) / voxel_size).astype(int)
+        occ_index = np.zeros([occ_shape[0], occ_shape[1], occ_shape[2], max_ptr_in_a_occ],
+                             dtype=np.int32)  # e.g[60,50,40,32]
+        occ_mask = np.zeros(occ_shape, dtype=np.int32)
+        # build occ
+        for i in range(len(shifted_neural_ptr)):
+            coord_x, coord_y, coord_z = shifted_neural_ptr_occ_coord[i]  # [3,]
+            pos =  occ_mask[coord_x, coord_y, coord_z]
+            if pos < max_ptr_in_a_occ-1:
+                occ_index[coord_x, coord_y, coord_z, pos] = i
+                occ_mask[coord_x, coord_y, coord_z] += 1
+            else :
+                print('warning!! out range, max_ptr_in_a_occ not enough')
+        # quick search
+        down_sampled_xyz  = np.zeros([0, 3],dtype=np.float32)
+        down_sampled_embeding = np.zeros([0, 32], dtype=np.float32)
+        down_sampled_conf = np.zeros([0, 1], dtype=np.float32)
+        down_sampled_color = np.zeros([0, 3], dtype=np.float32)
+        down_sampled_dirx = np.zeros([0, 3], dtype=np.float32)
+        down_sampled_diry = np.zeros([0, 3], dtype=np.float32)
+        down_sampled_dirz = np.zeros([0, 3], dtype=np.float32)
+
+        xyz_reshape = xyz[occ_index]
+        print('xyz_reshape:{}'.format(xyz_reshape.shape))
+        embeding_reshape = embeding[occ_index]
+        print('embeding_reshape:{}'.format(embeding_reshape.shape))
+        color_reshape = color[occ_index]
+        conf_reshape = conf[occ_index]
+        print('conf_reshape:{}'.format(conf_reshape.shape))
+        dirx_reshape = dirx[occ_index]
+        diry_reshape = diry[occ_index]
+        dirz_reshape = dirz[occ_index]
+        print('dir_reshape:{}'.format(dirz_reshape.shape))
+
+        if down_sample_func == 'random':
+            for h in tqdm(range(occ_mask.shape[0])):
+                for w in range(occ_mask.shape[1]):
+                    for c in range(occ_mask.shape[2]):
+                        index = occ_mask[h][w][c]
+                        if index!=0:
+                            tmp_xyz = xyz_reshape[h][w][c][index-1]
+                            tmp_embeding = embeding_reshape[h][w][c][index - 1]
+                            tmp_conf = conf_reshape[h][w][c][index - 1]
+                            tmp_dirx = dirx_reshape[h][w][c][index - 1]
+                            tmp_diry = diry_reshape[h][w][c][index - 1]
+                            tmp_dirz = dirz_reshape[h][w][c][index - 1]
+                            tmp_color = color_reshape[h][w][c][index - 1]
+                            down_sampled_xyz = np.concatenate([down_sampled_xyz,tmp_xyz[None,...]],axis=0)
+                            down_sampled_embeding = np.concatenate([down_sampled_embeding, tmp_embeding[None, ...]], axis=0)
+                            down_sampled_conf = np.concatenate([down_sampled_conf, tmp_conf[None, ...]], axis=0)
+                            down_sampled_dirx = np.concatenate([down_sampled_dirx, tmp_dirx[None, ...]], axis=0)
+                            down_sampled_diry = np.concatenate([down_sampled_diry, tmp_diry[None, ...]], axis=0)
+                            down_sampled_dirz = np.concatenate([down_sampled_dirz, tmp_dirz[None, ...]], axis=0)
+                            down_sampled_color = np.concatenate([down_sampled_color, tmp_color[None, ...]], axis=0)
+        if down_sample_func == 'average':
+            print(xyz_reshape.shape)
+            xyz_reshape_cumsum = np.cumsum( xyz_reshape,axis = 3)
+            embeding_reshape_cumsum = np.cumsum(embeding_reshape, axis=3)
+            conf_reshape_cumsum = np.cumsum(conf_reshape, axis=3)
+            dirx_reshape_cumsum = np.cumsum(dirx_reshape, axis=3)
+            diry_reshape_cumsum = np.cumsum(diry_reshape, axis=3)
+            dirz_reshape_cumsum = np.cumsum(dirz_reshape, axis=3)
+            color_reshape_cumsum = np.cumsum(color_reshape, axis=3)
+            for h in tqdm(range(occ_mask.shape[0])):
+                for w in range(occ_mask.shape[1]):
+                    for c in range(occ_mask.shape[2]):
+                        index = occ_mask[h][w][c]
+                        if index!=0:
+                            tmp_xyz = xyz_reshape_cumsum[h][w][c][index-1]/index
+                            tmp_embeding = embeding_reshape_cumsum[h][w][c][index - 1]/index
+                            tmp_conf = conf_reshape_cumsum[h][w][c][index - 1]/index
+                            tmp_dirx = dirx_reshape_cumsum[h][w][c][index - 1]/index
+                            tmp_diry = diry_reshape_cumsum[h][w][c][index - 1]/index
+                            tmp_dirz = dirz_reshape_cumsum[h][w][c][index - 1]/index
+                            tmp_color = color_reshape_cumsum[h][w][c][index - 1] / index
+                            down_sampled_xyz = np.concatenate([down_sampled_xyz, tmp_xyz[None, ...]], axis=0)
+                            down_sampled_embeding = np.concatenate([down_sampled_embeding, tmp_embeding[None, ...]],axis=0)
+                            down_sampled_conf = np.concatenate([down_sampled_conf, tmp_conf[None, ...]], axis=0)
+                            down_sampled_dirx = np.concatenate([down_sampled_dirx, tmp_dirx[None, ...]], axis=0)
+                            down_sampled_diry = np.concatenate([down_sampled_diry, tmp_diry[None, ...]], axis=0)
+                            down_sampled_dirz = np.concatenate([down_sampled_dirz, tmp_dirz[None, ...]], axis=0)
+                            down_sampled_color = np.concatenate([down_sampled_color, tmp_color[None, ...]], axis=0)
+        new_ptr = deepcopy(self)
+        new_ptr.xyz = down_sampled_xyz
+        new_ptr.color = down_sampled_color
+        new_ptr.embeding = down_sampled_embeding
+        new_ptr.conf = down_sampled_conf
+        new_ptr.dirx = down_sampled_dirx
+        new_ptr.diry = down_sampled_diry
+        new_ptr.dirz = down_sampled_dirz
+        print(down_sampled_xyz)
+        return new_ptr
+

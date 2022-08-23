@@ -12,7 +12,7 @@ class Options:
         parser = argparse.ArgumentParser(description="Argparse of  point_editor")
         parser.add_argument('--editor_checkpoints_scans',
                             type=str,
-                            default='edit',#/home/slam/devdata/pointnerf/checkpoints/scannet/scene000-T
+                            default='chair_finetune',#/home/slam/devdata/pointnerf/checkpoints/scannet/scene000-T
                             help='scans of checkpoints')
         parser.add_argument('--editor_checkpoints_root',
                             type=str,
