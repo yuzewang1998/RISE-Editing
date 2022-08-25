@@ -2,10 +2,10 @@
 renderer_required_grad=0
 nrCheckpoint="../checkpoints"
 nrDataRoot="../data_src"
-name='train_multi_scene/lego_finetune'
+name='train_multi_scene/chair_finetune'
 resume_iter=latest #
 data_root="${nrDataRoot}/nerf/nerf_synthetic_colmap/"
-scan="lego"
+scan="chair"
 load_points=1
 feat_grad=1
 conf_grad=1
@@ -51,7 +51,7 @@ vsize=" 0.004 0.004 0.004 " #" 0.005 0.005 0.005 "
 wcoord_query=1
 z_depth_dim=400
 max_o=600000 #2000000
-ranges="-0.638 -1.141 -0.346 0.634 1.149 1.141"
+ranges=" -0.721 -0.695 -0.995 0.658 0.706 1.050 "
 SR=80
 K=8
 P=13 #120
@@ -118,7 +118,7 @@ resume_dir="${nrCheckpoint}/init/dtu_dgt_d012_img0123_conf_agg2_32_dirclr20"
 
 save_iter_freq=5000
 save_point_freq=1000 #301840 #1
-maximum_step=200000 #800000
+maximum_step=1000000 #800000
 
 niter=10000 #1000000
 niter_decay=10000 #250000
