@@ -602,7 +602,10 @@ class lighting_fast_querier():
         near_vox_full = mod.get_function("near_vox_full")
         insert_vox_points = mod.get_function("insert_vox_points")
 
-        query_along_ray = mod.get_function("query_neigh_along_ray_layered") if self.opt.NN > 0 else mod.get_function("query_rand_along_ray")
+        if self.opt.increase_radius == 1:
+            query_along_ray = mod.get_function("query_neigh_along_ray_layered_increase_radius")
+        else:
+            query_along_ray = mod.get_function("query_neigh_along_ray_layered") if self.opt.NN > 0 else mod.get_function("query_rand_along_ray")
         return get_occ_vox, near_vox_full, insert_vox_points, query_along_ray
 
 

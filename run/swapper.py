@@ -111,14 +111,21 @@ def main():
     }
 
     # 所有场景都放在这一个dict中
+    # scene_list = {
+    #     0: scene0,
+    #     1: scene1,
+    #     2: scene2,
+    #     3: scene3,
+    #     4: scene4,
+    #     5: scene5,
+    #     6: scene6,
+    # }
     scene_list = {
         0: scene0,
         1: scene1,
         2: scene2,
-        3: scene3,
-        4: scene4,
-        5: scene5,
-        6: scene6,
+        3: scene5,
+        4: scene6,
     }
     sceneListSize = len(scene_list)
     #这个opt应该是cpc的opt

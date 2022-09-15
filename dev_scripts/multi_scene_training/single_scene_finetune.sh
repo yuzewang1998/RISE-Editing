@@ -2,10 +2,10 @@
 renderer_required_grad=0
 nrCheckpoint="../checkpoints"
 nrDataRoot="../data_src"
-name='train_multi_scene/chair_finetune'
+name='train_multi_scene/ficus_finetune'
 resume_iter=latest #
 data_root="${nrDataRoot}/nerf/nerf_synthetic_colmap/"
-scan="chair"
+scan="ficus"
 load_points=1
 feat_grad=1
 conf_grad=1
@@ -51,7 +51,7 @@ vsize=" 0.004 0.004 0.004 " #" 0.005 0.005 0.005 "
 wcoord_query=1
 z_depth_dim=400
 max_o=600000 #2000000
-ranges=" -0.721 -0.695 -0.995 0.658 0.706 1.050 "
+ranges=" -0.377 -0.858 -1.034 0.555 0.578 1.141 "
 SR=80
 K=8
 P=13 #120
@@ -118,7 +118,7 @@ resume_dir="${nrCheckpoint}/init/dtu_dgt_d012_img0123_conf_agg2_32_dirclr20"
 
 save_iter_freq=5000
 save_point_freq=1000 #301840 #1
-maximum_step=1000000 #800000
+maximum_step=750000 #800000
 
 niter=10000 #1000000
 niter_decay=10000 #250000
@@ -126,7 +126,7 @@ n_threads=1
 
 train_and_test=0 #1
 test_num=10
-test_freq=2000000 #1200 #1200 #30184 #30184 #50000
+test_freq=750000 #1200 #1200 #30184 #30184 #50000
 print_freq=100
 test_num_step=10
 
@@ -149,7 +149,7 @@ color_loss_weights=" 1.0 0.0 0.0 "
 color_loss_items='ray_masked_coarse_raycolor ray_miss_coarse_raycolor coarse_raycolor'
 test_color_loss_items='coarse_raycolor ray_miss_coarse_raycolor ray_masked_coarse_raycolor'
 
-vid=250000
+vid=25000000
 
 bg_color="white" #"0.0,0.0,0.0,1.0,1.0,1.0"
 split="train"

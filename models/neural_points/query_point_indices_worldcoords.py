@@ -624,8 +624,8 @@ class lighting_fast_querier():
                                             float y_v = (in_data[pidx*3 + 1]-centery);
                                             float z_v = (in_data[pidx*3 + 2]-centerz);
                                             float xyz2 = x_v * x_v + y_v * y_v + z_v * z_v;//点到query点距离**2
-                                            radius_limit2 = radius_limit2 * rank ;
-                                            if ((radius_limit2 == 0 || xyz2 <= radius_limit2)){//如果是在radius_limit2的范围内
+                                            float fix_radius_limit2 = radius_limit2 * rank ;
+                                            if ((fix_radius_limit2 == 0 || xyz2 <= fix_radius_limit2)){//如果是在radius_limit2的范围内
                                                 if (kid++ < K) {//K:max num.  neighbors;kid:current num neighbors
                                                     sample_pidx[index * K + kid - 1] = pidx;//sample_pidx存相应的pidx
                                                     xyz2Buffer[kid-1] = xyz2;//缓存xyz距离
@@ -756,8 +756,11 @@ class lighting_fast_querier():
             self.opt.semantic_guidance = 0
         if self.opt.semantic_guidance == 1:
             query_along_ray = mod.get_function("query_neigh_along_ray_layered_semantic_guidance")
+        elif self.opt.increase_radius == 1:
+            query_along_ray = mod.get_function("query_neigh_along_ray_layered_increase_radius")
         else:
             query_along_ray = mod.get_function("query_neigh_along_ray_layered")
+
 
         return claim_occ, map_coor2occ, fill_occ2pnts, mask_raypos, get_shadingloc, query_along_ray
 

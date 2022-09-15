@@ -21,6 +21,7 @@ class PenerfNeuralPoint(BaseNeuralPoint):
 
     def load_from_ply(self, name):
         self.load_ply_path = os.path.join(self.file_dir, name + '_penerfneuralpoint.ply')
+        print(self.load_ply_path)
         assert os.path.exists(self.load_ply_path), '{}_penerfneuralpoint doesn`t exist ,check!'.format(name)
         print('loading neural point cloud from ply....')
         plydata = PlyData.read(self.load_ply_path)

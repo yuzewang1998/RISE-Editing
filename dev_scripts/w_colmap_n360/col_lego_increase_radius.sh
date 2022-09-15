@@ -1,14 +1,13 @@
 #!/bin/bash
 semantic_guidance=0
-
+increase_radius=1
 nrCheckpoint="../checkpoints"
 nrDataRoot="../data_src"
-name='train_multi_scene/lego'
-resume_iter=latest #
+name='test_increase_radius/lego_increase_radius'
+resume_iter=best #
 data_root="${nrDataRoot}/nerf/nerf_synthetic_colmap/"
 scan="lego"
 
-train_step=500
 maximum_swap=20000
 
 
@@ -46,7 +45,7 @@ agg_color_xyz_mode="None"
 feature_init_method="rand" #"rand" # "zeros"
 agg_axis_weight=" 1. 1. 1."
 agg_dist_pers=15
-radius_limit_scale=4
+radius_limit_scale=8
 depth_limit_scale=0
 alpha_range=0
 
@@ -122,9 +121,9 @@ gpu_ids='0'
 checkpoints_dir="${nrCheckpoint}/col_nerfsynth/"
 resume_dir="${nrCheckpoint}/init/dtu_dgt_d012_img0123_conf_agg2_32_dirclr20"
 
-save_iter_freq=${train_step}
+save_iter_freq=5000
 save_point_freq=1000 #301840 #1
-maximum_step=2000000 #800000
+maximum_step=1000000 #800000
 
 niter=10000 #1000000
 niter_decay=10000 #250000
@@ -160,14 +159,15 @@ test_color_loss_items='coarse_raycolor ray_miss_coarse_raycolor ray_masked_coars
 bg_color="white" #"0.0,0.0,0.0,1.0,1.0,1.0"
 split="train"
 
+vid=25000000
+
+
 cd run
 
+for i in $(seq 1 $prob_freq $maximum_step)
 
-for swap_num in $(seq 0 1 $maximum_swap)
 do
-#let "train_step=train_step-1"
-#save_iter_freq=${train_step}
-python3 swapper.py \
+python3 train_ft.py \
        --name $name \
         --scan $scan \
         --data_root $data_root \
@@ -283,6 +283,7 @@ python3 swapper.py \
         --prob_tiers $prob_tiers \
         --alpha_range $alpha_range \
         --ranges $ranges \
+        --vid $vid \
         --vsize $vsize \
         --wcoord_query $wcoord_query \
         --max_o $max_o \
@@ -290,6 +291,7 @@ python3 swapper.py \
         --far_thresh $far_thresh \
         --debug \
         --semantic_guidance $semantic_guidance \
-        --swap_num $swap_num \
-        --train_step $train_step
+        --increase_radius $increase_radius
 done
+#        --zero_one_loss_items $zero_one_loss_items \
+#        --zero_one_loss_weights $zero_one_loss_weights \

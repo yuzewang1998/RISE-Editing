@@ -13,16 +13,19 @@ import numpy as np
 def extract_neural_point(opt):
     cpc1 = create_checkpointscontroller(opt, 'penerf', 'lego')
     np1 = cpc1.cvt_2_neuralPoint()
-    np1.save_as_ply("origin_lego")
+    np1.save_as_ply("lego_valina")
     cpc2 = create_checkpointscontroller(opt, 'penerf', 'chair')
     cpc2 = cpc2.cvt_2_neuralPoint()
-    cpc2.save_as_ply("origin_chair")
-    # cpc = create_checkpointscontroller(opt, 'penerf', 'mic')
-    # neural_point_whole_scene = cpc.cvt_2_neuralPoint()
-    # neural_point_whole_scene.save_as_ply("origin_mic")
-    # cpc = create_checkpointscontroller(opt, 'penerf', 'hotdog')
-    # neural_point_whole_scene = cpc.cvt_2_neuralPoint()
-    # neural_point_whole_scene.save_as_ply("origin_hotdog")
+    cpc2.save_as_ply("chair_valina")
+    cpc = create_checkpointscontroller(opt, 'penerf', 'mic')
+    neural_point_whole_scene = cpc.cvt_2_neuralPoint()
+    neural_point_whole_scene.save_as_ply("mic_valina")
+    cpc = create_checkpointscontroller(opt, 'penerf', 'ficus')
+    neural_point_whole_scene = cpc.cvt_2_neuralPoint()
+    neural_point_whole_scene.save_as_ply("ficus_valina")
+    cpc = create_checkpointscontroller(opt, 'penerf', 'materials')
+    neural_point_whole_scene = cpc.cvt_2_neuralPoint()
+    neural_point_whole_scene.save_as_ply("materials_valina")
 def meshlab_point_2_neural_point(opt):
     lego_nobody_mp = create_neural_point(opt,'meshlab')
     lego_nobody_mp.load_from_ply('lego_noplane')
@@ -48,7 +51,7 @@ def meshlab_point_2_neural_point(opt):
 def main():
     sparse = Options()
     opt = sparse.opt
-    # extract_neural_point(opt)
-    meshlab_point_2_neural_point(opt)
+    extract_neural_point(opt)
+    # meshlab_point_2_neural_point(opt)
 if __name__=="__main__":
     main()
