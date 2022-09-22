@@ -272,6 +272,13 @@ class NerfSynth360FtDataset(BaseDataset):
             help=
             'train, val, test'
         )
+        parser.add_argument(
+            '--img_wh',
+            type=int,
+            nargs=2,
+            default=(640, 480),
+            help='resize target of the image'
+        )
         parser.add_argument("--half_res", action='store_true',
                             help='load blender synthetic data at 400x400 instead of 800x800')
         parser.add_argument("--testskip", type=int, default=8,
@@ -285,7 +292,10 @@ class NerfSynth360FtDataset(BaseDataset):
                             type=int,
                             default=0,
                             help='normalize the ray_dir to unit length or not, default not')
-
+        parser.add_argument('--edge_filter',
+                            type=int,
+                            default=3,
+                            help='number of random samples')
         return parser
 
     def normalize_cam(self, w2cs, c2ws):

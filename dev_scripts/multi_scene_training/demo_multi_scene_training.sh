@@ -1,6 +1,5 @@
 #!/bin/bash
 semantic_guidance=0
-
 nrCheckpoint="../checkpoints"
 nrDataRoot="../data_src"
 name='train_multi_scene/lego'
@@ -20,7 +19,7 @@ color_grad=1
 vox_res=320
 normview=0
 prune_thresh=0.1
-prune_iter=10001
+prune_iter=10000001
 prune_max_iter=200000
 
 feedforward=0
@@ -57,7 +56,7 @@ vsize=" 0.004 0.004 0.004 " #" 0.005 0.005 0.005 "
 wcoord_query=1
 z_depth_dim=100
 max_o=600000 #2000000
-ranges=" -0.638 -1.141 -0.346 0.634 1.149 1.141 "
+ranges=" -10 -10 -10 10 10 10"
 SR=80
 K=8
 P=13 #120
@@ -93,8 +92,8 @@ raydist_mode_unit=1
 dataset_name='nerf_synth360_ft'
 pin_data_in_memory=1
 model='mvs_points_volumetric'
-near_plane=2.0
-far_plane=6.0
+near_plane=0.1
+far_plane=8.0
 which_ray_generation='near_far_linear' #'nerf_near_far_linear' #
 domain_size='1'
 dir_norm=0
@@ -119,7 +118,7 @@ lr_decay_iters=1000000
 lr_decay_exp=0.1
 
 gpu_ids='0'
-checkpoints_dir="${nrCheckpoint}/col_nerfsynth/"
+checkpoints_dir="${nrCheckpoint}/mul_train/"
 resume_dir="${nrCheckpoint}/init/dtu_dgt_d012_img0123_conf_agg2_32_dirclr20"
 
 save_iter_freq=${train_step}
@@ -137,7 +136,7 @@ print_freq=100
 test_num_step=10
 
 far_thresh=-1 #0.005
-prob_freq=10010 #10000 #2000 #1000 is bad #10001
+prob_freq=-1 #10000 #2000 #1000 is bad #10001
 prob_num_step=25
 prob_thresh=0.7
 prob_mul=0.4
