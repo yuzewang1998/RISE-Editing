@@ -2,12 +2,12 @@
 
 nrCheckpoint="../checkpoints"
 nrDataRoot="../data_src"
-name='00-scene0113-vanila'
+name='finaltrain/00-scene0000-vanila'
 
 resume_iter=best #latest
 
 data_root="${nrDataRoot}/scannet/scans/"
-scan="scene0113_00"
+scan="scene0000_00"
 
 load_points=1
 feat_grad=1
@@ -44,7 +44,7 @@ agg_alpha_xyz_mode="None"
 agg_color_xyz_mode="None"
 feature_init_method="rand" #"rand" # "zeros"
 agg_axis_weight=" 1. 1. 1."
-agg_dist_pers=20
+agg_dist_pers=15
 radius_limit_scale=4
 depth_limit_scale=0
 vscale=" 2 2 2 "
@@ -63,19 +63,22 @@ NN=2
 act_type="LeakyReLU"
 
 agg_intrp_order=2
-agg_distance_kernel="linear" #"avg" #"feat_intrp"
+agg_distance_kernel="linear_immediately" #"avg" #"feat_intrp"
 point_features_dim=32
 shpnt_jitter="passfunc" #"uniform" # uniform gaussian
 
 which_agg_model="viewmlp"
 apply_pnt_mask=1
-shading_feature_mlp_layer0=1 #2
-shading_feature_mlp_layer1=2 #2
-shading_feature_mlp_layer2=0 #1
-shading_feature_mlp_layer3=2 #1
-shading_feature_mlp_layer4=0 #1
+shading_feature_mlp_layer0=0
+shading_feature_mlp_layer1=2
+shading_feature_mlp_layer2=0
+shading_feature_mlp_linear=2
+shading_feature_mlp_layer3=0 #0
+shading_feature_mlp_layer4=2 #1
+shading_feature_mlp_layer0_rotation_invariance_feature_extraction_module=0
+shading_feature_mlp_layer0_rotation_invariance_feature_extraction_dim=999
 shading_alpha_mlp_layer=1
-shading_color_mlp_layer=4
+shading_color_mlp_layer=2
 shading_feature_num=256
 dist_xyz_freq=5
 num_feat_freqs=3
@@ -124,11 +127,11 @@ n_threads=2
 
 train_and_test=0 #1
 test_num=25
-test_freq=50000 #  #100 #1200 #1200 #30184 #30184 #50000
+test_freq=5000000 #  #100 #1200 #1200 #30184 #30184 #50000
 print_freq=100
 test_num_step=50
 
-prob_freq=10000001 #10001
+prob_freq=10001 #10001
 prob_num_step=100
 prob_kernel_size=" 3 3 3 1 1 1 "
 prob_tiers=" 40000 120000 "
@@ -223,9 +226,12 @@ python3 train_ft.py \
         --agg_intrp_order $agg_intrp_order \
         --shading_feature_mlp_layer0 $shading_feature_mlp_layer0 \
         --shading_feature_mlp_layer1 $shading_feature_mlp_layer1 \
+        --shading_feature_mlp_linear $shading_feature_mlp_linear \
         --shading_feature_mlp_layer2 $shading_feature_mlp_layer2 \
         --shading_feature_mlp_layer3 $shading_feature_mlp_layer3 \
         --shading_feature_mlp_layer4 $shading_feature_mlp_layer4 \
+        --shading_feature_mlp_layer0_rotation_invariance_feature_extraction_module $shading_feature_mlp_layer0_rotation_invariance_feature_extraction_module \
+        --shading_feature_mlp_layer0_rotation_invariance_feature_extraction_dim $shading_feature_mlp_layer0_rotation_invariance_feature_extraction_dim \
         --shading_feature_num $shading_feature_num \
         --dist_xyz_freq $dist_xyz_freq \
         --shpnt_jitter $shpnt_jitter \

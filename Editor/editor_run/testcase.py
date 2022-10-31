@@ -67,9 +67,8 @@ def tc5_changescale(opt):
     a_shear = a.change_scale(scale_factor=[1,3,1])
     a_shear.save_as_ply('a_scale_shear')
 def tc6_spaw_renderer(opt):
-    opt.editor_checkpoints_scans = 'mic_finetune'
-    net_paras = create_checkpointscontroller(opt, 'penerf', '136400_net_ray_marching')
-    renderer_paras = create_checkpointscontroller(opt, 'penerf', 'lego')
+    net_paras = create_checkpointscontroller(opt, 'penerf', '905000_net_ray_marching')
+    renderer_paras = create_checkpointscontroller(opt, 'penerf', 'chair')
     net_paras.aggrator_paras_copy(renderer_paras)
     net_paras.set_and_save(penerf_neuralpoint=None,edit_name=None)
 def tc7_spaw_renderer(opt):

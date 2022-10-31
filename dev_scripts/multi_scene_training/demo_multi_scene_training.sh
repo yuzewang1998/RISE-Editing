@@ -7,7 +7,7 @@ resume_iter=latest #
 data_root="${nrDataRoot}/nerf/nerf_synthetic_colmap/"
 scan="lego"
 
-train_step=500
+train_step=100
 maximum_swap=20000
 
 
@@ -49,7 +49,7 @@ radius_limit_scale=4
 depth_limit_scale=0
 alpha_range=0
 
-vscale=" 2 2 2 "
+vscale=" 3 3 3 "
 kernel_size=" 3 3 3 "
 query_size=" 3 3 3 "
 vsize=" 0.004 0.004 0.004 " #" 0.005 0.005 0.005 "

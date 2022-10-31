@@ -26,26 +26,22 @@ def rotate_part(opt):
     part.load_from_ply('part')
     # origin = create_neural_point('penerf')
     # origin.load_from_ply('origin')
-    for i in range(11):
-        deg = (i + 1) * 30
-        trans_matrix = cauc_transformationMatrix(cauc_RotationMatrix(0, 0, deg), np.array([0, 0, 0]))
-        part_translated = part.translate(trans_matrix, rotate_centerpoint=np.array([0, 0, 0]))
-        part_translated.save_as_ply('part_trans_{}'.format(deg))
+    for i in range(5):
+        deg = (i + 1) * 10
+        trans_matrix = cauc_transformationMatrix(cauc_RotationMatrix(-deg,0 , 0), np.array([0, 0, 0]))
+        part_translated = part.translate(trans_matrix, rotate_centerpoint=np.array([0, 0, -0.5]))
+        part_translated.save_as_ply('rotX_part_trans_{}'.format(deg))
 def add_part(opt):
-    part1 = create_neural_point(opt,'penerf')
-    part2 = create_neural_point(opt, 'penerf')
-    part3 = create_neural_point(opt, 'penerf')
-    part4 = create_neural_point(opt,'penerf')
-    part1.load_from_ply('part_trans_300')
-    part2.load_from_ply('part_trans_60')
-    part3.load_from_ply('part_trans_150')
-    part4.load_from_ply('part_trans_210')
+    part_n = create_neural_point(opt,'penerf')
+    part_n.load_from_ply('rotX_part_trans_30')
+    part_o = create_neural_point(opt, 'penerf')
+    part_o.load_from_ply('part')
     origin =  create_neural_point(opt,'penerf')
     origin.load_from_ply('origin')
-    new_scene = origin + part1 + part2 + part3 + part4
+    new_scene = origin - part_o + part_n
     new_scene.save_as_ply('new_scene')
     cpc = create_checkpointscontroller(opt, 'penerf', '430000_net_ray_marching')
-    cpc.set_and_save(new_scene,'new')
+    cpc.set_and_save(new_scene,'cmp_new')
 
 
 def main():

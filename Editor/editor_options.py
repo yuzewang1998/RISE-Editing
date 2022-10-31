@@ -2,7 +2,7 @@ import sys
 import os
 import pathlib
 import argparse
-sys.path.append(os.path.join(pathlib.Path(__file__).parent.absolute(), '..'))
+sys.path.append(os.path.join(pathlib.Path(__file__).parent.absolute(), '../../pointnerf'))
 
 class Options:
     def __init__(self):
@@ -16,7 +16,7 @@ class Options:
                             help='scans of checkpoints')
         parser.add_argument('--editor_checkpoints_root',
                             type=str,
-                            default='/home/slam/devdata/NSEPN/checkpoints/col_nerfsynth/train_multi_scene_v1',#/home/slam/devdata/pointnerf/checkpoints/scannet/scene000-T
+                            default='/home/slam/devdata/NSEPN/checkpoints/mul_train/train_multi_scene',#/home/slam/devdata/pointnerf/checkpoints/scannet/scene000-T
                             help='root of checkpoints datasets')
         parser.add_argument('--gpu_ids',
                             type=str,

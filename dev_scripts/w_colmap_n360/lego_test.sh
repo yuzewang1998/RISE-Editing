@@ -1,7 +1,7 @@
 #!/bin/bash
 nrCheckpoint="../checkpoints"
 nrDataRoot="../data_src"
-name='test_increase_radius/lego_increase_radius'
+name='legoV1'
 
 resume_iter=best # 20000
 data_root="${nrDataRoot}/nerf/nerf_synthetic_colmap/"
@@ -33,10 +33,10 @@ vsize=" 0.004 0.004 0.004 " #" 0.005 0.005 0.005 "
 wcoord_query=1
 z_depth_dim=400
 max_o=830000 #2000000
-ranges=" -0.638 -1.141 -0.346 0.634 1.149 1.141 "
+ranges=" -10 -10 -10 10 10 10 "
 SR=80
 K=8
-P=9 #120
+P=13 #120
 NN=2
 
 act_type="LeakyReLU"

@@ -32,7 +32,7 @@ class PointnerfNeuralPoint(BaseNeuralPoint):
             plydata.elements[0].data["dir1"].astype(np.float32)), np.array(
             plydata.elements[0].data["dir2"].astype(np.float32))
         self.dir = np.concatenate([dir0[..., np.newaxis], dir1[..., np.newaxis], dir2[..., np.newaxis]], axis=-1)
-        self.conf = np.array(plydata.elements[0].data["conf"].astype(np.float32))
+        self.conf = np.array(plydata.elements[0].data["conf"].astype(np.float32))[...,None]
         self.embeding = np.zeros([self.xyz.shape[0],0])
         for i in range(32):
             tmp = np.array(plydata.elements[0].data["embeding"+str(i)].astype(np.float32))[...,np.newaxis]
@@ -43,6 +43,7 @@ class PointnerfNeuralPoint(BaseNeuralPoint):
         assert self.xyz is not None, '[ERROR]Save before load,check it!'
         vertex = []
         print('Saving neural point cloud as ply...', self.xyz.shape)
+
         vertex = np.concatenate([self.xyz,self.color,self.conf,self.dir,self.embeding],axis=-1)
         vertex = [tuple(i) for i in vertex]
         vertex = np.array(
@@ -101,7 +102,7 @@ class PointnerfNeuralPoint(BaseNeuralPoint):
     def select_from_meshlabpoint(self,meshlab_point):
         id_list = find_neural_point_id(meshlab_point.xyz,self.xyz)
         neural_ptr = create_neural_point(self.opt,'pointnerf')
-        neural_ptr.set_input(self.xyz[id_list],self.embeding[id_list],self.conf[id_list],self.dir[id_list],self.color[id_list])
+        neural_ptr.set_input(points_xyz=self.xyz[id_list],points_embeding=self.embeding[id_list],points_conf=self.conf[id_list],points_dir=self.dir[id_list],points_color=self.color[id_list])
         return neural_ptr
 
     def __sub__(self, other:BaseNeuralPoint)->BaseNeuralPoint:
@@ -110,7 +111,7 @@ class PointnerfNeuralPoint(BaseNeuralPoint):
         not_id_list = list(set(all_id_list)-set(id_list))
         neural_ptr = create_neural_point(self.opt, 'pointnerf')
         neural_ptr.set_input(self.xyz[not_id_list], points_embeding=self.embeding[not_id_list],
-                             points_conf=self.conf[not_id_list][..., None], points_dir=self.dir,
+                             points_conf=self.conf[not_id_list], points_dir=self.dir[not_id_list],
                              points_color=self.color[not_id_list])
         return neural_ptr
 

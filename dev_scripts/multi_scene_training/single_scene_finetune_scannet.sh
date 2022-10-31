@@ -2,10 +2,10 @@
 renderer_required_grad=0
 nrCheckpoint="../checkpoints"
 nrDataRoot="../data_src"
-name="train_multi_scene/sc113_finetune"
+name="train_multi_scene/sc101"
 resume_iter=latest #
 data_root="${nrDataRoot}/scannet/scans/"
-scan="scene0113_00" #_99
+scan="scene0101_04" #_99
 load_points=1
 feat_grad=1
 conf_grad=1

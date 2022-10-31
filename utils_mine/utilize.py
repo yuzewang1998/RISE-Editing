@@ -4,7 +4,7 @@ import os
 import pathlib
 import shutil
 import argparse
-sys.path.append(os.path.join(pathlib.Path(__file__).parent.absolute(), '..'))
+sys.path.append(os.path.join(pathlib.Path(__file__).parent.absolute(), '../../NSEPN'))
 import numpy as np
 import cv2
 from tqdm import tqdm

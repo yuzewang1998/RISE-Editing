@@ -1,12 +1,12 @@
 #!/bin/bash
 semantic_guidance=0
-novel_cam_trajectory="1"
+novel_cam_trajectory="0"
 nrCheckpoint="../checkpoints"
 nrDataRoot="../data_src"
-name="01*-scene0113__NoSGS__FIXBUG_020202113_Pretrain_edit"
+name='finaltrain/00-scene0241-vanila'
 resume_iter=latest # 20000 #latest
 data_root="${nrDataRoot}/scannet/scans/"
-scan="scene0113_00" #_99
+scan="scene0241_01" #_99
 normview=0
 edge_filter=10 # pixels crop out at image edge
 
@@ -32,14 +32,14 @@ max_o=610000
 ranges=" -10.0 -10.0 -10.0 10.0 10.0 10.0 "
 SR=24
 K=8
-P=26
+P=32
 NN=2
 act_type="LeakyReLU"
 
 agg_intrp_order=2
 agg_distance_kernel="linear_immediately" #"avg" #"feat_intrp"
 
-point_features_dim=56
+point_features_dim=32
 shpnt_jitter="passfunc" #"uniform" # uniform gaussian
 
 which_agg_model="viewmlp"
@@ -50,11 +50,10 @@ shading_feature_mlp_layer2=0
 shading_feature_mlp_linear=2
 shading_feature_mlp_layer3=0 #0
 shading_feature_mlp_layer4=2 #1
-shading_feature_mlp_layer0_rotation_invariance_feature_extraction_module=1
-shading_feature_mlp_layer0_rotation_invariance_feature_extraction_dim=20
-
+shading_feature_mlp_layer0_rotation_invariance_feature_extraction_module=0
+shading_feature_mlp_layer0_rotation_invariance_feature_extraction_dim=999
 shading_alpha_mlp_layer=1
-shading_color_mlp_layer=3
+shading_color_mlp_layer=2
 shading_feature_num=256
 dist_xyz_freq=5
 num_feat_freqs=3

@@ -3,11 +3,11 @@
 # novel_cam_trajectory="1"
 nrCheckpoint="../checkpoints"
 nrDataRoot="../data_src"
-name="train_multi_scene/sc113"
+name="train_multi_scene/sc101"
 
 resume_iter=latest # 20000 #latest
 data_root="${nrDataRoot}/scannet/scans/"
-scan="scene0113_00" #_99
+scan="scene0101_04" #_99
 normview=0
 edge_filter=10 # pixels crop out at image edge
 

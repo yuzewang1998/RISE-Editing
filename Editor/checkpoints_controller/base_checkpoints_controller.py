@@ -5,11 +5,11 @@ class BaseCheckpointsController:
     def modify_commandline_options(parser, is_train=True):
         parser.add_argument('--editor_checkpoints_scans',
                             type=str,
-                            default='edit_something',#/home/slam/devdata/pointnerf/checkpoints/scannet/scene000-T
+                            default='edit',#/home/slam/devdata/pointnerf/checkpoints/scannet/scene000-T
                             help='scans of checkpoints')
         parser.add_argument('--editor_checkpoints_root',
                             type=str,
-                            default='/home/slam/devdata/NSEPN/checkpoints/col_nerfsynth',#/home/slam/devdata/pointnerf/checkpoints/scannet/scene000-T
+                            default='/home/slam/devdata/pointnerf/checkpoints/nerfsynth/lego',#/home/slam/devdata/pointnerf/checkpoints/scannet/scene000-T
                             help='root of checkpoints datasets')
         return parser
     def __init__(self,opt,name=None):

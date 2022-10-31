@@ -142,7 +142,4 @@ class NpbgNeuralPoint(BasePoint):
         rot_matrix = translation_matrix[:3, :3]
         trans_vector = translation_matrix[:3, 3]
         new_ptr.xyz = (new_ptr.xyz - rotate_centerpoint) @ rot_matrix + trans_vector + rotate_centerpoint
-        new_ptr.dirx = new_ptr.dirx @ rot_matrix
-        new_ptr.diry = new_ptr.diry @ rot_matrix
-        new_ptr.dirz = new_ptr.dirz @ rot_matrix
         return new_ptr

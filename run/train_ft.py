@@ -676,6 +676,7 @@ def main():
             model = create_model(opt)
             model.setup(opt)
             model.eval()
+            points_label_all=None
             if load_points in [1,3]:#True,load point = 1
                 points_xyz_all,points_label_all = train_dataset.load_init_points()
             if load_points == 2:#False

@@ -2,8 +2,8 @@
 semantic_guidance=0
 nrCheckpoint="../checkpoints"
 nrDataRoot="../data_src"
-name='test_increase_radius/lego_valina'
-resume_iter=best #
+name='legoV1_sparse'
+resume_iter=latest #
 data_root="${nrDataRoot}/nerf/nerf_synthetic_colmap/"
 scan="lego"
 
@@ -30,7 +30,7 @@ pre_d_est="${nrCheckpoint}/MVSNet/model_000014.ckpt"
 manual_std_depth=0.0
 depth_conf_thresh=0.8
 appr_feature_str0="imgfeat_0_0123 dir_0 point_conf"
-point_conf_mode="1" # 0 for only at features, 1 for multi at weight
+point_conf_mode="1" # 0 for only at features, 1 for multi at weight78
 point_dir_mode="1" # 0 for only at features, 1 for color branch
 point_color_mode="1" # 0 for only at features, 1 for color branch
 default_conf=0.15 #1000
@@ -83,7 +83,6 @@ dist_xyz_freq=5
 num_feat_freqs=3
 dist_xyz_deno=0
 
-
 raydist_mode_unit=1
 dataset_name='nerf_synth360_ft'
 pin_data_in_memory=1
@@ -117,7 +116,7 @@ gpu_ids='0'
 checkpoints_dir="${nrCheckpoint}/col_nerfsynth/"
 resume_dir="${nrCheckpoint}/init/dtu_dgt_d012_img0123_conf_agg2_32_dirclr20"
 
-save_iter_freq=10000
+save_iter_freq=2000
 save_point_freq=1000 #301840 #1
 maximum_step=1000000 #800000
 

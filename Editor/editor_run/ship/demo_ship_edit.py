@@ -11,7 +11,7 @@ from tqdm import tqdm
 from Editor.editor_options import Options
 import numpy as np
 def extract_neural_point(opt):
-    cpc = create_checkpointscontroller(opt, 'penerf', '430000_net_ray_marching')
+    cpc = create_checkpointscontroller(opt, 'penerf', '690000_net_ray_marching')
     neural_point_whole_scene = cpc.cvt_2_neuralPoint()
     neural_point_whole_scene.save_as_ply("origin")
 def meshlab_point_2_neural_point(opt):
@@ -26,25 +26,22 @@ def rotate_part(opt):
     part.load_from_ply('part')
     # origin = create_neural_point('penerf')
     # origin.load_from_ply('origin')
-    for i in range(11):
-        deg = (i + 1) * 30
-        trans_matrix = cauc_transformationMatrix(cauc_RotationMatrix(0, 0, deg), np.array([0, 0, 0]))
-        part_translated = part.translate(trans_matrix, rotate_centerpoint=np.array([0, 0, 0]))
-        part_translated.save_as_ply('part_trans_{}'.format(deg))
+    trans_matrix = cauc_transformationMatrix(cauc_RotationMatrix(0, 0, -15), np.array([0.15,-0.7 , 0.1]))
+    part_translated = part.translate(trans_matrix, rotate_centerpoint=np.array([0.0, 0, 0]))
+    part_translated.save_as_ply('part_trans_{}'.format(1))
+    trans_matrix = cauc_transformationMatrix(cauc_RotationMatrix(0, 0, 15), np.array([0.15,0.7 , 0.1]))
+    part_translated = part.translate(trans_matrix, rotate_centerpoint=np.array([0.0, 0, 0]))
+    part_translated.save_as_ply('part_trans_{}'.format(2))
 def add_part(opt):
     part1 = create_neural_point(opt,'penerf')
     part2 = create_neural_point(opt, 'penerf')
-    part3 = create_neural_point(opt, 'penerf')
-    part4 = create_neural_point(opt,'penerf')
-    part1.load_from_ply('part_trans_300')
-    part2.load_from_ply('part_trans_60')
-    part3.load_from_ply('part_trans_150')
-    part4.load_from_ply('part_trans_210')
+    part1.load_from_ply('part_trans_1')
+    part2.load_from_ply('part_trans_2')
     origin =  create_neural_point(opt,'penerf')
     origin.load_from_ply('origin')
-    new_scene = origin + part1 + part2 + part3 + part4
+    new_scene = origin + part1 + part2
     new_scene.save_as_ply('new_scene')
-    cpc = create_checkpointscontroller(opt, 'penerf', '430000_net_ray_marching')
+    cpc = create_checkpointscontroller(opt, 'penerf', '690000_net_ray_marching')
     cpc.set_and_save(new_scene,'new')
 
 
@@ -53,7 +50,7 @@ def main():
     opt = sparse.opt
     # extract_neural_point(opt)
     # meshlab_point_2_neural_point(opt)
-    # rotate_part(opt)
+    rotate_part(opt)
     add_part(opt)
 if __name__=="__main__":
     main()

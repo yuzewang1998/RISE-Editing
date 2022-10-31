@@ -2,7 +2,7 @@
 renderer_required_grad=0
 nrCheckpoint="../checkpoints"
 nrDataRoot="../data_src"
-name='train_multi_scene/ficus_finetune'
+name='train_multi_scene/ficus'
 resume_iter=latest #
 data_root="${nrDataRoot}/nerf/nerf_synthetic_colmap/"
 scan="ficus"
@@ -14,8 +14,8 @@ color_grad=1
 vox_res=320
 normview=0
 prune_thresh=-1
-prune_iter=30001
-prune_max_iter=200000
+prune_iter=10000
+prune_max_iter=870001
 
 feedforward=0
 ref_vid=0
@@ -44,7 +44,7 @@ radius_limit_scale=4
 depth_limit_scale=0
 alpha_range=0
 
-vscale=" 2 2 2 "
+vscale=" 3 3 3 "
 kernel_size=" 3 3 3 "
 query_size=" 3 3 3 "
 vsize=" 0.004 0.004 0.004 " #" 0.005 0.005 0.005 "
@@ -118,7 +118,7 @@ resume_dir="${nrCheckpoint}/init/dtu_dgt_d012_img0123_conf_agg2_32_dirclr20"
 
 save_iter_freq=5000
 save_point_freq=1000 #301840 #1
-maximum_step=750000 #800000
+maximum_step=2500000 #800000
 
 niter=10000 #1000000
 niter_decay=10000 #250000
@@ -126,7 +126,7 @@ n_threads=1
 
 train_and_test=0 #1
 test_num=10
-test_freq=750000 #1200 #1200 #30184 #30184 #50000
+test_freq=2500000 #1200 #1200 #30184 #30184 #50000
 print_freq=100
 test_num_step=10
 

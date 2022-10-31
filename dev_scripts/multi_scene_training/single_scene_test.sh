@@ -2,10 +2,10 @@
 nrCheckpoint="../checkpoints"
 nrDataRoot="../data_src"
 #name='train_multi_scene/edit'
-name='train_multi_scene/lego'
+name='train_multi_scene/edit'
 resume_iter=latest # 20000
 data_root="${nrDataRoot}/nerf/nerf_synthetic_colmap/"
-scan="lego" #dui biao de shu ju ji
+scan="chair" #dui biao de shu ju ji
 
 normview=0
 
@@ -26,15 +26,14 @@ radius_limit_scale=4
 depth_limit_scale=0
 alpha_range=0
 
-vscale=" 2 2 2 "
+vscale=" 3 3 3 "
 kernel_size=" 3 3 3 "
 query_size=" 3 3 3 "
 vsize=" 0.004 0.004 0.004 " #" 0.005 0.005 0.005 "
 wcoord_query=1
-z_depth_dim=100
+z_depth_dim=400
 max_o=600000 #2000000
-#ranges=" -0.638 -1.141 -0.346 0.634 1.149 1.141 " #lego
-ranges=" -10 -10 -10 10 10 10"
+ranges=" -10 -10 -10 10 10 10 "
 SR=80
 K=8
 P=13 #120
