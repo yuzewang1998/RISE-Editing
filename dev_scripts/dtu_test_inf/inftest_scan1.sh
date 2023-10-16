@@ -21,7 +21,7 @@ prune_iter=10000
 
 feedforward=0
 ref_vid=0
-bgmodel="plane" #"plane"
+bgmodel="no" #"plane"
 depth_occ=1
 depth_vid="0"
 trgt_id=3
@@ -33,21 +33,21 @@ manual_std_depth=0.0
 depth_conf_thresh=0.8
 
 uni_depth=1
-geo_cnsst_num=10
+geo_cnsst_num=0
 appr_feature_str0="imgfeat_0_0123 dir_0 point_conf"
-point_conf_mode="01" # 0 for only at features, 1 for multi at weight
-point_dir_mode="01" # 0 for only at features, 1 for color branch
-point_color_mode="01" # 0 for only at features, 1 for color branch
+point_conf_mode="1" # 0 for only at features, 1 for multi at weight
+point_dir_mode="1" # 0 for only at features, 1 for color branch
+point_color_mode="1" # 0 for only at features, 1 for color branch
 
 agg_feat_xyz_mode="None"
 agg_alpha_xyz_mode="None"
 agg_color_xyz_mode="None"
 feature_init_method="rand" #"rand" # "zeros"
 agg_axis_weight=" 1. 1. 1."
-agg_dist_pers=20
+agg_dist_pers=15
 radius_limit_scale=0
 depth_limit_scale=0
-vscale=" 2 2 1 "
+vscale=" 3 3 3 "
 kernel_size=" 3 3 3 "
 SR=40
 K=8
@@ -56,21 +56,26 @@ NN=2
 
 act_type="LeakyReLU"
 
-agg_intrp_order=1
-agg_distance_kernel="linear" #"avg" #"feat_intrp"
+agg_intrp_order=2
+agg_distance_kernel="linear_immediately" #"avg" #"feat_intrp"
 weight_xyz_freq=2
 weight_feat_dim=8
 
-point_features_dim=63
-shpnt_jitter="uniform" #"uniform" # uniform gaussian
+point_features_dim=32
+shpnt_jitter="passfunc" #"uniform" # uniform gaussian
 
 which_agg_model="viewmlp"
 apply_pnt_mask=1
-shading_feature_mlp_layer1=2 #2
-shading_feature_mlp_layer2=0 #1
-shading_feature_mlp_layer3=2 #1
+shading_feature_mlp_layer0=0
+shading_feature_mlp_layer1=2
+shading_feature_mlp_layer2=0
+shading_feature_mlp_linear=2
+shading_feature_mlp_layer3=0 #0
+shading_feature_mlp_layer4=2 #1
+shading_feature_mlp_layer0_rotation_invariance_feature_extraction_module=0
+shading_feature_mlp_layer0_rotation_invariance_feature_extraction_dim=999
 shading_alpha_mlp_layer=1
-shading_color_mlp_layer=4
+shading_color_mlp_layer=2
 shading_feature_num=256
 dist_xyz_freq=5
 #num_feat_freqs=6
@@ -80,7 +85,7 @@ dist_xyz_deno=0
 
 raydist_mode_unit=1
 dataset_name='dtu_ft'
-pin_data_in_memory=1
+pin_data_in_memory=0
 model='mvs_points_volumetric'
 near_plane=2.0
 far_plane=4.725
@@ -98,7 +103,7 @@ num_viewdir_freqs=4 #6
 
 random_sample='random'
 
-random_sample_size=48 # 32 * 32 = 1024
+random_sample_size=32 # 32 * 32 = 1024
 batch_size=1
 
 plr=0.002 # 0.0005 #0.00015
@@ -110,7 +115,7 @@ lr_decay_exp=0.1
 gpu_ids='0'
 
 checkpoints_dir="${nrCheckpoint}/dtu/"
-resume_dir="${nrCheckpoint}/init/dtu_dgt_d012_img0123_conf_color_dir_agg2"
+resume_dir="${nrCheckpoint}/init/dtu_dgt_d012_img0123_conf_agg2_32_dirclr20"
 
 save_iter_freq=10000
 save_point_freq=308000 #1 #308000 #1ss
@@ -210,9 +215,14 @@ python3 train_ft.py \
         --raydist_mode_unit $raydist_mode_unit  \
         --agg_dist_pers $agg_dist_pers \
         --agg_intrp_order $agg_intrp_order \
+        --shading_feature_mlp_layer0 $shading_feature_mlp_layer0 \
         --shading_feature_mlp_layer1 $shading_feature_mlp_layer1 \
         --shading_feature_mlp_layer2 $shading_feature_mlp_layer2 \
+        --shading_feature_mlp_linear $shading_feature_mlp_linear \
         --shading_feature_mlp_layer3 $shading_feature_mlp_layer3 \
+        --shading_feature_mlp_layer4 $shading_feature_mlp_layer4 \
+        --shading_feature_mlp_layer0_rotation_invariance_feature_extraction_module $shading_feature_mlp_layer0_rotation_invariance_feature_extraction_module\
+        --shading_feature_mlp_layer0_rotation_invariance_feature_extraction_dim $shading_feature_mlp_layer0_rotation_invariance_feature_extraction_dim \
         --shading_feature_num $shading_feature_num \
         --dist_xyz_freq $dist_xyz_freq \
         --shpnt_jitter $shpnt_jitter \

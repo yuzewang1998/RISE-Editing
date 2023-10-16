@@ -625,10 +625,11 @@ class NeuralPoints(nn.Module):
         #vsize_np[0.008 0.008 0.008]
         #ranges_np[-1.6265 -1.9573 -3.2914 3.868 4.070 2.417]
         ray_label_tensor = None
+        sample_ray_labels_tensor = None
         if ray_label_tensor is not None:
             sample_pidx_tensor, sample_loc_tensor, sample_loc_w_tensor,sample_ray_dirs_tensor,sample_ray_labels_tensor, ray_mask_tensor, vsize, ranges = self.querier.query_points(pixel_idx_tensor, point_xyz_pers_tensor, self.xyz[None,...], actual_numpoints_tensor, h, w, intrinsic, near_plane, far_plane, ray_dirs_tensor, cam_pos_tensor, cam_rot_tensor,self.points_label[None,...],ray_label_tensor)
         else:
-            sample_pidx_tensor, sample_loc_tensor, sample_loc_w_tensor, sample_ray_dirs_tensor, sample_ray_labels_tensor, ray_mask_tensor, vsize, ranges = self.querier.query_points(pixel_idx_tensor, point_xyz_pers_tensor, self.xyz[None, ...],actual_numpoints_tensor, h, w, intrinsic, near_plane, far_plane, ray_dirs_tensor,cam_pos_tensor, cam_rot_tensor)
+            sample_pidx_tensor, sample_loc_tensor, sample_loc_w_tensor, sample_ray_dirs_tensor,sample_ray_labels_tensor, ray_mask_tensor, vsize, ranges = self.querier.query_points(pixel_idx_tensor, point_xyz_pers_tensor, self.xyz[None, ...],actual_numpoints_tensor, h, w, intrinsic, near_plane, far_plane, ray_dirs_tensor,cam_pos_tensor, cam_rot_tensor)
         # sample_pidx_tensor[1,784,24,8];sample_loc_tensor[1,784,24,3];sample_loc_w_tensor[1,784,24,3];sample_ray_dirs_tensor[1,784,24,3];ray_mask_tensor[1,784]
         #loc_w ? whats meaning
         B, _, SR, K = sample_pidx_tensor.shape#B1 SR24 K 8

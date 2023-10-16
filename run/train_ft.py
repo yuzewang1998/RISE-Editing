@@ -26,6 +26,18 @@ from tqdm import tqdm
 # from models.pointnet2.pointnet2_stack import pointnet2_utils as pointnet2_stack_utils
 # from pcdet.ops.pointnet2.pointnet2_stack import pointnet2_utils as pointnet2_stack_utils
 import gc
+def get_list_shape(lst):
+    shape = []
+    for element in lst:
+        if isinstance(element, list):
+            shape.append(len(element))
+            subshape = get_list_shape(element)  # Recursive call
+            shape.extend(subshape)
+    return shape
+
+my_list = [1, 2, [3, 4], [[5, 6], [7, 8]]]
+shape = get_list_shape(my_list)
+print(shape)  # Output: [2, 2, 2]
 
 def mse2psnr(x): return -10.* torch.log(x)/np.log(10.)
 
@@ -148,26 +160,42 @@ def gen_points_filter_embeddings(dataset, visualizer, opt):
         xyz_world_all = [xyz_world_all[points_vid[:,0]==i, :] for i in range(len(HDWD_lst))]
         confidence_filtered_all = [confidence_filtered_all[points_vid[:,0]==i] for i in range(len(HDWD_lst))]
         cam_xyz_all = [(torch.cat([xyz_world_all[i], torch.ones_like(xyz_world_all[i][...,0:1])], dim=-1) @ extrinsics_all[i][0].t())[...,:3] for i in range(len(HDWD_lst))]
-        points_embedding_all, points_color_all, points_dir_all, points_conf_all = [], [], [], []
+        points_embedding_all, points_color_all, points_dirx_all,points_diry_all, points_dirz_all, points_conf_all = [], [], [], [], [], []
         for i in tqdm(range(len(HDWD_lst))):
             if len(xyz_world_all[i]) > 0:
-                embedding, color, dir, conf = model.query_embedding(HDWD_lst[i], torch.as_tensor(cam_xyz_all[i][None, ...], device="cuda", dtype=torch.float32), torch.as_tensor(confidence_filtered_all[i][None, :, None], device="cuda", dtype=torch.float32) if len(confidence_filtered_all) > 0 else None, imgs_lst[i].cuda(), c2ws_lst[i], w2cs_lst[i], intrinsics_full_lst[i], 0, pointdir_w=True)
+                embedding, color, dirx, diry, dirz, conf = model.query_embedding(HDWD_lst[i], torch.as_tensor(cam_xyz_all[i][None, ...], device="cuda", dtype=torch.float32), torch.as_tensor(confidence_filtered_all[i][None, :, None], device="cuda", dtype=torch.float32) if len(confidence_filtered_all) > 0 else None, imgs_lst[i].cuda(), c2ws_lst[i], w2cs_lst[i], intrinsics_full_lst[i], 0, pointdir_w=True)
                 points_embedding_all.append(embedding)
                 points_color_all.append(color)
-                points_dir_all.append(dir)
+                points_dirx_all.append(dirx)
+                points_diry_all.append(dirx)
+                points_dirz_all.append(dirx)
                 points_conf_all.append(conf)
 
         xyz_world_all = torch.cat(xyz_world_all, dim=0)
+        # 当embedding size过大会OOM ，改为chunk形式分批拼接
+        # def trunk_cat(points_embedding_all, trunk_size,dim):
+        #     # points_embedding_all: 66个[1,X,56]沿着dim=1拼接后[1,x1+x2+...+x66,56]=
+        #     nums_trunks = len(points_embedding_all)//trunk_size
+        #     cat_tensor = torch.ones([1,0,56],device=points_embedding_all[0].device)
+        #     for i in range(nums_trunks):
+        #         batch = points_embedding_all[i*trunk_size:(i+1)*trunk_size]
+        #         cat_tensor = torch.cat([cat_tensor,*batch],dim=dim)
+        #     if len(points_embedding_all) % trunk_size >0 :
+        #         cat_tensor = torch.cat([cat_tensor,points_embedding_all[nums_trunks*trunk_size:-1]])
+        #     return cat_tensor
+        # points_embedding_all = trunk_cat(points_embedding_all,trunk_size=6,dim=1)
         points_embedding_all = torch.cat(points_embedding_all, dim=1)
         points_color_all = torch.cat(points_color_all, dim=1) if points_color_all[0] is not None else None
-        points_dir_all = torch.cat(points_dir_all, dim=1) if points_dir_all[0] is not None else None
+        points_dirx_all = torch.cat(points_dirx_all, dim=1) if points_dirx_all[0] is not None else None
+        points_diry_all = torch.cat(points_diry_all, dim=1) if points_diry_all[0] is not None else None
+        points_dirz_all = torch.cat(points_dirz_all, dim=1) if points_dirz_all[0] is not None else None
         points_conf_all = torch.cat(points_conf_all, dim=1) if points_conf_all[0] is not None else None
 
         visualizer.save_neural_points(200, xyz_world_all, points_color_all, data, save_ref=opt.load_points == 0)
         print("vis")
         model.cleanup()
         del model
-    return xyz_world_all, points_embedding_all, points_color_all, points_dir_all, points_conf_all, [img[0].cpu() for img in imgs_lst], [c2w for c2w in c2ws_lst], [w2c for w2c in w2cs_lst] , intrinsics_all, [list(HDWD) for HDWD in HDWD_lst]
+    return xyz_world_all, points_embedding_all, points_color_all, points_dirx_all,points_diry_all,points_dirz_all, points_conf_all, [img[0].cpu() for img in imgs_lst], [c2w for c2w in c2ws_lst], [w2c for w2c in w2cs_lst] , intrinsics_all, [list(HDWD) for HDWD in HDWD_lst]
 
 
 def masking(mask, firstdim_lst, seconddim_lst):
@@ -663,7 +691,7 @@ def main():
             model = create_model(opt)#In default train scannet:initialize /models/mvs_points_volumetric_model.py
         elif opt.load_points < 1:#no exsist _net_ray_marching,from COLMAP to generate point feature
             #ERR
-            points_xyz_all, points_embedding_all, points_color_all, points_dir_all, points_conf_all, img_lst, c2ws_lst, w2cs_lst, intrinsics_all, HDWD_lst = gen_points_filter_embeddings(train_dataset, visualizer, opt)
+            points_xyz_all, points_embedding_all, points_color_all, points_dirx_all,points_diry_all,points_dirz_all, points_conf_all, img_lst, c2ws_lst, w2cs_lst, intrinsics_all, HDWD_lst = gen_points_filter_embeddings(train_dataset, visualizer, opt)
             opt.resume_iter = opt.resume_iter if opt.resume_iter != "latest" else get_latest_epoch(opt.resume_dir)
             opt.is_train=True
             opt.mode = 2
@@ -794,6 +822,7 @@ def main():
             opt.mode = 2
             model = create_model(opt)
         # None in default train scannet
+        points_label_all = None
         if points_xyz_all is not None:
             if opt.bgmodel.startswith("planepoints"):# bgmodel='no'
                 gen_pnts, gen_embedding, gen_dir, gen_color, gen_conf = train_dataset.get_plane_param_points()

@@ -274,7 +274,7 @@ class MvsPointsModel(nn.Module):
 
     def gen_points(self, batch):
         if 'scan' in batch.keys():
-            batch.pop('scan')
+            batch.pop('scan')#44,49
         log, loss = {},0
         data_mvs, pose_ref = self.decode_batch(batch)
         imgs, proj_mats = data_mvs['images'], data_mvs['proj_mats']
@@ -357,7 +357,7 @@ class MvsPointsModel(nn.Module):
 
     def forward(self, batch):
         # 3 , 3, 3, 2, 4, dict, 3, 3
-
+        # for not COLMAP input, this line indicates to use batch['depth_h'] to generate points
         cam_xyz_lst, photometric_confidence_lst, nearfar_mask_lst, HDWD, data_mvs, intrinsics_lst, extrinsics_lst  = self.gen_points(batch)
         # #################### FILTER by Masks ##################
         gpu_filter = True

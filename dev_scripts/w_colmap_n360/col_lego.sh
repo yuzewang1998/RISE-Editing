@@ -7,7 +7,7 @@ resume_iter=latest #
 data_root="${nrDataRoot}/nerf/nerf_synthetic_colmap/"
 scan="lego"
 
-load_points=1
+load_points=0
 feat_grad=1
 conf_grad=1
 dir_grad=0
@@ -118,14 +118,14 @@ resume_dir="${nrCheckpoint}/init/dtu_dgt_d012_img0123_conf_agg2_32_dirclr20"
 
 save_iter_freq=2000
 save_point_freq=1000 #301840 #1
-maximum_step=1000000 #800000
+maximum_step=800000 #800000
 
 niter=10000 #1000000
 niter_decay=10000 #250000
 n_threads=1
 
 train_and_test=0 #1
-test_num=10
+test_num=1
 test_freq=2000000 #1200 #1200 #30184 #30184 #50000
 print_freq=100
 test_num_step=10
@@ -149,7 +149,7 @@ color_loss_weights=" 1.0 0.0 0.0 "
 color_loss_items='ray_masked_coarse_raycolor ray_miss_coarse_raycolor coarse_raycolor'
 test_color_loss_items='coarse_raycolor ray_miss_coarse_raycolor ray_masked_coarse_raycolor'
 
-vid=250000
+vid=2500000000
 
 bg_color="white" #"0.0,0.0,0.0,1.0,1.0,1.0"
 split="train"

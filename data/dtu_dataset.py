@@ -300,7 +300,7 @@ class DtuDataset(BaseDataset):
         sample = {}
         scan, light_idx, target_view, src_views = self.metas[idx]
         if self.split=='train':
-            ids = torch.randperm(5)[:3]
+            ids = torch.randperm(5)[:3]#if train ,reference view random select 3
             view_ids = [src_views[i] for i in ids] + [target_view]
         else:
             view_ids = [src_views[i] for i in range(3)] + [target_view]

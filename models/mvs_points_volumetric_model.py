@@ -78,7 +78,7 @@ class MvsPointsVolumetricModel(NeuralPointsVolumetricModel):
                                               betas=(0.9, 0.999))
             self.optimizers.append(self.mvs_optimizer)
 
-        if len(net_params) and opt.renderer_required_grad > 0:
+        if len(net_params)>0 and opt.renderer_required_grad > 0:
             self.optimizer = torch.optim.Adam(net_params,
                                           lr=opt.lr,
                                           betas=(0.9, 0.999))
