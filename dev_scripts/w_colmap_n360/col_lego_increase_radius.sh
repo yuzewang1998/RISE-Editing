@@ -1,10 +1,10 @@
 #!/bin/bash
 semantic_guidance=0
-increase_radius=1
+# increase_radius=1
 nrCheckpoint="../checkpoints"
 nrDataRoot="../data_src"
-name='test_increase_radius/lego_increase_radius'
-resume_iter=best #
+name='lego_1023'
+resume_iter=latest #
 data_root="${nrDataRoot}/nerf/nerf_synthetic_colmap/"
 scan="lego"
 
@@ -131,7 +131,7 @@ n_threads=1
 
 train_and_test=0 #1
 test_num=100
-test_freq=5000000 #1200 #1200 #30184 #30184 #50000
+test_freq=50000 #1200 #1200 #30184 #30184 #50000
 print_freq=100
 test_num_step=10
 
@@ -291,7 +291,7 @@ python3 train_ft.py \
         --far_thresh $far_thresh \
         --debug \
         --semantic_guidance $semantic_guidance \
-        --increase_radius $increase_radius
+
 done
 #        --zero_one_loss_items $zero_one_loss_items \
 #        --zero_one_loss_weights $zero_one_loss_weights \

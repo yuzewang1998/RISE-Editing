@@ -1,9 +1,9 @@
 #!/bin/bash
 nrCheckpoint="../checkpoints"
 nrDataRoot="../data_src"
-name='legoV1'
+name='lego_1023'
 
-resume_iter=best # 20000
+resume_iter=latest # 20000
 data_root="${nrDataRoot}/nerf/nerf_synthetic_colmap/"
 scan="lego"
 
@@ -33,10 +33,10 @@ vsize=" 0.004 0.004 0.004 " #" 0.005 0.005 0.005 "
 wcoord_query=1
 z_depth_dim=400
 max_o=830000 #2000000
-ranges=" -10 -10 -10 10 10 10 "
+ranges=" -0.638 -1.141 -0.346 0.634 1.149 1.141 "
 SR=80
 K=8
-P=13 #120
+P=9 #120
 NN=2
 
 act_type="LeakyReLU"
@@ -94,7 +94,7 @@ gpu_ids='0'
 checkpoints_dir="${nrCheckpoint}/col_nerfsynth/"
 resume_dir="${nrCheckpoint}/init/dtu_dgt_d012_img0123_conf_agg2_32_dirclr20"
 
-test_num_step=1
+test_num_step=10
 visual_items=' coarse_raycolor gt_image '
 color_loss_weights=" 1.0 0.0 0.0 "
 color_loss_items='ray_masked_coarse_raycolor ray_miss_coarse_raycolor coarse_raycolor'
@@ -185,4 +185,5 @@ python3 test_ft.py \
         --vsize $vsize \
         --wcoord_query $wcoord_query \
         --max_o $max_o \
+
         --debug

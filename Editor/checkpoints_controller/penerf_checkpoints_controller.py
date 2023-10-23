@@ -20,7 +20,7 @@ class PeNerfCheckpointsController(BaseCheckpointsController):
         if penerf_neuralpoint is not None:
             self.network_paras["neural_points.xyz"] = torch.Tensor(penerf_neuralpoint.xyz)  #[ptr,3]
             self.network_paras["neural_points.points_embeding"] = torch.unsqueeze(torch.Tensor(penerf_neuralpoint.embeding),dim=0) #[1,ptr,32]
-            self.network_paras["neural_points.points_conf"] =  torch.unsqueeze(torch.Tensor(penerf_neuralpoint.conf[...,np.newaxis]),dim=0)#[1,ptr,1]
+            self.network_paras["neural_points.points_conf"] =  torch.unsqueeze(torch.Tensor(penerf_neuralpoint.conf),dim=0)#[1,ptr,1]
             self.network_paras["neural_points.points_dirx"] = torch.unsqueeze(torch.Tensor(penerf_neuralpoint.dirx),dim=0)#[1,ptr,3]
             self.network_paras["neural_points.points_diry"] = torch.unsqueeze(torch.Tensor(penerf_neuralpoint.diry),dim=0)#[1,ptr,3]
             self.network_paras["neural_points.points_dirz"] = torch.unsqueeze(torch.Tensor(penerf_neuralpoint.dirz), dim=0)  # [1,ptr,3]

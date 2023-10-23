@@ -1,13 +1,17 @@
 #!/bin/bash
 semantic_guidance=0
+# increase_radius=1
 nrCheckpoint="../checkpoints"
 nrDataRoot="../data_src"
-name='legoV1_sparse'
+name='lego_1023'
 resume_iter=latest #
 data_root="${nrDataRoot}/nerf/nerf_synthetic_colmap/"
 scan="lego"
 
-load_points=0
+maximum_swap=20000
+
+
+load_points=1
 feat_grad=1
 conf_grad=1
 dir_grad=0
@@ -15,7 +19,7 @@ color_grad=1
 vox_res=320
 normview=0
 prune_thresh=0.1
-prune_iter=30001
+prune_iter=10001
 prune_max_iter=200000
 
 feedforward=0
@@ -30,7 +34,7 @@ pre_d_est="${nrCheckpoint}/MVSNet/model_000014.ckpt"
 manual_std_depth=0.0
 depth_conf_thresh=0.8
 appr_feature_str0="imgfeat_0_0123 dir_0 point_conf"
-point_conf_mode="1" # 0 for only at features, 1 for multi at weight78
+point_conf_mode="1" # 0 for only at features, 1 for multi at weight
 point_dir_mode="1" # 0 for only at features, 1 for color branch
 point_color_mode="1" # 0 for only at features, 1 for color branch
 default_conf=0.15 #1000
@@ -41,16 +45,16 @@ agg_color_xyz_mode="None"
 feature_init_method="rand" #"rand" # "zeros"
 agg_axis_weight=" 1. 1. 1."
 agg_dist_pers=15
-radius_limit_scale=4
+radius_limit_scale=8
 depth_limit_scale=0
 alpha_range=0
 
-vscale=" 3 3 3 "
+vscale=" 2 2 2 "
 kernel_size=" 3 3 3 "
 query_size=" 3 3 3 "
 vsize=" 0.004 0.004 0.004 " #" 0.005 0.005 0.005 "
 wcoord_query=1
-z_depth_dim=400
+z_depth_dim=100
 max_o=600000 #2000000
 ranges=" -0.638 -1.141 -0.346 0.634 1.149 1.141 "
 SR=80
@@ -82,6 +86,7 @@ shading_feature_num=256
 dist_xyz_freq=5
 num_feat_freqs=3
 dist_xyz_deno=0
+
 
 raydist_mode_unit=1
 dataset_name='nerf_synth360_ft'
@@ -116,17 +121,17 @@ gpu_ids='0'
 checkpoints_dir="${nrCheckpoint}/col_nerfsynth/"
 resume_dir="${nrCheckpoint}/init/dtu_dgt_d012_img0123_conf_agg2_32_dirclr20"
 
-save_iter_freq=2000
+save_iter_freq=5000
 save_point_freq=1000 #301840 #1
-maximum_step=800000 #800000
+maximum_step=1000000 #800000
 
 niter=10000 #1000000
 niter_decay=10000 #250000
 n_threads=1
 
 train_and_test=0 #1
-test_num=1
-test_freq=2000000 #1200 #1200 #30184 #30184 #50000
+test_num=100
+test_freq=50000 #1200 #1200 #30184 #30184 #50000
 print_freq=100
 test_num_step=10
 
@@ -136,7 +141,7 @@ prob_num_step=25
 prob_thresh=0.7
 prob_mul=0.4
 prob_kernel_size=" 1 1 1 "
-prob_tiers=" 120000 160000 "
+prob_tiers=" 60000 "
 
 zero_epsilon=1e-3
 
@@ -149,10 +154,13 @@ color_loss_weights=" 1.0 0.0 0.0 "
 color_loss_items='ray_masked_coarse_raycolor ray_miss_coarse_raycolor coarse_raycolor'
 test_color_loss_items='coarse_raycolor ray_miss_coarse_raycolor ray_masked_coarse_raycolor'
 
-vid=2500000000
+
 
 bg_color="white" #"0.0,0.0,0.0,1.0,1.0,1.0"
 split="train"
+
+vid=25000000
+
 
 cd run
 
@@ -282,7 +290,8 @@ python3 train_ft.py \
         --prune_max_iter $prune_max_iter \
         --far_thresh $far_thresh \
         --debug \
-        --semantic_guidance $semantic_guidance
+        --semantic_guidance $semantic_guidance \
+
 done
 #        --zero_one_loss_items $zero_one_loss_items \
 #        --zero_one_loss_weights $zero_one_loss_weights \

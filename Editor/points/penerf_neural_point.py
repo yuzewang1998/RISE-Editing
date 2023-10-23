@@ -55,6 +55,7 @@ class PenerfNeuralPoint(BaseNeuralPoint):
     def save_as_ply(self,name):
         assert self.xyz is not None, '[ERROR]Save before load,check it!'
         print('Saving neural point cloud as ply...', self.xyz.shape)
+        # self.color = np.clip(np.ceil(self.color * 128 + 127).astype(np.uint8), 0, 255)
         vertex = np.concatenate([self.xyz,self.color,self.conf,self.dirx,self.diry,self.dirz,self.embeding],axis=-1)
         vertex = [tuple(i) for i in vertex]
             #ply的格式，没写循环、增加可读性

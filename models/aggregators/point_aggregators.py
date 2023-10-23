@@ -649,6 +649,7 @@ class PointAggregator(torch.nn.Module):
         if self.opt.shading_feature_mlp_layer4>0:#implement by my-self
             if sampled_color is not None:
                 sampled_color = sampled_color.view(-1, sampled_color.shape[-1])  # [150528,3]
+
                 if self.opt.apply_pnt_mask > 0:
                     sampled_color = sampled_color[pnt_mask_flat, :]
                 feat = torch.cat([feat, sampled_color], dim=-1)  # [35634,256+3]
