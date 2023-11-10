@@ -5,6 +5,18 @@ class TrainOptions(BaseOptions):
     def initialize(self, parser):
         parser = BaseOptions.initialize(self, parser)
         self.is_train = True
+        '''
+        use only in ripnerf animation
+        '''
+        parser.add_argument(
+            '--start_iter',
+            type=int,
+            default=0,
+            help='animation t=0 ckpt idx')
+
+        '''
+        use only in multiple scene training
+        '''
         parser.add_argument(
             '--train_step',
             type=int,

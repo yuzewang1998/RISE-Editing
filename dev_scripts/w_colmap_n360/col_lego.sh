@@ -3,7 +3,7 @@ semantic_guidance=0
 # increase_radius=1
 nrCheckpoint="../checkpoints"
 nrDataRoot="../data_src"
-name='lego_1023'
+name='lego'
 resume_iter=latest #
 data_root="${nrDataRoot}/nerf/nerf_synthetic_colmap/"
 scan="lego"
@@ -45,16 +45,16 @@ agg_color_xyz_mode="None"
 feature_init_method="rand" #"rand" # "zeros"
 agg_axis_weight=" 1. 1. 1."
 agg_dist_pers=15
-radius_limit_scale=8
+radius_limit_scale=4
 depth_limit_scale=0
 alpha_range=0
 
-vscale=" 2 2 2 "
+vscale=" 3 3 3 "
 kernel_size=" 3 3 3 "
 query_size=" 3 3 3 "
 vsize=" 0.004 0.004 0.004 " #" 0.005 0.005 0.005 "
 wcoord_query=1
-z_depth_dim=100
+z_depth_dim=400
 max_o=600000 #2000000
 ranges=" -0.638 -1.141 -0.346 0.634 1.149 1.141 "
 SR=80
@@ -68,7 +68,7 @@ agg_intrp_order=2
 agg_distance_kernel="linear_immediately" #"avg" #"feat_intrp"
 
 point_features_dim=32
-shpnt_jitter="passfunc" #"uniform" # uniform gaussian
+shpnt_jitter="uniform" #"uniform" # uniform gaussian
 
 which_agg_model="viewmlp"
 apply_pnt_mask=1
@@ -121,8 +121,8 @@ gpu_ids='0'
 checkpoints_dir="${nrCheckpoint}/col_nerfsynth/"
 resume_dir="${nrCheckpoint}/init/dtu_dgt_d012_img0123_conf_agg2_32_dirclr20"
 
-save_iter_freq=5000
-save_point_freq=1000 #301840 #1
+save_iter_freq=10000
+save_point_freq=10000 #301840 #1
 maximum_step=1000000 #800000
 
 niter=10000 #1000000
@@ -140,8 +140,8 @@ prob_freq=10010 #10000 #2000 #1000 is bad #10001
 prob_num_step=25
 prob_thresh=0.7
 prob_mul=0.4
-prob_kernel_size=" 1 1 1 "
-prob_tiers=" 60000 "
+prob_kernel_size="3 3 3 1 1 1 "
+prob_tiers="120000 60000 "
 
 zero_epsilon=1e-3
 
@@ -159,7 +159,7 @@ test_color_loss_items='coarse_raycolor ray_miss_coarse_raycolor ray_masked_coars
 bg_color="white" #"0.0,0.0,0.0,1.0,1.0,1.0"
 split="train"
 
-vid=25000000
+vid=2500000000
 
 
 cd run

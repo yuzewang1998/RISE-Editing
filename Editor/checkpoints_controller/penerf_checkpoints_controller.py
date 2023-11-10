@@ -15,7 +15,7 @@ class PeNerfCheckpointsController(BaseCheckpointsController):
         neural_point = create_neural_point(self.opt,'penerf')
         neural_point.set_input(self.points_xyz,points_embeding=self.points_embeding,points_conf=self.points_conf,points_color=self.points_color,points_dirx=self.points_dirx,points_diry=self.points_diry,points_dirz=self.points_dirz)
         return neural_point
-    def set_and_save(self,penerf_neuralpoint = None,edit_name = None):
+    def set_and_save(self,penerf_neuralpoint = None,edit_name = None,ani_flag = 0):
         print('Saving checkpoints from neural point cloud...')
         if penerf_neuralpoint is not None:
             self.network_paras["neural_points.xyz"] = torch.Tensor(penerf_neuralpoint.xyz)  #[ptr,3]
@@ -25,12 +25,16 @@ class PeNerfCheckpointsController(BaseCheckpointsController):
             self.network_paras["neural_points.points_diry"] = torch.unsqueeze(torch.Tensor(penerf_neuralpoint.diry),dim=0)#[1,ptr,3]
             self.network_paras["neural_points.points_dirz"] = torch.unsqueeze(torch.Tensor(penerf_neuralpoint.dirz), dim=0)  # [1,ptr,3]
             self.network_paras["neural_points.points_color"] = torch.unsqueeze(torch.Tensor(penerf_neuralpoint.color),dim=0) #[1,ptr,3]
-        if edit_name != None:
-            torch.save(self.network_paras,os.path.join(self.opt.editor_checkpoints_root,self.opt.editor_checkpoints_scans,self.checkpoints_name+'_'+edit_name +'.pth'))# find the latest pth file)
-        else :
+        if not ani_flag:
+            if edit_name != None:
+                torch.save(self.network_paras,os.path.join(self.opt.editor_checkpoints_root,self.opt.editor_checkpoints_scans,self.checkpoints_name+'_'+edit_name +'.pth'))# find the latest pth file)
+            else :
+                torch.save(self.network_paras,
+                           os.path.join(self.opt.editor_checkpoints_root, self.opt.editor_checkpoints_scans,self.checkpoints_name + '.pth'))
+        else:
             torch.save(self.network_paras,
-                       os.path.join(self.opt.editor_checkpoints_root, self.opt.editor_checkpoints_scans,self.checkpoints_name + '.pth'))
-        print('Saving checkpoints done')
+                       os.path.join(self.opt.editor_checkpoints_root, edit_name + '_net_ray_marching.pth'))
+            print('Saving checkpoints done: {}'.format(os.path.join(self.opt.editor_checkpoints_root, edit_name + '_net_ray_marching.pth')))
     def aggrator_paras_copy(self,cpc_other):
         for key in cpc_other.network_paras.keys():
             if  key.startswith('aggregator'):

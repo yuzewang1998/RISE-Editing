@@ -59,7 +59,7 @@ def pth_copy_paste(opt,ckpt_name):
 def main():
     sparse = Options()
     opt = sparse.opt
-    ckpt_name = '125000_net_ray_marching'
+    ckpt_name = '500000_net_ray_marching'
     # Step 1 : ckpt 2 ply
     # os.mkdir(os.path.join(opt.editor_checkpoints_root,opt.editor_checkpoints_scans))
     # shutil.copy(os.path.join(opt.editor_checkpoints_root,ckpt_name+".pth"),os.path.join(opt.editor_checkpoints_root,opt.editor_checkpoints_scans,ckpt_name+".pth"))
@@ -71,12 +71,12 @@ def main():
 
 
     # Step 3: manipulate ply via XX
-    manipulate_neural_point(opt)
+    # manipulate_neural_point(opt)
 
 
     # Step 4: back to ckpt
-    back_to_ckpt(opt,ckpt_name)
-    pth_copy_paste(opt,ckpt_name)
+    # back_to_ckpt(opt,ckpt_name)
+    # pth_copy_paste(opt,ckpt_name)
 
 if __name__=="__main__":
     main()

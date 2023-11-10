@@ -9,14 +9,14 @@ class Options:
         self.opt = None
         self.parse()
     def parse(self):
-        parser = argparse.ArgumentParser(description="Argparse of  point_editor")
+        parser = argparse.ArgumentParser(description="Argparse of point_editor")
         parser.add_argument('--editor_checkpoints_scans',
                             type=str,
                             default='edit',#/home/slam/devdata/pointnerf/checkpoints/scannet/scene000-T
                             help='scans of checkpoints')
         parser.add_argument('--editor_checkpoints_root',
                             type=str,
-                            default='/home/yuze/Documents/project/PC-NeRF/checkpoints/col_nerfsynth/lego_1023',#/home/slam/devdata/pointnerf/checkpoints/scannet/scene000-T
+                            default='/home/yuze/Documents/project/PC-NeRF/checkpoints/col_nerfsynth/lego',#/home/slam/devdata/pointnerf/checkpoints/scannet/scene000-T
                             help='root of checkpoints datasets')
         parser.add_argument('--gpu_ids',
                             type=str,

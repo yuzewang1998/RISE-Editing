@@ -365,6 +365,7 @@ class NerfSynth360FtDataset(BaseDataset):
 
     def load_init_points(self):
         points_path = os.path.join(self.data_dir, self.scan, "colmap_results/dense/fused.ply")
+        print('aaaaaaaaaaAA??A???A?A??A/A?A?')
         # points_path = os.path.join(self.data_dir, self.scan, "exported/pcd_te_1_vs_0.01_jit.ply")
         assert os.path.exists(points_path)
         plydata = PlyData.read(points_path)

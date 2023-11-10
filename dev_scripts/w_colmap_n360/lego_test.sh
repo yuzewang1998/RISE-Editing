@@ -1,7 +1,7 @@
 #!/bin/bash
 nrCheckpoint="../checkpoints"
 nrDataRoot="../data_src"
-name='lego_1023'
+name='lego'
 
 resume_iter=latest # 20000
 data_root="${nrDataRoot}/nerf/nerf_synthetic_colmap/"
@@ -36,7 +36,7 @@ max_o=830000 #2000000
 ranges=" -0.638 -1.141 -0.346 0.634 1.149 1.141 "
 SR=80
 K=8
-P=9 #120
+P=13 #120
 NN=2
 
 act_type="LeakyReLU"
