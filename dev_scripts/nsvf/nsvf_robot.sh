@@ -1,23 +1,24 @@
 #!/bin/bash
-
 nrCheckpoint="../checkpoints"
 nrDataRoot="../data_src"
-name='ship'
+name="robot"
+
 resume_iter=latest #
-data_root="${nrDataRoot}/nerf/nerf_synthetic_colmap/"
-scan="ship"
+data_root="${nrDataRoot}/Synthetic_NSVF/"
+scan="Robot"
 
-
-load_points=1
+load_points=0
 feat_grad=1
 conf_grad=1
 dir_grad=0
 color_grad=1
-vox_res=320
+vox_res=640
 normview=0
 prune_thresh=0.1
-prune_iter=20000
-prune_max_iter=80100
+prune_iter=30000
+prune_max_iter=100000
+mvs_img_wh=" 800 800 "
+img_wh=" 800 800 "
 
 feedforward=0
 ref_vid=0
@@ -30,8 +31,8 @@ init_view_num=3
 pre_d_est="${nrCheckpoint}/MVSNet/model_000014.ckpt"
 manual_std_depth=0.0
 depth_conf_thresh=0.8
-geo_cnsst_num=5
-full_comb=1
+geo_cnsst_num=3
+full_comb=0
 appr_feature_str0="imgfeat_0_0123 dir_0 point_conf"
 point_conf_mode="1" # 0 for only at features, 1 for multi at weight
 point_dir_mode="1" # 0 for only at features, 1 for color branch
@@ -48,17 +49,17 @@ radius_limit_scale=4
 depth_limit_scale=0
 alpha_range=0
 
-vscale=" 3 3 3 "
+vscale=" 2 2 2 "
 kernel_size=" 3 3 3 "
 query_size=" 3 3 3 "
-vsize=" 0.004 0.004 0.004 " #" 0.005 0.005 0.005 "
+vsize=" 0.002 0.002 0.002 " #" 0.005 0.005 0.005 "
 wcoord_query=1
 z_depth_dim=400
-max_o=1200000 #2000000
-ranges=" -1.277 -1.300 -0.550 1.371 1.349 0.729 "
+max_o=1800000 #2000000
+ranges=" -0.65 -0.29 -0.84 0.68 0.37 0.36 "
 SR=80
 K=8
-P=15 #120
+P=30 #120
 NN=2
 
 
@@ -66,8 +67,8 @@ act_type="LeakyReLU"
 
 agg_intrp_order=2
 agg_distance_kernel="linear_immediately" #"avg" #"feat_intrp"
-weight_xyz_freq=2
-weight_feat_dim=8
+#weight_xyz_freq=2
+#weight_feat_dim=8
 
 point_features_dim=32
 shpnt_jitter="uniform" #"uniform" # uniform gaussian
@@ -90,10 +91,10 @@ num_feat_freqs=3
 dist_xyz_deno=0
 
 raydist_mode_unit=1
-dataset_name='nerf_synth360_ft'
+dataset_name='nsvf_ft'
 pin_data_in_memory=1
 model='mvs_points_volumetric'
-near_plane=2.0
+near_plane=0.0
 far_plane=6.0
 which_ray_generation='near_far_linear' #'nerf_near_far_linear' #
 domain_size='1'
@@ -108,6 +109,7 @@ num_pos_freqs=10
 num_viewdir_freqs=4 #6
 
 random_sample='random'
+
 random_sample_size=60 #48 # 32 * 32 = 1024
 
 batch_size=1
@@ -118,34 +120,33 @@ lr_decay_iters=1000000
 lr_decay_exp=0.1
 
 gpu_ids='0'
-checkpoints_dir="${nrCheckpoint}/col_nerfsynth/"
+checkpoints_dir="${nrCheckpoint}/NSVF/"
 resume_dir="${nrCheckpoint}/init/dtu_dgt_d012_img0123_conf_agg2_32_dirclr20"
 
 save_iter_freq=10000
 save_point_freq=10000 #301840 #1
-maximum_step=1000000 #250000 #300000 #800000
+maximum_step=500000 #300000 #800000
 
 niter=10000 #1000000
 niter_decay=10000 #250000
 n_threads=1
-
 train_and_test=0 #1
-test_num=100
+test_num=10
 test_freq=50000 #1200 #1200 #30184 #30184 #50000
 print_freq=100
 test_num_step=10
 
-far_thresh=-1 #0.005
+far_thresh=-1
 prob_freq=10001 #2000 #10001
-prob_num_step=20
-prob_thresh=0.5
+prob_num_step=25
+prob_thresh=0.7
 prob_mul=0.4
-prob_kernel_size=" 3 3 3 1 1 1 "
-prob_tiers=" 120100 180000 "
-
+prob_kernel_size=" 3 3 3 "
+prob_tiers=" 130000 "
 
 zero_epsilon=1e-3
-visual_items='coarse_raycolor gt_image '
+
+visual_items=' coarse_raycolor gt_image '
 zero_one_loss_items='conf_coefficient' #regularize background to be either 0 or 1
 zero_one_loss_weights=" 0.0001 "
 sparse_loss_weight=0
@@ -154,7 +155,7 @@ color_loss_weights=" 1.0 0.0 0.0 "
 color_loss_items='ray_masked_coarse_raycolor ray_miss_coarse_raycolor coarse_raycolor'
 test_color_loss_items='coarse_raycolor ray_miss_coarse_raycolor ray_masked_coarse_raycolor'
 
-vid=2500000000
+vid=600000000000000000000000000000
 
 bg_color="white" #"0.0,0.0,0.0,1.0,1.0,1.0"
 split="train"
@@ -279,6 +280,8 @@ python3 train_ft.py \
         --prob_tiers $prob_tiers \
         --alpha_range $alpha_range \
         --ranges $ranges \
+        --mvs_img_wh $mvs_img_wh \
+        --img_wh $img_wh \
         --vid $vid \
         --vsize $vsize \
         --wcoord_query $wcoord_query \

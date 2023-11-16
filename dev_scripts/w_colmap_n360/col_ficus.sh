@@ -2,15 +2,15 @@
 
 nrCheckpoint="../checkpoints"
 nrDataRoot="../data_src"
-name='ficusV1'
-resume_iter=best #
+name='ficus'
+resume_iter=latest #
 data_root="${nrDataRoot}/nerf/nerf_synthetic_colmap/"
 scan="ficus"
 
 load_points=1
 feat_grad=1
 conf_grad=1
-dir_grad=1
+dir_grad=0
 color_grad=1
 vox_res=320
 normview=0
@@ -125,8 +125,8 @@ niter_decay=10000 #250000
 n_threads=1
 
 train_and_test=0 #1
-test_num=10
-test_freq=10000000000 #1200 #1200 #30184 #30184 #50000
+test_num=100
+test_freq=50000 #1200 #1200 #30184 #30184 #50000
 print_freq=100
 test_num_step=10
 
