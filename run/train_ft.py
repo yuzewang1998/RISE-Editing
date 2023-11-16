@@ -1,5 +1,6 @@
 import sys
 import os
+# what
 import pathlib
 sys.path.append(os.path.join(pathlib.Path(__file__).parent.absolute(), '..'))
 import glob
@@ -26,6 +27,7 @@ from tqdm import tqdm
 # from models.pointnet2.pointnet2_stack import pointnet2_utils as pointnet2_stack_utils
 # from pcdet.ops.pointnet2.pointnet2_stack import pointnet2_utils as pointnet2_stack_utils
 import gc
+
 def get_list_shape(lst):
     shape = []
     for element in lst:
