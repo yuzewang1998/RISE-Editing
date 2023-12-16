@@ -5,7 +5,7 @@ name='lego'
 
 resume_iter=latest # 20000
 data_root="${nrDataRoot}/nerf/nerf_synthetic_colmap/"
-scan="lego"
+scan="lego"#
 
 normview=0
 
