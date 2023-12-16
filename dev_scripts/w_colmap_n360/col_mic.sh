@@ -6,6 +6,8 @@ resume_iter=latest #
 data_root="${nrDataRoot}/nerf/nerf_synthetic_colmap/"
 scan="mic"
 
+
+
 load_points=1
 feat_grad=1
 conf_grad=1
@@ -45,7 +47,6 @@ agg_dist_pers=15
 radius_limit_scale=4
 depth_limit_scale=0
 alpha_range=0
-
 vscale=" 2 2 2 "
 kernel_size=" 3 3 3 "
 query_size=" 3 3 3 "
@@ -58,7 +59,7 @@ SR=80
 K=8
 P=9 #120
 NN=2
-inall_img=0
+
 
 act_type="LeakyReLU"
 

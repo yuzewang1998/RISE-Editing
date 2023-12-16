@@ -1,11 +1,11 @@
 #!/bin/bash
 nrCheckpoint="../checkpoints"
 nrDataRoot="../data_src"
-name='lego'
+name='ship'
 
 resume_iter=latest # 20000
 data_root="${nrDataRoot}/nerf/nerf_synthetic_colmap/"
-scan="lego"
+scan="ship"
 
 normview=0
 
@@ -32,11 +32,11 @@ query_size=" 3 3 3 "
 vsize=" 0.004 0.004 0.004 " #" 0.005 0.005 0.005 "
 wcoord_query=1
 z_depth_dim=400
-max_o=830000 #2000000
-ranges=" -0.638 -1.141 -0.346 0.634 1.149 1.141 "
+max_o=1200000 #2000000
+ranges=" -1.277 -1.300 -0.550 1.371 1.349 0.729 "
 SR=80
 K=8
-P=13 #120
+P=15 #120
 NN=2
 
 act_type="LeakyReLU"

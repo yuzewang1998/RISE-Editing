@@ -1,11 +1,11 @@
 #!/bin/bash
 nrCheckpoint="../checkpoints"
 nrDataRoot="../data_src"
-name='lego'
+name='chair'
 
 resume_iter=latest # 20000
 data_root="${nrDataRoot}/nerf/nerf_synthetic_colmap/"
-scan="lego"
+scan="chair"
 
 normview=0
 
@@ -26,21 +26,21 @@ radius_limit_scale=4
 depth_limit_scale=0
 alpha_range=0
 
-vscale=" 3 3 3 "
+vscale=" 2 2 2 "
 kernel_size=" 3 3 3 "
 query_size=" 3 3 3 "
 vsize=" 0.004 0.004 0.004 " #" 0.005 0.005 0.005 "
 wcoord_query=1
 z_depth_dim=400
-max_o=830000 #2000000
-ranges=" -0.638 -1.141 -0.346 0.634 1.149 1.141 "
+max_o=410000 #2000000
+ranges=" -0.721 -0.695 -0.995 0.658 0.706 1.050 "
 SR=80
 K=8
-P=13 #120
+P=12 #120
 NN=2
 
 act_type="LeakyReLU"
-
+appr_feature_str0="imgfeat_0_0123 dir_0 point_conf"
 agg_intrp_order=2
 agg_distance_kernel="linear_immediately" #"avg" #"feat_intrp"
 
@@ -94,7 +94,7 @@ gpu_ids='0'
 checkpoints_dir="${nrCheckpoint}/col_nerfsynth/"
 resume_dir="${nrCheckpoint}/init/dtu_dgt_d012_img0123_conf_agg2_32_dirclr20"
 
-test_num_step=1
+test_num_step=10
 visual_items=' coarse_raycolor gt_image '
 color_loss_weights=" 1.0 0.0 0.0 "
 color_loss_items='ray_masked_coarse_raycolor ray_miss_coarse_raycolor coarse_raycolor'
@@ -102,7 +102,9 @@ test_color_loss_items='coarse_raycolor ray_miss_coarse_raycolor ray_masked_coars
 
 bg_color="white" #"0.0,0.0,0.0,1.0,1.0,1.0"
 split="train"
-
+default_conf=0.15
+depth_conf_thresh=0.8
+depth_occ=1
 cd run
 
 python3 test_ft.py \
@@ -185,5 +187,8 @@ python3 test_ft.py \
         --vsize $vsize \
         --wcoord_query $wcoord_query \
         --max_o $max_o \
-
+        --appr_feature_str0 $appr_feature_str0 \
+        --default_conf $default_conf \
+        --depth_conf_thresh $depth_conf_thresh\
+        --depth_occ $depth_occ\
         --debug

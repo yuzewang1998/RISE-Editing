@@ -1,11 +1,11 @@
 #!/bin/bash
 nrCheckpoint="../checkpoints"
 nrDataRoot="../data_src"
-name='lego'
+name='drums'
 
 resume_iter=latest # 20000
 data_root="${nrDataRoot}/nerf/nerf_synthetic_colmap/"
-scan="lego"
+scan="drums"
 
 normview=0
 
@@ -26,17 +26,17 @@ radius_limit_scale=4
 depth_limit_scale=0
 alpha_range=0
 
-vscale=" 3 3 3 "
+vscale=" 2 2 2 "
 kernel_size=" 3 3 3 "
 query_size=" 3 3 3 "
 vsize=" 0.004 0.004 0.004 " #" 0.005 0.005 0.005 "
 wcoord_query=1
 z_depth_dim=400
-max_o=830000 #2000000
-ranges=" -0.638 -1.141 -0.346 0.634 1.149 1.141 "
+max_o=400000 #2000000
+ranges=" -1.126 -0.746 -0.492 1.122 0.962 0.939 "
 SR=80
 K=8
-P=13 #120
+P=10 #120
 NN=2
 
 act_type="LeakyReLU"
@@ -185,5 +185,4 @@ python3 test_ft.py \
         --vsize $vsize \
         --wcoord_query $wcoord_query \
         --max_o $max_o \
-
         --debug

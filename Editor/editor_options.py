@@ -16,7 +16,7 @@ class Options:
                             help='scans of checkpoints')
         parser.add_argument('--editor_checkpoints_root',
                             type=str,
-                            default='/home/yuze/Documents/project/PC-NeRF/checkpoints/col_nerfsynth/lego',#/home/slam/devdata/pointnerf/checkpoints/scannet/scene000-T
+                            default='/home/wangyz/Documents/project/PC-NeRF/checkpoints/col_nerfsynth/lego',#/home/slam/devdata/pointnerf/checkpoints/scannet/scene000-T
                             help='root of checkpoints datasets')
         parser.add_argument('--gpu_ids',
                             type=str,

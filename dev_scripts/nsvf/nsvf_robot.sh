@@ -1,7 +1,7 @@
 #!/bin/bash
 nrCheckpoint="../checkpoints"
 nrDataRoot="../data_src"
-name="robot"
+name="robot1124_1"
 
 resume_iter=latest #
 data_root="${nrDataRoot}/Synthetic_NSVF/"
@@ -45,7 +45,7 @@ agg_color_xyz_mode="None"
 feature_init_method="rand" #"rand" # "zeros"
 agg_axis_weight=" 1. 1. 1."
 agg_dist_pers=15
-radius_limit_scale=4
+radius_limit_scale=8
 depth_limit_scale=0
 alpha_range=0
 
@@ -58,8 +58,8 @@ z_depth_dim=400
 max_o=1800000 #2000000
 ranges=" -0.65 -0.29 -0.84 0.68 0.37 0.36 "
 SR=80
-K=8
-P=30 #120
+K=13
+P=120 #120
 NN=2
 
 
@@ -95,7 +95,7 @@ dataset_name='nsvf_ft'
 pin_data_in_memory=1
 model='mvs_points_volumetric'
 near_plane=0.0
-far_plane=6.0
+far_plane=2.0
 which_ray_generation='near_far_linear' #'nerf_near_far_linear' #
 domain_size='1'
 dir_norm=0
@@ -125,7 +125,7 @@ resume_dir="${nrCheckpoint}/init/dtu_dgt_d012_img0123_conf_agg2_32_dirclr20"
 
 save_iter_freq=10000
 save_point_freq=10000 #301840 #1
-maximum_step=500000 #300000 #800000
+maximum_step=1000000 #300000 #800000
 
 niter=10000 #1000000
 niter_decay=10000 #250000
@@ -139,10 +139,10 @@ test_num_step=10
 far_thresh=-1
 prob_freq=10001 #2000 #10001
 prob_num_step=25
-prob_thresh=0.7
+prob_thresh=0.5
 prob_mul=0.4
-prob_kernel_size=" 3 3 3 "
-prob_tiers=" 130000 "
+prob_kernel_size=" 2 2 2 1 1 1 "
+prob_tiers=" 130000 150000"
 
 zero_epsilon=1e-3
 
@@ -223,6 +223,8 @@ python3 train_ft.py \
         --agg_feat_xyz_mode $agg_feat_xyz_mode \
         --agg_alpha_xyz_mode $agg_alpha_xyz_mode \
         --agg_color_xyz_mode $agg_color_xyz_mode  \
+        --geo_cnsst_num $geo_cnsst_num\
+        --full_comb $full_comb\
         --save_point_freq $save_point_freq  \
         --raydist_mode_unit $raydist_mode_unit  \
         --agg_dist_pers $agg_dist_pers \
@@ -230,8 +232,12 @@ python3 train_ft.py \
         --shading_feature_mlp_layer0 $shading_feature_mlp_layer0 \
         --shading_feature_mlp_layer1 $shading_feature_mlp_layer1 \
         --shading_feature_mlp_layer2 $shading_feature_mlp_layer2 \
+        --shading_feature_mlp_linear $shading_feature_mlp_linear \
         --shading_feature_mlp_layer3 $shading_feature_mlp_layer3 \
+        --shading_feature_mlp_layer4 $shading_feature_mlp_layer4 \
         --shading_feature_num $shading_feature_num \
+        --shading_feature_mlp_layer0_rotation_invariance_feature_extraction_module $shading_feature_mlp_layer0_rotation_invariance_feature_extraction_module \
+        --shading_feature_mlp_layer0_rotation_invariance_feature_extraction_dim $shading_feature_mlp_layer0_rotation_invariance_feature_extraction_dim \
         --dist_xyz_freq $dist_xyz_freq \
         --shpnt_jitter $shpnt_jitter \
         --shading_alpha_mlp_layer $shading_alpha_mlp_layer \
@@ -262,14 +268,12 @@ python3 train_ft.py \
         --bgmodel $bgmodel \
         --vox_res $vox_res \
         --act_type $act_type \
-        --geo_cnsst_num $geo_cnsst_num \
         --point_conf_mode $point_conf_mode \
         --point_dir_mode $point_dir_mode \
         --point_color_mode $point_color_mode \
         --normview $normview \
         --prune_thresh $prune_thresh \
         --prune_iter $prune_iter \
-        --full_comb $full_comb \
         --sparse_loss_weight $sparse_loss_weight \
         --default_conf $default_conf \
         --prob_freq $prob_freq \
