@@ -1,7 +1,7 @@
 #!/bin/bash
 nrCheckpoint="../checkpoints"
 nrDataRoot="../data_src"
-name='lego'
+name='lego'##
 
 resume_iter=latest # 20000
 data_root="${nrDataRoot}/nerf/nerf_synthetic_colmap/"
