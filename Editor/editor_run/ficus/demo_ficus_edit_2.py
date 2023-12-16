@@ -11,7 +11,7 @@ from tqdm import tqdm
 from Editor.editor_options import Options
 import numpy as np
 def extract_neural_point(opt):
-    cpc = create_checkpointscontroller(opt, 'penerf', '430000_net_ray_marching')
+    cpc = create_checkpointscontroller(opt, 'penerf', '750000_net_ray_marching')
     neural_point_whole_scene = cpc.cvt_2_neuralPoint()
     neural_point_whole_scene.save_as_ply("origin")
 def meshlab_point_2_neural_point(opt):
@@ -38,18 +38,29 @@ def add_part(opt):
     part_o.load_from_ply('part')
     origin =  create_neural_point(opt,'penerf')
     origin.load_from_ply('origin')
-    new_scene = origin - part_o + part_n
+    new_scene = origin+ part_n
     new_scene.save_as_ply('new_scene')
-    cpc = create_checkpointscontroller(opt, 'penerf', '430000_net_ray_marching')
+    cpc = create_checkpointscontroller(opt, 'penerf', '750000_net_ray_marching')
     cpc.set_and_save(new_scene,'cmp_new')
 
-
+def ed1_rotate(opt):
+    extract_neural_point(opt)
+    meshlab_point_2_neural_point(opt)
+    rotate_part(opt)
+    add_part(opt)
+def ed2_shear(opt):
+    extract_neural_point(opt)
+    meshlab_point_2_neural_point(opt)
+    part_o = create_neural_point(opt, 'penerf')
+    part_o.load_from_ply('part')
+    cpc = create_checkpointscontroller(opt, 'penerf', '750000_net_ray_marching')
+    cpc.set_and_save(part_o, 'cmp_new')
 def main():
     sparse = Options()
     opt = sparse.opt
-    # extract_neural_point(opt)
-    # meshlab_point_2_neural_point(opt)
-    # rotate_part(opt)
-    add_part(opt)
+    ed2_shear(opt)
+    # ed1_rotate(opt)
+
+
 if __name__=="__main__":
     main()

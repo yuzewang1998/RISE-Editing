@@ -3,7 +3,7 @@ nrCheckpoint="../checkpoints"
 nrDataRoot="../data_src"
 name='barn'
 
-resume_iter=200000 # 20000 #latest
+resume_iter=latest # 20000 #latest
 data_root="${nrDataRoot}/TanksAndTemple/"
 scan="Barn"
 
@@ -18,7 +18,7 @@ agg_feat_xyz_mode="None"
 agg_alpha_xyz_mode="None"
 agg_color_xyz_mode="None"
 agg_axis_weight=" 1. 1. 1."
-agg_dist_pers=20
+agg_dist_pers=15
 radius_limit_scale=4
 depth_limit_scale=0
 alpha_range=1
@@ -39,7 +39,7 @@ NN=2
 
 act_type="LeakyReLU"
 agg_intrp_order=2
-agg_distance_kernel="linear" #"avg" #"feat_intrp"
+agg_distance_kernel="linear_immediately" #"avg" #"feat_intrp"
 weight_xyz_freq=2
 weight_feat_dim=8
 point_features_dim=32
@@ -47,12 +47,16 @@ shpnt_jitter="uniform" #"uniform" # uniform gaussian
 
 which_agg_model="viewmlp"
 apply_pnt_mask=1
-shading_feature_mlp_layer0=1 #2
-shading_feature_mlp_layer1=2 #2
-shading_feature_mlp_layer2=0 #1
-shading_feature_mlp_layer3=2 #1
+shading_feature_mlp_layer0=0
+shading_feature_mlp_layer1=2
+shading_feature_mlp_layer2=0
+shading_feature_mlp_linear=2
+shading_feature_mlp_layer3=0 #0
+shading_feature_mlp_layer4=2 #1
+shading_feature_mlp_layer0_rotation_invariance_feature_extraction_module=0
+shading_feature_mlp_layer0_rotation_invariance_feature_extraction_dim=999
 shading_alpha_mlp_layer=1
-shading_color_mlp_layer=4
+shading_color_mlp_layer=2
 shading_feature_num=256
 dist_xyz_freq=5
 num_feat_freqs=3
@@ -78,7 +82,7 @@ random_sample='random'
 random_sample_size=48 #48 # 32 * 32 = 1024
 
 batch_size=1
-gpu_ids='2'
+gpu_ids='0'
 
 checkpoints_dir="${nrCheckpoint}/tanksntemples/"
 resume_dir="${nrCheckpoint}/init/dtu_dgt_d012_img0123_conf_agg2_32_dirclr20"
@@ -141,7 +145,11 @@ python3 test_ft.py \
         --shading_feature_mlp_layer0 $shading_feature_mlp_layer0 \
         --shading_feature_mlp_layer1 $shading_feature_mlp_layer1 \
         --shading_feature_mlp_layer2 $shading_feature_mlp_layer2 \
+        --shading_feature_mlp_linear $shading_feature_mlp_linear \
         --shading_feature_mlp_layer3 $shading_feature_mlp_layer3 \
+        --shading_feature_mlp_layer4 $shading_feature_mlp_layer4 \
+        --shading_feature_mlp_layer0_rotation_invariance_feature_extraction_module $shading_feature_mlp_layer0_rotation_invariance_feature_extraction_module \
+        --shading_feature_mlp_layer0_rotation_invariance_feature_extraction_dim $shading_feature_mlp_layer0_rotation_invariance_feature_extraction_dim \
         --shading_feature_num $shading_feature_num \
         --dist_xyz_freq $dist_xyz_freq \
         --shpnt_jitter $shpnt_jitter \

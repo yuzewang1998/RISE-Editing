@@ -2,6 +2,7 @@ import sys
 import os
 import pathlib
 sys.path.append(os.path.join(pathlib.Path(__file__).parent.absolute(), '..'))
+sys.path.append(os.path.join(pathlib.Path(__file__).parent.absolute(), './Editor'))
 from Editor.checkpoints_controller import create_checkpointscontroller
 from Editor.points import create_neural_point
 from utils_mine.utilize import cauc_RotationMatrix,cauc_transformationMatrix
@@ -11,7 +12,7 @@ from tqdm import tqdm
 from Editor.editor_options import Options
 import numpy as np
 def extract_neural_point(opt):
-    cpc = create_checkpointscontroller(opt, 'penerf', '690000_net_ray_marching')
+    cpc = create_checkpointscontroller(opt, 'penerf', '1000000_net_ray_marching')
     neural_point_whole_scene = cpc.cvt_2_neuralPoint()
     neural_point_whole_scene.save_as_ply("origin")
 def meshlab_point_2_neural_point(opt):
@@ -41,7 +42,7 @@ def add_part(opt):
     origin.load_from_ply('origin')
     new_scene = origin + part1 + part2
     new_scene.save_as_ply('new_scene')
-    cpc = create_checkpointscontroller(opt, 'penerf', '690000_net_ray_marching')
+    cpc = create_checkpointscontroller(opt, 'penerf', '1000000_net_ray_marching')
     cpc.set_and_save(new_scene,'new')
 
 
@@ -49,7 +50,7 @@ def main():
     sparse = Options()
     opt = sparse.opt
     # extract_neural_point(opt)
-    # meshlab_point_2_neural_point(opt)
+    meshlab_point_2_neural_point(opt)
     rotate_part(opt)
     add_part(opt)
 if __name__=="__main__":

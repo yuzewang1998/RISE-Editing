@@ -350,12 +350,11 @@ class TtFtDataset(BaseDataset):
         self.train_pos_paths = ["" for i in self.train_id_list]
         self.test_pos_paths = ["" for i in self.test_id_list]
         for train_path in train_image_paths:
-            # tt
             id = int(train_path.split("_")[1])
             self.train_image_paths[id] = os.path.join(self.data_dir, self.scan, "rgb/{}".format(train_path))
             self.train_pos_paths[id] = os.path.join(self.data_dir, self.scan, "pose/{}.txt".format(train_path[:-4]))
         for test_path in test_image_paths:
-            id = int(train_path.split("_")[1])
+            id = int(test_path.split("_")[1])
             self.test_image_paths[id] = os.path.join(self.data_dir, self.scan, "rgb/{}".format(test_path))
             self.test_pos_paths[id] = os.path.join(self.data_dir, self.scan, "pose/{}.txt".format(test_path[:-4]))
         self.id_list = self.train_id_list if self.split=="train" else self.test_id_list
@@ -405,7 +404,7 @@ class TtFtDataset(BaseDataset):
             proj_mat_l[:3, :4] = downintrinsic @ w2c[:3, :4]
             proj_mats += [(proj_mat_l, self.near_far)]
 
-        proj_mats = proj_mats
+        # proj_mats = np.stack(proj_mats)
         intrinsics = np.stack(intrinsics)
         world2cams, cam2worlds = np.stack(world2cams), np.stack(cam2worlds)
         return proj_mats, intrinsics, world2cams, cam2worlds
@@ -767,4 +766,3 @@ class TtFtDataset(BaseDataset):
             item[key] = value.unsqueeze(0)
 
         return item
-

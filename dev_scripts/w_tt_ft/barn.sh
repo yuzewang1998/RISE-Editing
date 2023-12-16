@@ -3,7 +3,7 @@ nrCheckpoint="../checkpoints"
 nrDataRoot="../data_src"
 name='barn'
 
-resume_iter=best #
+resume_iter=latest #
 data_root="${nrDataRoot}/TanksAndTemple/"
 scan="Barn"
 
@@ -44,10 +44,10 @@ agg_alpha_xyz_mode="None"
 agg_color_xyz_mode="None"
 feature_init_method="rand" #"rand" # "zeros"
 agg_axis_weight=" 1. 1. 1."
-agg_dist_pers=20
+agg_dist_pers=15
 radius_limit_scale=4
 depth_limit_scale=0
-alpha_range=1
+alpha_range=0
 
 vscale=" 3 3 3 "
 kernel_size=" 3 3 3 "
@@ -66,7 +66,7 @@ NN=2
 act_type="LeakyReLU"
 
 agg_intrp_order=2
-agg_distance_kernel="linear" #"avg" #"feat_intrp"
+agg_distance_kernel="linear_immediately" #"avg" #"feat_intrp"
 weight_xyz_freq=2
 weight_feat_dim=8
 
@@ -75,12 +75,16 @@ shpnt_jitter="uniform" #"uniform" # uniform gaussian
 
 which_agg_model="viewmlp"
 apply_pnt_mask=1
-shading_feature_mlp_layer0=1 #2
-shading_feature_mlp_layer1=2 #2
-shading_feature_mlp_layer2=0 #1
-shading_feature_mlp_layer3=2 #1
+shading_feature_mlp_layer0=0
+shading_feature_mlp_layer1=2
+shading_feature_mlp_layer2=0
+shading_feature_mlp_linear=2
+shading_feature_mlp_layer3=0 #0
+shading_feature_mlp_layer4=2 #1
+shading_feature_mlp_layer0_rotation_invariance_feature_extraction_module=0
+shading_feature_mlp_layer0_rotation_invariance_feature_extraction_dim=999
 shading_alpha_mlp_layer=1
-shading_color_mlp_layer=4
+shading_color_mlp_layer=2
 shading_feature_num=256
 dist_xyz_freq=5
 num_feat_freqs=3
@@ -116,24 +120,24 @@ lr_policy="iter_exponential_decay"
 lr_decay_iters=1000000
 lr_decay_exp=0.1
 
-gpu_ids='2'
+gpu_ids='0'
 
 checkpoints_dir="${nrCheckpoint}/tanksntemples/"
 resume_dir="${nrCheckpoint}/init/dtu_dgt_d012_img0123_conf_agg2_32_dirclr20"
 
 save_iter_freq=10000
 save_point_freq=10000 #301840 #1
-maximum_step=200000 #300000 #800000
+maximum_step=1000000 #300000 #800000
 
 niter=10000 #1000000
 niter_decay=10000 #250000
 n_threads=1
 
 train_and_test=0 #1
-test_num=10
-test_freq=10000 #1200 #1200 #30184 #30184 #50000
-print_freq=40
-test_num_step=3
+test_num=100
+test_freq=50000 #1200 #1200 #30184 #30184 #50000
+print_freq=100
+test_num_step=10
 
 far_thresh=0.009
 prob_freq=10001 #2000 #10001
@@ -154,7 +158,7 @@ color_loss_weights=" 1.0 0.0 0.0 "
 color_loss_items='ray_masked_coarse_raycolor ray_miss_coarse_raycolor coarse_raycolor'
 test_color_loss_items='coarse_raycolor ray_miss_coarse_raycolor ray_masked_coarse_raycolor'
 
-vid=220000
+vid=220000000000000
 
 bg_color="white" #"0.0,0.0,0.0,1.0,1.0,1.0"
 split="train"
@@ -165,7 +169,7 @@ for i in $(seq 1 $prob_freq $maximum_step)
 
 do
 python3 train_ft.py \
-        --experiment $name \
+        --name $name \
         --scan $scan \
         --data_root $data_root \
         --dataset_name $dataset_name \
@@ -228,7 +232,11 @@ python3 train_ft.py \
         --shading_feature_mlp_layer0 $shading_feature_mlp_layer0 \
         --shading_feature_mlp_layer1 $shading_feature_mlp_layer1 \
         --shading_feature_mlp_layer2 $shading_feature_mlp_layer2 \
+        --shading_feature_mlp_linear $shading_feature_mlp_linear \
         --shading_feature_mlp_layer3 $shading_feature_mlp_layer3 \
+        --shading_feature_mlp_layer4 $shading_feature_mlp_layer4 \
+        --shading_feature_mlp_layer0_rotation_invariance_feature_extraction_module $shading_feature_mlp_layer0_rotation_invariance_feature_extraction_module \
+        --shading_feature_mlp_layer0_rotation_invariance_feature_extraction_dim $shading_feature_mlp_layer0_rotation_invariance_feature_extraction_dim \
         --shading_feature_num $shading_feature_num \
         --dist_xyz_freq $dist_xyz_freq \
         --shpnt_jitter $shpnt_jitter \
