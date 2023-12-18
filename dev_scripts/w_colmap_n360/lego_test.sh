@@ -8,7 +8,7 @@ data_root="${nrDataRoot}/nerf/nerf_synthetic_colmap/"
 scan="lego"
 
 normview=0
-
+#
 point_conf_mode="1" # 0 for only at features, 1 for multi at weight
 point_dir_mode="1" # 0 for only at features, 1 for color branch
 point_color_mode="1" # 0 for only at features, 1 for color branch
