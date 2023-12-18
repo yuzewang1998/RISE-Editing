@@ -2,7 +2,7 @@
 nrCheckpoint="../checkpoints"
 nrDataRoot="../data_src"
 name='lego'
-
+#1218
 resume_iter=latest # 20000
 data_root="${nrDataRoot}/nerf/nerf_synthetic_colmap/"
 scan="lego"
