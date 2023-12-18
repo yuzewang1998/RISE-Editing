@@ -1,11 +1,11 @@
 #!/bin/bash
 nrCheckpoint="../checkpoints"
 nrDataRoot="../data_src"
-name='ficus'
+name='mic'
 
 resume_iter=latest # 20000
 data_root="${nrDataRoot}/nerf/nerf_synthetic_colmap/"
-scan="ficus"
+scan="mic"
 
 normview=0
 
@@ -26,19 +26,18 @@ radius_limit_scale=4
 depth_limit_scale=0
 alpha_range=0
 
-vscale=" 3 3 3 "
+vscale=" 2 2 2 "
 kernel_size=" 3 3 3 "
 query_size=" 3 3 3 "
 vsize=" 0.004 0.004 0.004 " #" 0.005 0.005 0.005 "
 wcoord_query=1
 z_depth_dim=400
-max_o=830000 #2000000
-ranges=" -10 -10 -10 10 10 10 "
+max_o=300000 #2000000
+ranges=" -2.252 -1.910 -1.742 1.767 2.082 2.151 "
 SR=80
 K=8
-P=15 #120
+P=9 #120
 NN=2
-
 act_type="LeakyReLU"
 
 agg_intrp_order=2
@@ -86,7 +85,7 @@ num_viewdir_freqs=4 #6
 
 random_sample='random'
 
-random_sample_size=60 #48 # 32 * 32 = 1024
+random_sample_size=90 #48 # 32 * 32 = 1024
 batch_size=1
 
 gpu_ids='0'
@@ -102,7 +101,9 @@ test_color_loss_items='coarse_raycolor ray_miss_coarse_raycolor ray_masked_coars
 
 bg_color="white" #"0.0,0.0,0.0,1.0,1.0,1.0"
 split="train"
-
+weight_xyz_freq=2
+weight_feat_dim=8
+inall_img=0
 cd run
 
 python3 test_ft.py \
@@ -185,4 +186,7 @@ python3 test_ft.py \
         --vsize $vsize \
         --wcoord_query $wcoord_query \
         --max_o $max_o \
+        --weight_xyz_freq $weight_xyz_freq\
+        --weight_feat_dim $weight_feat_dim\
+
         --debug

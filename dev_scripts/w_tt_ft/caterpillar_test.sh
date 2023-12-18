@@ -1,77 +1,68 @@
 #!/bin/bash
 nrCheckpoint="../checkpoints"
 nrDataRoot="../data_src"
-name='ficus'
+name='caterpillar'
 
-resume_iter=latest # 20000
-data_root="${nrDataRoot}/nerf/nerf_synthetic_colmap/"
-scan="ficus"
+resume_iter=200000 # 20000 #latest
+data_root="${nrDataRoot}/TanksAndTemple/"
+scan="Caterpillar"
 
 normview=0
-
+mvs_img_wh=" 1088 640 "
+img_wh=" 1088 640 "
 point_conf_mode="1" # 0 for only at features, 1 for multi at weight
 point_dir_mode="1" # 0 for only at features, 1 for color branch
 point_color_mode="1" # 0 for only at features, 1 for color branch
-feat_grad=1
-conf_grad=1
-dir_grad=0
-color_grad=1
+
 agg_feat_xyz_mode="None"
 agg_alpha_xyz_mode="None"
 agg_color_xyz_mode="None"
-feature_init_method="rand" #"rand" # "zeros"
 agg_axis_weight=" 1. 1. 1."
-agg_dist_pers=15
+agg_dist_pers=20
 radius_limit_scale=4
 depth_limit_scale=0
-alpha_range=0
+alpha_range=1
 
-vscale=" 3 3 3 "
+vscale=" 2 2 2 "
 kernel_size=" 3 3 3 "
 query_size=" 3 3 3 "
-vsize=" 0.004 0.004 0.004 " #" 0.005 0.005 0.005 "
+vsize=" 0.002 0.002 0.002 " #" 0.005 0.005 0.005 "
 wcoord_query=1
 z_depth_dim=400
-max_o=830000 #2000000
-ranges=" -10 -10 -10 10 10 10 "
-SR=80
+max_o=1800000 #2000000
+ranges=" -1.3345 -0.8172 -0.9727 0.9255 0.7428 1.3273 "
+SR=40
 K=8
-P=15 #120
+P=10 #120
 NN=2
 
 act_type="LeakyReLU"
-
 agg_intrp_order=2
-agg_distance_kernel="linear_immediately" #"avg" #"feat_intrp"
-
+agg_distance_kernel="linear" #"avg" #"feat_intrp"
+weight_xyz_freq=2
+weight_feat_dim=8
 point_features_dim=32
 shpnt_jitter="uniform" #"uniform" # uniform gaussian
 
 which_agg_model="viewmlp"
 apply_pnt_mask=1
-shading_feature_mlp_layer0=0
-shading_feature_mlp_layer1=2
-shading_feature_mlp_layer2=0
-shading_feature_mlp_linear=2
-shading_feature_mlp_layer3=0 #0
-shading_feature_mlp_layer4=2 #1
-shading_feature_mlp_layer0_rotation_invariance_feature_extraction_module=0
-shading_feature_mlp_layer0_rotation_invariance_feature_extraction_dim=999
+shading_feature_mlp_layer0=1 #2
+shading_feature_mlp_layer1=2 #2
+shading_feature_mlp_layer2=0 #1
+shading_feature_mlp_layer3=2 #1
 shading_alpha_mlp_layer=1
-shading_color_mlp_layer=2
+shading_color_mlp_layer=4
 shading_feature_num=256
 dist_xyz_freq=5
 num_feat_freqs=3
 dist_xyz_deno=0
 
-
-
 raydist_mode_unit=1
-dataset_name='nerf_synth360_ft'
-pin_data_in_memory=1
+dataset_name='tt_ft'
+pin_data_in_memory=0
 model='mvs_points_volumetric'
-near_plane=2.0
-far_plane=6.0
+near_plane=0.0
+far_plane=3.0
 which_ray_generation='near_far_linear' #'nerf_near_far_linear' #
 domain_size='1'
 dir_norm=0
@@ -85,13 +76,10 @@ num_pos_freqs=10
 num_viewdir_freqs=4 #6
 
 random_sample='random'
-
-random_sample_size=60 #48 # 32 * 32 = 1024
+random_sample_size=56 #48 # 32 * 32 = 1024
 batch_size=1
-
-gpu_ids='0'
-
-checkpoints_dir="${nrCheckpoint}/col_nerfsynth/"
+gpu_ids='3'
+checkpoints_dir="${nrCheckpoint}/tanksntemples/"
 resume_dir="${nrCheckpoint}/init/dtu_dgt_d012_img0123_conf_agg2_32_dirclr20"
 
 test_num_step=1
@@ -99,14 +87,13 @@ visual_items=' coarse_raycolor gt_image '
 color_loss_weights=" 1.0 0.0 0.0 "
 color_loss_items='ray_masked_coarse_raycolor ray_miss_coarse_raycolor coarse_raycolor'
 test_color_loss_items='coarse_raycolor ray_miss_coarse_raycolor ray_masked_coarse_raycolor'
-
 bg_color="white" #"0.0,0.0,0.0,1.0,1.0,1.0"
 split="train"
 
 cd run
 
 python3 test_ft.py \
-        --name $name \
+        --experiment $name \
         --scan $scan \
         --data_root $data_root \
         --dataset_name $dataset_name \
@@ -133,17 +120,12 @@ python3 test_ft.py \
         --which_tonemap_func $which_tonemap_func \
         --resume_dir $resume_dir \
         --resume_iter $resume_iter \
-        --feature_init_method $feature_init_method \
         --agg_axis_weight $agg_axis_weight \
         --agg_distance_kernel $agg_distance_kernel \
         --radius_limit_scale $radius_limit_scale \
         --depth_limit_scale $depth_limit_scale  \
         --vscale $vscale    \
         --kernel_size $kernel_size  \
-        --feat_grad $feat_grad \
-        --conf_grad $conf_grad \
-        --dir_grad $dir_grad \
-        --color_grad $color_grad \
         --SR $SR  \
         --K $K  \
         --P $P \
@@ -157,12 +139,8 @@ python3 test_ft.py \
         --shading_feature_mlp_layer0 $shading_feature_mlp_layer0 \
         --shading_feature_mlp_layer1 $shading_feature_mlp_layer1 \
         --shading_feature_mlp_layer2 $shading_feature_mlp_layer2 \
-        --shading_feature_mlp_linear $shading_feature_mlp_linear \
         --shading_feature_mlp_layer3 $shading_feature_mlp_layer3 \
-        --shading_feature_mlp_layer4 $shading_feature_mlp_layer4 \
         --shading_feature_num $shading_feature_num \
-        --shading_feature_mlp_layer0_rotation_invariance_feature_extraction_module $shading_feature_mlp_layer0_rotation_invariance_feature_extraction_module \
-        --shading_feature_mlp_layer0_rotation_invariance_feature_extraction_dim $shading_feature_mlp_layer0_rotation_invariance_feature_extraction_dim \
         --dist_xyz_freq $dist_xyz_freq \
         --shpnt_jitter $shpnt_jitter \
         --shading_alpha_mlp_layer $shading_alpha_mlp_layer \
@@ -182,6 +160,8 @@ python3 test_ft.py \
         --normview $normview \
         --alpha_range $alpha_range \
         --ranges $ranges \
+        --mvs_img_wh $mvs_img_wh \
+        --img_wh $img_wh \
         --vsize $vsize \
         --wcoord_query $wcoord_query \
         --max_o $max_o \

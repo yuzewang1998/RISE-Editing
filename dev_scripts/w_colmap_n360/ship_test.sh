@@ -1,11 +1,11 @@
 #!/bin/bash
 nrCheckpoint="../checkpoints"
 nrDataRoot="../data_src"
-name='ficus'
+name='ship'
 
 resume_iter=latest # 20000
 data_root="${nrDataRoot}/nerf/nerf_synthetic_colmap/"
-scan="ficus"
+scan="ship"
 
 normview=0
 
@@ -32,8 +32,8 @@ query_size=" 3 3 3 "
 vsize=" 0.004 0.004 0.004 " #" 0.005 0.005 0.005 "
 wcoord_query=1
 z_depth_dim=400
-max_o=830000 #2000000
-ranges=" -10 -10 -10 10 10 10 "
+max_o=1200000 #2000000
+ranges=" -1.277 -1.300 -0.550 1.371 1.349 0.729 "
 SR=80
 K=8
 P=15 #120
@@ -185,4 +185,5 @@ python3 test_ft.py \
         --vsize $vsize \
         --wcoord_query $wcoord_query \
         --max_o $max_o \
+
         --debug
