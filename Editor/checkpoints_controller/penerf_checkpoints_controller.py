@@ -33,6 +33,9 @@ class PeNerfCheckpointsController(BaseCheckpointsController):
                            os.path.join(self.opt.editor_checkpoints_root, self.opt.editor_checkpoints_scans,self.checkpoints_name + '.pth'))
         else:
             torch.save(self.network_paras,
+                       os.path.join(os.path.join(self.opt.editor_checkpoints_root, self.opt.editor_checkpoints_scans),
+                                    edit_name + '_net_ray_marching.pth'))
+            torch.save(self.network_paras,
                        os.path.join(self.opt.editor_checkpoints_root, edit_name + '_net_ray_marching.pth'))
             print('Saving checkpoints done: {}'.format(os.path.join(self.opt.editor_checkpoints_root, edit_name + '_net_ray_marching.pth')))
     def aggrator_paras_copy(self,cpc_other):

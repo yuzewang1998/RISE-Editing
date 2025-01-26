@@ -5,11 +5,11 @@ nrDataRoot="../data_src"
 name='scene101'
 
 resume_iter=200000 # 20000 #latest
-
 data_root="${nrDataRoot}/scannet/scans/"
 scan="scene0101_04"
 normview=0
 edge_filter=10 # pixels crop out at image edge
+
 point_conf_mode="1" # 0 for only at features, 1 for multi at weight
 point_dir_mode="1" # 0 for only at features, 1 for color branch
 point_color_mode="1" # 0 for only at features, 1 for color branch
@@ -19,7 +19,7 @@ agg_alpha_xyz_mode="None"
 agg_color_xyz_mode="None"
 feature_init_method="rand" #"rand" # "zeros"
 agg_axis_weight=" 1. 1. 1."
-agg_dist_pers=20
+agg_dist_pers=15
 radius_limit_scale=4
 depth_limit_scale=0
 vscale=" 2 2 2 "
@@ -28,16 +28,18 @@ query_size=" 3 3 3 "
 vsize=" 0.008 0.008 0.008 " #" 0.005 0.005 0.005 "
 wcoord_query=1
 z_depth_dim=400
-max_o=2000000
+max_o=610000
 ranges=" -10.0 -10.0 -10.0 10.0 10.0 10.0 "
 SR=24
 K=8
-P=30
+P=26
 NN=2
 
+
 act_type="LeakyReLU"
+
 agg_intrp_order=2
-agg_distance_kernel="linear" #"avg" #"feat_intrp"
+agg_distance_kernel="linear_immediately" #"avg" #"feat_intrp"
 weight_xyz_freq=2
 weight_feat_dim=8
 
@@ -46,12 +48,16 @@ shpnt_jitter="passfunc" #"uniform" # uniform gaussian
 
 which_agg_model="viewmlp"
 apply_pnt_mask=1
-shading_feature_mlp_layer0=1 #2
-shading_feature_mlp_layer1=2 #2
-shading_feature_mlp_layer2=0 #1
-shading_feature_mlp_layer3=2 #1
+shading_feature_mlp_layer0=0
+shading_feature_mlp_layer1=2
+shading_feature_mlp_layer2=0
+shading_feature_mlp_linear=2
+shading_feature_mlp_layer3=0 #0
+shading_feature_mlp_layer4=2 #1
+shading_feature_mlp_layer0_rotation_invariance_feature_extraction_module=0
+shading_feature_mlp_layer0_rotation_invariance_feature_extraction_dim=999
 shading_alpha_mlp_layer=1
-shading_color_mlp_layer=4
+shading_color_mlp_layer=2
 shading_feature_num=256
 dist_xyz_freq=5
 num_feat_freqs=3
@@ -78,9 +84,17 @@ num_viewdir_freqs=4 #6
 
 random_sample='random'
 random_sample_size=56 # 32 * 32 = 1024
+
 batch_size=1
 
+plr=0.002
+lr=0.0005 # 0.0005 #0.00015
+lr_policy="iter_exponential_decay"
+lr_decay_iters=1000000
+lr_decay_exp=0.1
+
 gpu_ids='0'
+
 checkpoints_dir="${nrCheckpoint}/scannet/"
 resume_dir="${nrCheckpoint}/init/dtu_dgt_d012_img0123_conf_agg2_32_dirclr20"
 
@@ -90,8 +104,11 @@ color_loss_weights=" 1.0 0.0 0.0 "
 color_loss_items='ray_masked_coarse_raycolor ray_miss_coarse_raycolor coarse_raycolor'
 test_color_loss_items='coarse_raycolor ray_miss_coarse_raycolor ray_masked_coarse_raycolor'
 
+
+
 bg_color="white" #"0.0,0.0,0.0,1.0,1.0,1.0"
 split="train"
+
 cd run
 
 python3 test_ft.py \
@@ -139,10 +156,14 @@ python3 test_ft.py \
         --raydist_mode_unit $raydist_mode_unit  \
         --agg_dist_pers $agg_dist_pers \
         --agg_intrp_order $agg_intrp_order \
+        --shading_feature_mlp_linear $shading_feature_mlp_linear \
         --shading_feature_mlp_layer0 $shading_feature_mlp_layer0 \
         --shading_feature_mlp_layer1 $shading_feature_mlp_layer1 \
         --shading_feature_mlp_layer2 $shading_feature_mlp_layer2 \
         --shading_feature_mlp_layer3 $shading_feature_mlp_layer3 \
+        --shading_feature_mlp_layer4 $shading_feature_mlp_layer4 \
+        --shading_feature_mlp_layer0_rotation_invariance_feature_extraction_module $shading_feature_mlp_layer0_rotation_invariance_feature_extraction_module \
+        --shading_feature_mlp_layer0_rotation_invariance_feature_extraction_dim $shading_feature_mlp_layer0_rotation_invariance_feature_extraction_dim \
         --shading_feature_num $shading_feature_num \
         --dist_xyz_freq $dist_xyz_freq \
         --shpnt_jitter $shpnt_jitter \
@@ -169,4 +190,3 @@ python3 test_ft.py \
         --max_o $max_o \
         --query_size $query_size \
         --debug
-

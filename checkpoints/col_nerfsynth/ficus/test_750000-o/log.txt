@@ -1,0 +1,62 @@
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.0025901594199240208, PSNR:25.86673355102539
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.004560723435133696, PSNR:23.4096622467041
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.005024304147809744, PSNR:22.989240646362305
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.004416348412632942, PSNR:23.54936408996582
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.003131944453343749, PSNR:25.041858673095703
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.003842221572995186, PSNR:24.1541748046875
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.0029827335383743048, PSNR:25.253854751586914
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.004625493194907904, PSNR:23.348417282104492
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.0024804119020700455, PSNR:26.054759979248047
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.0025493286084383726, PSNR:25.935741424560547
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.0026487610302865505, PSNR:25.76957130432129
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.005556321237236261, PSNR:22.552125930786133
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.003420528955757618, PSNR:24.65906524658203
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.002688327105715871, PSNR:25.705177307128906
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.0037427772767841816, PSNR:24.26805877685547
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.0037613818421959877, PSNR:24.246524810791016
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.003966549877077341, PSNR:24.015869140625
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.0027542193420231342, PSNR:25.600013732910156
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.004375975113362074, PSNR:23.589250564575195
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.0052018542774021626, PSNR:22.838415145874023
+End of iteration 20 	 Number of batches 20 	 Time taken: 81.34s
+[Average Loss] coarse_raycolor: 0.0006314893   coarse_raycolor_psnr: 32.1559829712   ray_masked_coarse_raycolor: 0.0037160181   ray_masked_coarse_raycolor_psnr: 24.4423942566   

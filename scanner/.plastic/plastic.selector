@@ -1,0 +1,4 @@
+repository "BH-G717-XR-Platform@yansongl@cloud.cn"
+  path "/"
+    br "/main"
+    co "/main"

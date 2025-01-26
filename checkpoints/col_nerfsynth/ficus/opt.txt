@@ -1,0 +1,213 @@
+----------------- Options ---------------
+                        K: 8                             	[default: 32]
+                       NN: 2                             	[default: 0]
+                        P: 15                            	[default: 16]
+                       SR: 80                            	[default: 24]
+                act_super: 1                             
+                 act_type: LeakyReLU                     	[default: ReLU]
+         add_shading_dist: 0                             
+       agg_alpha_xyz_mode: None                          
+          agg_axis_weight: [1.0, 1.0, 1.0]               	[default: None]
+       agg_color_xyz_mode: None                          
+            agg_dist_pers: 15                            	[default: 1]
+      agg_distance_kernel: linear_immediately            	[default: quadric]
+        agg_feat_xyz_mode: None                          
+          agg_intrp_order: 2                             	[default: 0]
+          agg_weight_norm: 1                             
+              alpha_range: 0                             
+               alter_step: 0                             
+           apply_pnt_mask: 1                             
+        appr_feature_str0: ['imgfeat_0_0', 'vol']        
+        appr_feature_str1: ['imgfeat_0_0', 'vol']        
+        appr_feature_str2: ['imgfeat_0_0', 'vol']        
+        appr_feature_str3: ['imgfeat_0_0', 'vol']        
+               batch_size: 1                             
+                 bg_color: white                         
+            bg_loss_items: []                            
+          bg_loss_weights: [1.0]                         
+                  bgmodel: No                            
+          checkpoints_dir: ../checkpoints/col_nerfsynth/ 	[default: ./checkpoints]
+               cloud_path:                               
+               color_grad: 1                             
+         color_loss_items: ['ray_masked_coarse_raycolor', 'ray_miss_coarse_raycolor', 'coarse_raycolor']	[default: None]
+       color_loss_weights: [1.0, 0.0, 0.0]               	[default: [1.0]]
+                comb_file: None                          
+            compute_depth: 0                             
+                conf_grad: 1                             
+            construct_res: 0                             
+                data_root: ../data_src/nerf/nerf_synthetic_colmap/	[default: None]
+             dataset_name: nerf_synth360_ft              	[default: None]
+                    debug: True                          	[default: False]
+             default_conf: -1.0                          
+        depth_conf_thresh: None                          
+               depth_grid: 128                           
+        depth_limit_scale: 0.0                           	[default: 1.3]
+         depth_loss_items: []                            
+       depth_loss_weights: [1.0]                         
+                depth_occ: 0                             
+                depth_vid: 0                             
+                 dir_grad: 0                             
+                 dir_norm: 0                             
+            dist_xyz_deno: 0.0                           
+            dist_xyz_freq: 5                             	[default: 2]
+              domain_size: 1                             
+             dprob_thresh: 0.8                           
+              edge_filter: 3                             
+  editor_checkpoints_root: /home/slam/devdata/pointnerf/checkpoints/nerfsynth/lego
+ editor_checkpoints_scans: edit                          
+           embedding_size: -1                            
+                far_plane: 6.0                           	[default: 4.525]
+          far_plane_shift: None                          
+               far_thresh: -1.0                          
+                feat_grad: 1                             
+      feature_init_method: rand                          
+              feedforward: 0                             
+                full_comb: 0                             
+            geo_cnsst_num: 2                             
+                  gpu_ids: 0                             
+               gpu_maxthr: 1024                          
+                 grid_res: 0                             
+                 half_res: False                         
+                  id_list: None                          
+                 id_range: (0, 385, 1)                   
+                   img_wh: (640, 480)                    
+                inall_img: 1                             
+          increase_radius: 0                             
+            init_view_num: 3                             
+                  inverse: 0                             
+      inverse_gamma_image: -1                            
+                 is_train: True                          	[default: None]
+              kernel_size: [3, 3, 3]                     	[default: (7, 7, 1)]
+       l2_size_loss_items: []                            
+     l2_size_loss_weights: [0.0]                         
+              load_points: 1                             
+ loss_embedding_l2_weight: -1                            
+          loss_kld_weight: -1                            
+                       lr: 0.001                         
+             lr_decay_exp: 0.1                           
+           lr_decay_iters: 50                            
+                lr_policy: lambda                        
+        manual_depth_view: 0                             
+         manual_std_depth: 0                             
+         max_dataset_size: inf                           
+                    max_o: 830000                        	[default: None]
+             maximum_step: None                          
+                     mode: 0                             
+                    model: mvs_points_volumetric         	[default: None]
+         modulator_concat: 0                             
+                   mvs_lr: 0.0005                        
+        mvs_point_sampler: gau_single_sampler            
+                n_threads: 1                             
+                     name: ficus                         	[default: None]
+               near_plane: 2.0                           	[default: 2.125]
+         neural_point_dir: None                          
+                    niter: 100                           
+              niter_decay: 100                           
+                  no_loss: False                         
+                 normview: 0                             
+     novel_cam_trajectory: 0                             
+           num_each_depth: 1                             
+           num_feat_freqs: 3                             	[default: 0]
+        num_feature_freqs: -1                            
+      num_hyperfeat_freqs: 0                             
+             num_neighbor: 1                             
+                   num_nn: 1                             
+                num_point: 8192                          
+            num_pos_freqs: 10                            	[default: -1]
+        num_viewdir_freqs: 4                             	[default: -1]
+             out_channels: 4                             	[default: None]
+                      pad: 24                            
+       pin_data_in_memory: 1                             	[default: -1]
+                      plr: 0.0005                        
+         point_color_mode: 1                             	[default: 0]
+          point_conf_mode: 1                             	[default: 0]
+           point_dir_mode: 1                             	[default: 0]
+       point_features_dim: 32                            	[default: 64]
+          point_hyper_dim: 256                           
+              point_noise:                               
+                pre_d_est: None                          
+               print_freq: 100                           
+                     prob: 0                             
+                prob_freq: 0                             
+         prob_kernel_size: None                          
+                prob_mode: 0                             
+                 prob_mul: 1.0                           
+            prob_num_step: 100                           
+              prob_thresh: 0.8                           
+               prob_tiers: 250000                        
+                 prob_top: 1                             
+               prune_iter: -1                            
+           prune_max_iter: 9999999                       
+             prune_thresh: 0.1                           
+               query_size: (0, 0, 0)                     
+       radius_limit_scale: 4.0                           	[default: 5.0]
+            random_sample: random                        	[default: none]
+       random_sample_size: 60                            	[default: 1024]
+                   ranges: [-10.0, -10.0, -10.0, 10.0, 10.0, 10.0]	[default: (-100.0, -100.0, -100.0, 100.0, 100.0, 100.0)]
+        raydist_mode_unit: 1                             	[default: 0]
+                  ref_vid: 0                             
+              render_only: 0                             
+   renderer_required_grad: 1                             
+            resample_pnts: -1                            
+               resume_dir: ../checkpoints/init/dtu_dgt_d012_img0123_conf_agg2_32_dirclr20	[default: ]
+              resume_iter: latest                        
+           save_iter_freq: 100000                        
+          save_point_freq: 100000                        
+                     scan: ficus                         	[default: scan1]
+        semantic_guidance: 0                             
+           serial_batches: 0                             
+                   sh_act: sigmoid                       
+                sh_degree: 4                             
+             sh_dist_func: sh_quadric                    
+  shading_alpha_mlp_layer: 1                             
+shading_color_channel_num: 3                             
+  shading_color_mlp_layer: 2                             	[default: 1]
+shading_feature_mlp_layer0: 0                             
+shading_feature_mlp_layer0_rotation_invariance_feature_extraction_dim: 999                           	[default: 0]
+shading_feature_mlp_layer0_rotation_invariance_feature_extraction_module: 0                             
+shading_feature_mlp_layer1: 2                             
+shading_feature_mlp_layer2: 0                             
+shading_feature_mlp_layer3: 0                             
+shading_feature_mlp_layer4: 2                             	[default: 1]
+shading_feature_mlp_linear: 2                             	[default: 0]
+      shading_feature_num: 256                           
+                 shape_id: 0                             
+         show_tensorboard: 0                             
+             shpnt_jitter: uniform                       	[default: passfunc]
+       sparse_loss_weight: 0                             
+                    split: train                         
+               start_iter: 0                             
+                 swap_num: None                          
+    test_color_loss_items: ['coarse_raycolor', 'ray_miss_coarse_raycolor', 'ray_masked_coarse_raycolor']	[default: None]
+                test_freq: 500                           
+                 test_num: 1                             
+            test_num_step: 1                             
+               test_train: 0                             
+                 testskip: 8                             
+                timestamp: False                         
+           train_and_test: 0                             
+           train_load_num: 0                             
+               train_step: 0                             
+                  trgt_id: 0                             
+                  verbose: False                         
+                      vid: 0                             
+                 view_ori: 0                             
+             visual_items: ['coarse_raycolor', 'gt_image']	[default: None]
+  visual_items_additional: []                            
+                  vox_res: 0                             
+                   vscale: [3, 3, 3]                     	[default: (2, 2, 1)]
+                    vsize: [0.004, 0.004, 0.004]         	[default: (0.005, 0.005, 0.005)]
+             wcoord_query: 1                             	[default: 0]
+          weight_feat_dim: 8                             
+          weight_xyz_freq: 2                             
+          which_agg_model: viewmlp                       
+         which_blend_func: alpha                         
+     which_ray_generation: near_far_linear               	[default: cube]
+        which_render_func: radiance                      	[default: microfacet]
+       which_tonemap_func: off                           	[default: gamma]
+                 xyz_grad: 0                             
+              z_depth_dim: 400                           
+             zero_epsilon: 0.001                         
+      zero_one_loss_items: []                            
+    zero_one_loss_weights: [1.0]                         
+----------------- End -------------------

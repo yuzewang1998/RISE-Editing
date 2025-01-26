@@ -36,7 +36,7 @@ class NpbgCheckpointsController(BaseCheckpointsController):
         neural_point = create_neural_point(self.opt,'npbg')
         neural_point.set_input(self.points_xyz,points_embeding=self.points_embeding)
         return neural_point
-    def set_and_save(self,npbg_neuralpoint,edit_name=None):
+    def set_and_save(self,npbg_neuralpoint,edit_name = None,ani_flag = 0):
         self.network_paras = torch.Tensor(npbg_neuralpoint.embeding)
         self.points_xyz = npbg_neuralpoint.xyz
         torch.save(self.network_paras,self.checkpoints_path+"n")

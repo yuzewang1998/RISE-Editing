@@ -4,15 +4,15 @@ nrCheckpoint="../checkpoints"
 nrDataRoot="../data_src"
 name='scene113'
 
-resume_iter=best #latest
+resume_iter=latest #latest
 
 data_root="${nrDataRoot}/scannet/scans/"
-scan="scene0113_01"
+scan="scene0113_00"
 
 load_points=2
 feat_grad=1
 conf_grad=1
-dir_grad=1
+dir_grad=0
 color_grad=1
 vox_res=900
 normview=0
@@ -108,7 +108,7 @@ num_pos_freqs=10
 num_viewdir_freqs=4 #6
 
 random_sample='random'
-random_sample_size=28 # 32 * 32 = 1024
+random_sample_size=56 # 32 * 32 = 1024
 
 batch_size=1
 
@@ -123,9 +123,9 @@ gpu_ids='0'
 checkpoints_dir="${nrCheckpoint}/scannet/"
 resume_dir="${nrCheckpoint}/init/dtu_dgt_d012_img0123_conf_agg2_32_dirclr20"
 
-save_iter_freq=10000
-save_point_freq=10000 #301840 #1
-maximum_step=200000 #500000 #250000 #800000
+save_iter_freq=50000
+save_point_freq=50000 #301840 #1
+maximum_step=800000 #500000 #250000 #800000
 
 niter=10000 #1000000
 niter_decay=10000 #250000

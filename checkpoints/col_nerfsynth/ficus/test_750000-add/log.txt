@@ -1,0 +1,602 @@
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.009283718653023243, PSNR:20.322778701782227
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.011322996579110622, PSNR:19.460384368896484
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.013409447856247425, PSNR:18.72589111328125
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.015353254973888397, PSNR:18.13799476623535
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.016913454979658127, PSNR:17.717674255371094
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.018465155735611916, PSNR:17.336471557617188
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.01990521512925625, PSNR:17.010330200195312
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.020333239808678627, PSNR:16.917932510375977
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.020673295482993126, PSNR:16.845901489257812
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.022170178592205048, PSNR:16.542306900024414
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.022645307704806328, PSNR:16.450218200683594
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.022879907861351967, PSNR:16.40545654296875
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.02376915141940117, PSNR:16.239864349365234
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.02433084510266781, PSNR:16.138427734375
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.024906177073717117, PSNR:16.036928176879883
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.025274241343140602, PSNR:15.973217010498047
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.025549469515681267, PSNR:15.926179885864258
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.026130707934498787, PSNR:15.828487396240234
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.027110159397125244, PSNR:15.668679237365723
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.027607206255197525, PSNR:15.589775085449219
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.027855437248945236, PSNR:15.550899505615234
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.02779574878513813, PSNR:15.56021499633789
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.027908043935894966, PSNR:15.542704582214355
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.02741003781557083, PSNR:15.620903015136719
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.026303304359316826, PSNR:15.799896240234375
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.026172466576099396, PSNR:15.821553230285645
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.02623010240495205, PSNR:15.812000274658203
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.026374638080596924, PSNR:15.78813362121582
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.02677266299724579, PSNR:15.72308349609375
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.027162035927176476, PSNR:15.660375595092773
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.027905305847525597, PSNR:15.543130874633789
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.02829340286552906, PSNR:15.483148574829102
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.028686273843050003, PSNR:15.423258781433105
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.029889456927776337, PSNR:15.244818687438965
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.0308997742831707, PSNR:15.100446701049805
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.03166632726788521, PSNR:14.994022369384766
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.03249858319759369, PSNR:14.881354331970215
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.033791717141866684, PSNR:14.711896896362305
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.03542185574769974, PSNR:14.507286071777344
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.03754361346364021, PSNR:14.254639625549316
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.03944218158721924, PSNR:14.040389060974121
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.04078822210431099, PSNR:13.894651412963867
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.04205804690718651, PSNR:13.76150894165039
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.04239456355571747, PSNR:13.726897239685059
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.041756462305784225, PSNR:13.792762756347656
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.03928105905652046, PSNR:14.058167457580566
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.03416547551751137, PSNR:14.664124488830566
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.03018013760447502, PSNR:15.202788352966309
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.028185328468680382, PSNR:15.499768257141113
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.028989214450120926, PSNR:15.37763500213623
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.034621551632881165, PSNR:14.606534004211426
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.03965136036276817, PSNR:14.017419815063477
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.042928699404001236, PSNR:13.67252254486084
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.0438651479780674, PSNR:13.578802108764648
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.04204680398106575, PSNR:13.762669563293457
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.03944357484579086, PSNR:14.040237426757812
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.0364341102540493, PSNR:14.384917259216309
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.03487851843237877, PSNR:14.574419021606445
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.03317403420805931, PSNR:14.792015075683594
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.03125787153840065, PSNR:15.050406455993652
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.029794558882713318, PSNR:15.258628845214844
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.02829357609152794, PSNR:15.48311996459961
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.027280863374471664, PSNR:15.641417503356934
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.026517322286963463, PSNR:15.764702796936035
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.02551611140370369, PSNR:15.931854248046875
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.024082524701952934, PSNR:16.182979583740234
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.02304777503013611, PSNR:16.373708724975586
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.02263808250427246, PSNR:16.451602935791016
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.02311907336115837, PSNR:16.360294342041016
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.024115145206451416, PSNR:16.177101135253906
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.024815864861011505, PSNR:16.052705764770508
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.025170082226395607, PSNR:15.9911527633667
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.02529008686542511, PSNR:15.970497131347656
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.02588837966322899, PSNR:15.868950843811035
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.026784135028719902, PSNR:15.721222877502441
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.027441726997494698, PSNR:15.615884780883789
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.027659427374601364, PSNR:15.581565856933594
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.028004316613078117, PSNR:15.527750015258789
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.028773071244359016, PSNR:15.410137176513672
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.029319671913981438, PSNR:15.328409194946289
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.030061807483434677, PSNR:15.2198486328125
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.030662529170513153, PSNR:15.133920669555664
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.031009024009108543, PSNR:15.085119247436523
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.031096193939447403, PSNR:15.072925567626953
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.03168075159192085, PSNR:14.992043495178223
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.032050494104623795, PSNR:14.941652297973633
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.03256698697805405, PSNR:14.872222900390625
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.03289728984236717, PSNR:14.828397750854492
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.03284832090139389, PSNR:14.834867477416992
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.032367024570703506, PSNR:14.898971557617188
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.030773654580116272, PSNR:15.118207931518555
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.026686199009418488, PSNR:15.73713207244873
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.021746089681982994, PSNR:16.626188278198242
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.019497277215123177, PSNR:17.10025978088379
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.01884974166750908, PSNR:17.246944427490234
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.01548883318901062, PSNR:18.09981346130371
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.013132411986589432, PSNR:18.81655502319336
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.011961538344621658, PSNR:19.222129821777344
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.011672720313072205, PSNR:19.328279495239258
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.011840295046567917, PSNR:19.266374588012695
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.010741840116679668, PSNR:19.689212799072266
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.010285462252795696, PSNR:19.877761840820312
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.010745484381914139, PSNR:19.687740325927734
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.012292641215026379, PSNR:19.103548049926758
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.01249606441706419, PSNR:19.03226661682129
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.01484984066337347, PSNR:18.28278160095215
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.01660027541220188, PSNR:17.798847198486328
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.019230147823691368, PSNR:17.160173416137695
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.02108101174235344, PSNR:16.761085510253906
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.021809782832860947, PSNR:16.61348533630371
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.02208629623055458, PSNR:16.55877113342285
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.021618032827973366, PSNR:16.651838302612305
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.021007336676120758, PSNR:16.776290893554688
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.02066890522837639, PSNR:16.846824645996094
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.020922213792800903, PSNR:16.793922424316406
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.02139294520020485, PSNR:16.697294235229492
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.02142978459596634, PSNR:16.689821243286133
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.020809482783079147, PSNR:16.817386627197266
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.019686542451381683, PSNR:17.058303833007812
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.018429188057780266, PSNR:17.34493637084961
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.017864923924207687, PSNR:17.47998809814453
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.01723741553723812, PSNR:17.635276794433594
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.017303667962551117, PSNR:17.61861801147461
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.017748519778251648, PSNR:17.508377075195312
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.018399646505713463, PSNR:17.351903915405273
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.019292254000902176, PSNR:17.146169662475586
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.020436173304915428, PSNR:16.89600372314453
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.02185411937534809, PSNR:16.604665756225586
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.02367400750517845, PSNR:16.257282257080078
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.02545805834233761, PSNR:15.941746711730957
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.02714090421795845, PSNR:15.663755416870117
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.028903981670737267, PSNR:15.390422821044922
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.02965833805501461, PSNR:15.278532028198242
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.030910130590200424, PSNR:15.098990440368652
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.03291669115424156, PSNR:14.825838088989258
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.03523366525769234, PSNR:14.530420303344727
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.038152698427438736, PSNR:14.184745788574219
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.04136482626199722, PSNR:13.833687782287598
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.04396791756153107, PSNR:13.56864070892334
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.04606404900550842, PSNR:13.366378784179688
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.048280756920576096, PSNR:13.16225814819336
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.05036896839737892, PSNR:12.978368759155273
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.052205104380846024, PSNR:12.822869300842285
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.054026100784540176, PSNR:12.67396354675293
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.053770504891872406, PSNR:12.694558143615723
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.04955986514687538, PSNR:13.048698425292969
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.041701361536979675, PSNR:13.798497200012207
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.03648459166288376, PSNR:14.37890338897705
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.03337123617529869, PSNR:14.766276359558105
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.032629020512104034, PSNR:14.863959312438965
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.03467723727226257, PSNR:14.599555015563965
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.03964683413505554, PSNR:14.017914772033691
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.04249636456370354, PSNR:13.71648120880127
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.042972929775714874, PSNR:13.668048858642578
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.04151929169893265, PSNR:13.817500114440918
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.03847511485219002, PSNR:14.148199081420898
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.03613928332924843, PSNR:14.42020320892334
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.0340338870882988, PSNR:14.680883407592773
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.03185484930872917, PSNR:14.968243598937988
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.029442470520734787, PSNR:15.310257911682129
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.027563951909542084, PSNR:15.59658432006836
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.026012815535068512, PSNR:15.848124504089355
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.024529727175831795, PSNR:16.103073120117188
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.023145487532019615, PSNR:16.355335235595703
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.0222124345600605, PSNR:16.53403663635254
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.021393025293946266, PSNR:16.697277069091797
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.020831748843193054, PSNR:16.812742233276367
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.02005882002413273, PSNR:16.976945877075195
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.0196267981082201, PSNR:17.071504592895508
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.020825687795877457, PSNR:16.814006805419922
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.022402312606573105, PSNR:16.497072219848633
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.023990308865904808, PSNR:16.199642181396484
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.025055501610040665, PSNR:16.010969161987305
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.025825977325439453, PSNR:15.87943172454834
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.026626788079738617, PSNR:15.74681282043457
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.027126308530569077, PSNR:15.666090965270996
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.02752513997256756, PSNR:15.602704048156738
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.028170336037874222, PSNR:15.50207805633545
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.02921220101416111, PSNR:15.344356536865234
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.029742129147052765, PSNR:15.266279220581055
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.03045514225959778, PSNR:15.163393020629883
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.03166266158223152, PSNR:14.994525909423828
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.03186311945319176, PSNR:14.96711540222168
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.03229206055402756, PSNR:14.909041404724121
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.03245469555258751, PSNR:14.887224197387695
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.03199465945363045, PSNR:14.949224472045898
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.03131333366036415, PSNR:15.042705535888672
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.03029223345220089, PSNR:15.186686515808105
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.029049163684248924, PSNR:15.368663787841797
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.02722327783703804, PSNR:15.650595664978027
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.02350546419620514, PSNR:16.288311004638672
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.020373810082674026, PSNR:16.909276962280273
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.017649246379733086, PSNR:17.532737731933594
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.01640591211616993, PSNR:17.849994659423828
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.015806350857019424, PSNR:18.011682510375977
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.01566527783870697, PSNR:18.05061912536621
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.013674795627593994, PSNR:18.640792846679688
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.012431556358933449, PSNR:19.05474281311035
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.011948486790060997, PSNR:19.226869583129883
+coarse_raycolor:(800, 800, 3)
+gt_image:torch.Size([640000, 3])
+ray_masked_coarse_raycolor loss:0.00954938493669033, PSNR:20.200244903564453
+End of iteration 200 	 Number of batches 200 	 Time taken: 793.53s
+[Average Loss] coarse_raycolor: 0.0056519946   coarse_raycolor_psnr: 22.8530139923   ray_masked_coarse_raycolor: 0.0273275319   ray_masked_coarse_raycolor_psnr: 15.8915081024   

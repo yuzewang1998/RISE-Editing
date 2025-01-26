@@ -21,6 +21,8 @@ def meshlab_point_2_neural_point(opt):
     origin_lego_np.load_from_ply('origin')
     scraper_np = origin_lego_np.select_from_meshlabpoint(scraper_mp)
     scraper_np.save_as_ply("part")
+    port_np = origin_lego_np - scraper_np
+    port_np.save_as_ply("port")
 def rotate_part(opt):
     part = create_neural_point(opt,'penerf')
     part.load_from_ply('part')
@@ -44,10 +46,10 @@ def add_part(opt):
     cpc.set_and_save(new_scene,'cmp_new')
 
 def ed1_rotate(opt):
-    extract_neural_point(opt)
+    # extract_neural_point(opt)
     meshlab_point_2_neural_point(opt)
-    rotate_part(opt)
-    add_part(opt)
+    # rotate_part(opt)
+    # add_part(opt)
 def ed2_shear(opt):
     extract_neural_point(opt)
     meshlab_point_2_neural_point(opt)
@@ -58,8 +60,7 @@ def ed2_shear(opt):
 def main():
     sparse = Options()
     opt = sparse.opt
-    ed2_shear(opt)
-    # ed1_rotate(opt)
+    ed1_rotate(opt)
 
 
 if __name__=="__main__":
