@@ -1,9 +1,10 @@
-
+RISE-Editing uses neural 3D point clouds, with associated neural features, to model and editing radiance field. Specifically, we first propose a novel rotation-invariant neural point field representation to learn local contents with the Cartesian coordinates, enhancing the rendering quality after fine-grained editing of the reconstructed scenes. Secondly, we present a plug-and-play multi-view ensemble learning strategy to lift the 2D inconsistent zero-shot segmentation results to 3D neural point field without post retraining. Users can efficiently achieve the interactive implicit field segment-then-editing with this strategy. Third, we propose an efficient and fine-grained neural scene shape editing framework. With simple click-based prompts, users can segment the implicit point field they want to edit, and generate novel implicit field with variopus shape editing functions in real-time, such as part transformation, duplication, scaling up or down, and cross-scene compositing.
 ## Overal Instruction
 1. Please first install the libraries as below and download/prepare the datasets as instructed.
 2. Point Initialization: Download pre-trained MVSNet as below and train the feature extraction from scratch or directly download the pre-trained models. (Obtain 'MVSNet' and 'init' folder in checkpoints folder)
-3.  Per-scene Optimization: Download pre-trained models or optimize from scratch as instructed.
-
+3. Per-scene Optimization: Optimize from scratch as instructed.
+4. Select neural point with SAM (prompt from multi-view images) or MeshLab (prompt from 3D point cloud)
+5. Editing neural point ( local transformation, duplication, deletion, scaling up or down, and cross-scene compositing)
 For nerfsynthetic, colmap_nerfsynthetic, tanks&temples, scannet and dtu,  
 We provide all the checkpoint_files [google drive](https://drive.google.com/drive/folders/1xk1GhDhgPk1MrlX8ncfBz5hNMvSa9vS6?usp=sharing) | [baidu wangpan](https://pan.baidu.com/s/1doJHI03Tgl_qIquGZuW5bw?pwd=p8bs); all the images and scores of the test results [google drive](https://drive.google.com/drive/folders/1KAYs7XuBJNMTHVBuOCtpLNv9P8UMoayw?usp=sharing) | [baidu wangpan](https://pan.baidu.com/s/1BMewWRSIkNFlp7DKYmx9vQ?pwd=3yse); and video results [google drive](https://drive.google.com/drive/folders/1dutZEZO9vfeIbfWwplbIIam7YBeyZ0dY?usp=sharing) | [baidu wangpan](https://pan.baidu.com/s/1kC1qSL5dkT8cDdE3dHTc2A?pwd=j46j);
 
@@ -15,7 +16,7 @@ We also share the visual results of [npbg](https://github.com/alievk/npbg), [nsv
 All the codes are tested in the following environment:
 * Linux (tested on Ubuntu 22.04)
 * Python 3.6+
-* PyTorch 1.7 or higher (tested on PyTorch 1.7, 1.8.1, 1.9, 1.10)
+* PyTorch 1.7 or higher
 * CUDA 10.2 or higher 
 
 ### Install
