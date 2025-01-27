@@ -1,4 +1,5 @@
 RISE-Editing uses neural 3D point clouds, with associated neural features, to model and editing radiance field. Specifically, we first propose a novel rotation-invariant neural point field representation to learn local contents with the Cartesian coordinates, enhancing the rendering quality after fine-grained editing of the reconstructed scenes. Secondly, we present a plug-and-play multi-view ensemble learning strategy to lift the 2D inconsistent zero-shot segmentation results to 3D neural point field without post retraining. Users can efficiently achieve the interactive implicit field segment-then-editing with this strategy. Third, we propose an efficient and fine-grained neural scene shape editing framework. With simple click-based prompts, users can segment the implicit point field they want to edit, and generate novel implicit field with variopus shape editing functions in real-time, such as part transformation, duplication, scaling up or down, and cross-scene compositing.
+![image](https://github.com/yuzewang1998/RISE-EDITING/blob/master/assets/teaser.jpg)
 ## Overal Instruction
 1. Please first install the libraries as below and download/prepare the datasets as instructed.
 2. Point Initialization: Download pre-trained MVSNet as below and train the feature extraction from scratch or directly download the pre-trained models. (Obtain 'MVSNet' and 'init' folder in checkpoints folder)
@@ -27,10 +28,12 @@ Install the dependent libraries as follows:
 pip install torch==1.8.1+cu102 h5py
 pip install imageio scikit-image
 ```
+
 * Install pycuda (crucial) following:
 https://documen.tician.de/pycuda/install.html 
 * Install torch_scatter following:
 https://github.com/rusty1s/pytorch_scatter
+* (Optional) If you want to edit radiance field via 3D neural points scaffold with MeshLab, just skip this step. If you want to edit via prompting 2D images with SAM, install [SAM](https://github.com/facebookresearch/segment-anything) and put it at ```./segment-anything``` folder and download checkpoints at ```./segment-anything/checkpoints```( Or you can customize the SAM path in ```./Editor/SAMER/app.py```)
 
 We develope our code with pytorch1.8.1, pycuda2021.1, and torch_scatter 2.0.8
 
@@ -38,7 +41,7 @@ We develope our code with pytorch1.8.1, pycuda2021.1, and torch_scatter 2.0.8
 
 The layout should looks like this
 ```
-rip-nerf
+rise-editing
 ├── data_src
 │   ├── dtu
     │   │   │──Cameras
@@ -57,11 +60,9 @@ rip-nerf
 Or you can download using the official links as follows:
 
 
-## NeRF Synthetic
-Download `nerf_synthetic.zip` from [here](https://drive.google.com/drive/folders/128yBriW1IG_3NJ5Rp7APSTZsJqdJdfc1) under ``data_src/nerf/''
-
-
-
+### NeRF Synthetic dataset
+Download NeRF Synthetic dataset with COLMAP from [here](https://drive.google.com/drive/folders/1sonP_5JLNE5c5ejHpqke_7M84Zd4O7eH) under ``data_src/nerf/''
+### Scannet dataset
 Download and extract ScanNet by following the instructions provided at http://www.scan-net.org/. The detailed steps including:
 * Go to http://www.scan-net.org and fill & sent the request form.
 * You will get a email that has command instruction and a download-scannet.py file, this file is for python 2, you can use our download-scannet.py in the ``data'' directory for python 3.
@@ -69,29 +70,26 @@ Download and extract ScanNet by following the instructions provided at http://ww
     ```
     git clone https://github.com/ScanNet/ScanNet.git
     ```
-* Download specific scenes (used by NSVF):
+* Download specific scenes, such as:
   ```
-   python data/download-scannet.py -o ../data_src/scannet/ id scene0101_04 
-   python data/download-scannet.py -o ../data_src/scannet/ id scene0241_01
+   python data/download-scannet.py -o ../data_src/scannet/ id scene0113_01
   ```
 * Process the sens files:
   ```
-    python ScanNet/SensReader/python/reader.py --filename data_src/nrData/scannet/scans/scene0101_04/scene0101_04.sens  --output_path data_src/nrData/scannet/scans/scene0101_04/exported/ --export_depth_images --export_color_images --export_poses --export_intrinsics
-    
-    python ScanNet/SensReader/python/reader.py --filename data_src/nrData/scannet/scans/scene0241_01/scene0241_01.sens  --output_path data_src/nrData/scannet/scans/scene0241_01/exported/ --export_depth_images --export_color_images --export_poses --export_intrinsics
+    python ScanNet/SensReader/python/reader.py --filename data_src/nrData/scannet/scans/scene01113_01/scene01113_01.sens  --output_path data_src/nrData/scannet/scans/scene01113_01/exported/ --export_depth_images --export_color_images --export_poses --export_intrinsics
   ```
 
 ## Point Initialization / Generalization:
 ### &nbsp; Download pre-trained MVSNet checkpoints:
 We trained [MVSNet](https://github.com/xy-guo/MVSNet_pytorch) on DTU. You can Download ''MVSNet'' directory from 
-[google drive](https://drive.google.com/drive/folders/1xk1GhDhgPk1MrlX8ncfBz5hNMvSa9vS6?usp=sharing)
-and place them under '''checkpoints/'''
+[google drive](https://drive.google.com/drive/folders/1dVAWn5j3e8JmHJSjr4csPP_jUsOZVhnL?usp=drive_link)
+and place them under ```./checkpoints/```
 
 ### &nbsp;  Train 2D feature extraction and point representation
 #####  &nbsp; Directly use our trained checkpoints files:
-Download ''init'' directory from 
-[google drive](https://drive.google.com/drive/folders/1xk1GhDhgPk1MrlX8ncfBz5hNMvSa9vS6?usp=sharing).
-and place them under '''checkpoints/'''
+Download ```init``` directory from 
+[google drive](https://drive.google.com/drive/folders/1Y_AxuUgkAFmnskb25u8AOWgeQYp55xjh?usp=drive_link).
+and place them under ```./checkpoints/```
 
 ##### &nbsp; Or train from scratch:
 Train for point features of 63 channels (as in paper) 
@@ -108,155 +106,57 @@ cp checkpoints/dtu_dgt_d012_img0123_conf_color_dir_agg2/250000_net_ray_marching.
 
 cp checkpoints/dtu_dgt_d012_img0123_conf_color_dir_agg2/250000_net_mvs.pth  checkpoints/dtu_dgt_d012_img0123_conf_color_dir_agg2/best_net_mvs.pth
 ```
-### &nbsp; Test feed forward inference on dtu scenes 
-These scenes that are selected by MVSNeRF, please also refer their code to understand the metrics calculation.
-```
-bash dev_scripts/dtu_test_inf/inftest_scan1.sh
-bash dev_scripts/dtu_test_inf/inftest_scan8.sh
-bash dev_scripts/dtu_test_inf/inftest_scan21.sh
-bash dev_scripts/dtu_test_inf/inftest_scan103.sh
-bash dev_scripts/dtu_test_inf/inftest_scan114.sh
-```
 
-(Please visit the project sites to see the original videos of above scenes, which have quality loss when being converted to gif files here.)
 ### Download per-scene optimized Point-NeRFs
- You can skip training and download the folders of ''nerfsynth'', ''tanksntemples'' and ''scannet'' here [google drive](https://drive.google.com/drive/folders/1xk1GhDhgPk1MrlX8ncfBz5hNMvSa9vS6?usp=sharing), and place them in ''checkpoints/''.
+ You can skip training and download the folders here [google drive](https://drive.google.com/drive/folders/1xk1GhDhgPk1MrlX8ncfBz5hNMvSa9vS6?usp=sharing), and place them in ```checkpoints/```.
 
 ```
 pointnerf
 ├── checkpoints
 │   ├── init
     ├── MVSNet
-    ├── nerfsynth
     ├── col_nerfsynth
     ├── scannet
-    ├── tanksntemples
+    ...
 ```
-
-In each scene, we provide initialized point features and network weights ''0_net_ray_marching.pth'', points and weights at 20K steps ''20000_net_ray_marching.pth'' and 200K steps ''200000_net_ray_marching.pth''
-
-### Test the per-scene optimized Point-NeRFs
-#### NeRF Synthetics
-<details>
-  <summary>test scripts</summary>
-  
-```
-    bash dev_scripts/w_n360/chair_test.sh
-    bash dev_scripts/w_n360/drums_test.sh
-    bash dev_scripts/w_n360/ficus_test.sh
-    bash dev_scripts/w_n360/hotdog_test.sh
-    bash dev_scripts/w_n360/lego_test.sh
-    bash dev_scripts/w_n360/materials_test.sh
-    bash dev_scripts/w_n360/mic_test.sh
-    bash dev_scripts/w_n360/ship_test.sh
-```
-</details>
-
-
-#### ScanNet
-<details>
-  <summary>test scripts</summary>
-  
-```
-    bash dev_scripts/w_scannet_etf/scane101_test.sh
-    bash dev_scripts/w_scannet_etf/scane241_test.sh
-```
-</details>
-
-#### Tanks & Temples
-<details>
-  <summary>test scripts</summary>
-
-```
-    bash dev_scripts/w_tt_ft/barn_test.sh
-    bash dev_scripts/w_tt_ft/caterpillar_test.sh
-    bash dev_scripts/w_tt_ft/family_test.sh
-    bash dev_scripts/w_tt_ft/ignatius_test.sh
-    bash dev_scripts/w_tt_ft/truck_test.sh
-```
-</details>
-
-### Per-scene optimize from scatch 
+### Train the per-scene RISE-Editing
 Make sure the ''checkpoints'' folder has ''init'' and ''MVSNet''.
 The training scripts will start to do initialization if there is no ''.pth'' files in a scene folder. It will start from the last ''.pth'' files until reach the iteration of ''maximum_step''.
-
-#### NeRF Synthetics using MVSNet (w/ alpha channel filtering during point cloud reconstruction and pycuda)
-<details>
-  <summary>train scripts</summary>
-
+ For example:
 ```
-    bash dev_scripts/w_n360/chair.sh
-    bash dev_scripts/w_n360/drums.sh
-    bash dev_scripts/w_n360/ficus.sh
-    bash dev_scripts/w_n360/hotdog.sh
-    bash dev_scripts/w_n360/lego.sh
-    bash dev_scripts/w_n360/materials.sh
-    bash dev_scripts/w_n360/mic.sh
-    bash dev_scripts/w_n360/ship.sh
+    bash dev_scripts/w_colmap_n360/chair.sh
+    bash dev_scripts/w_colmap_n360/drums.sh
+    bash dev_scripts/w_scannet_etf/scene113.sh
+    bash dev_scripts/w_scannet_etf/scene33.sh
 ```
-</details>
-
-
-#### NeRF Synthetics using MVSNet (w/ background color filtering during point cloud reconstruction and pytorch cuda)
-<details>
-  <summary>train scripts</summary>
-
+### Train across scene for compositing
+We provide an example for simitaneously training multiple scenes for compositing:
+```aiignore
+./run/train_ft_ms.py
 ```
-    bash dev_scripts/w_n360/chair_cuda.sh
-    bash dev_scripts/w_n360/drums_cuda.sh
-    bash dev_scripts/w_n360/ficus_cuda.sh
-    bash dev_scripts/w_n360/hotdog_cuda.sh
-    bash dev_scripts/w_n360/lego_cuda.sh
-    bash dev_scripts/w_n360/materials_cuda.sh
-    bash dev_scripts/w_n360/mic_cuda.sh
-    bash dev_scripts/w_n360/ship_cuda.sh
+### Test the per-scene optimized RISE-Editing
+
+  For example:
 ```
-</details>
-
-#### NeRF Synthetics using COLMAP points
-Please download the COLMAP data (see above). If there is {maximum_step}.pth checkpoint files in the path, the scripts below will also run test.
-<details>
-  <summary>train scripts</summary>
-
+    bash dev_scripts/w_colmap_n360/chair_test.sh
+    bash dev_scripts/w_colmap_n360/drums_test.sh
+    bash dev_scripts/w_scannet_etf/scene113_test.sh
+    bash dev_scripts/w_scannet_etf/scene33_test.sh
 ```
-    bash dev_scripts/w_colmap_n360/col_chair.sh
-    bash dev_scripts/w_colmap_n360/col_drums.sh
-    bash dev_scripts/w_colmap_n360/col_ficus.sh
-    bash dev_scripts/w_colmap_n360/col_hotdog.sh
-    bash dev_scripts/w_colmap_n360/col_lego.sh
-    bash dev_scripts/w_colmap_n360/col_materials.sh
-    bash dev_scripts/w_colmap_n360/col_mic.sh
-    bash dev_scripts/w_colmap_n360/col_ship.sh
-```
-</details>
-
-#### ScanNet
-<details>
-  <summary>train scripts</summary>
-
-```
-    bash dev_scripts/w_scannet_etf/scene101.sh
-    bash dev_scripts/w_scannet_etf/scene241.sh
-```
-</details>
-
-#### Tanks & Temples
-<details>
-  <summary>train scripts</summary>
-
-```
-    bash dev_scripts/w_tt_ft/barn.sh
-    bash dev_scripts/w_tt_ft/caterpillar.sh
-    bash dev_scripts/w_tt_ft/family.sh
-    bash dev_scripts/w_tt_ft/ignatius.sh
-    bash dev_scripts/w_tt_ft/truck.sh
-```
-</details>
-
-
+### Prompting and editing the neural points you want to edit.
+#### Option 1: Prompting the neural points with MeshLab
+We provide several editing example scripts in ``./Editor/editor_run`` folder.
+It mainly contains four steps:
+* extract the neural points explicitly (.ply) from the checkpoints (xxx_net_ray_marching.pth). A ``*_neuralpoint.ply`` will generated.
+* Open the ``*_neural_point.ply`` with Meshlab, and select the neural points you want to edit, export it as '*_meshlabpoint.ply'
+* convert the meshlab type point to neural type point.
+* Manipulate the corresponding neural point (transformation, scaling up/down, deletion, composition across scenes...)
+* replace the generate ``*_net_ray_marching.pth`` to the checkpoints before editing (or just rename it as +1 iteration) 
+For example, 
+#### Option 2: Prompting the neural points with SAM
 
 ## Acknowledgement
-Our repo is developed based on [MVSNet](https://github.com/YoYo000/MVSNet),  [NeRF](https://github.com/bmild/nerf), [MVSNeRF](https://github.com/apchenstu/mvsnerf), and [NSVF](https://github.com/facebookresearch/NSVF).
+Our repo is developed based on [Point-NeRF](), [SAM]() and [SPIDR]()
 
 Please also consider citing the corresponding papers. 
 
