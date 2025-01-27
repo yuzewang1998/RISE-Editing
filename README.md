@@ -77,7 +77,7 @@ Download and extract ScanNet by following the instructions provided at http://ww
   ```
 
 ## Point Initialization / Generalization:
-### &nbsp; Download pre-trained MVSNet checkpoints:
+### &nbsp; Download pre-trained MVSNet checkpoints
 We trained [MVSNet](https://github.com/xy-guo/MVSNet_pytorch) on DTU. You can Download ''MVSNet'' directory from 
 [google drive](https://drive.google.com/drive/folders/1dVAWn5j3e8JmHJSjr4csPP_jUsOZVhnL?usp=drive_link)
 and place them under ```./checkpoints/```
@@ -140,7 +140,7 @@ We provide an example for simitaneously training multiple scenes for compositing
     bash dev_scripts/w_scannet_etf/scene113_test.sh
     bash dev_scripts/w_scannet_etf/scene33_test.sh
 ```
-### Prompting and editing the neural points you want to edit.
+### Prompting and editing the neural points you want to edit
 #### Option 1: Prompting the neural points with MeshLab
 We provide several editing example scripts in ``./Editor/editor_run`` folder.
 It mainly contains four steps:
@@ -170,7 +170,7 @@ The mainly difference is the select neural points step. We use a GUI to interact
 Then you will get the neural point you want to edit. And the following steps are same as the MeshLab one.
 ![image](https://github.com/yuzewang1998/RISE-EDITING/blob/master/assets/sam_gui.png)
 ## Acknowledgement
-Our repo is developed based on [Point-NeRF](https://github.com/Xharlie/pointnerf), [SAM](https://github.com/facebookresearch/segment-anything) and [SPIDR](https://github.com/nexuslrf/SPIDR)
+Our repo is developed based on [Point-NeRF](https://github.com/Xharlie/pointnerf), [SAM](https://github.com/facebookresearch/segment-anything) and [SPIDR](https://github.com/nexuslrf/SPIDR).
 
 Please also consider citing the corresponding papers. 
 
