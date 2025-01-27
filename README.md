@@ -152,15 +152,27 @@ It mainly contains four steps:
 * convert the meshlab type point to neural type point.
 * Manipulate the corresponding neural point (transformation, scaling up/down, deletion, composition across scenes...)
 * replace the generate ``*_net_ray_marching.pth`` to the checkpoints before editing (or just rename it as +1 iteration) 
-For example, 
-#### Option 2: Prompting the neural points with SAM
+* Render the edited scene with the test script, such as ``./dev_scripts/w_colmap_n360/ship_test.sh``
 
+We provide an example of ship editing: select the ship at the top of the platte, duplicate it twice, and position the duplicates to the left and right of the original ship.
+The following image illustrates the selected body of the ship:
+![image](https://github.com/yuzewang1998/RISE-EDITING/blob/master/assets/edit_meshlab3.png)
+The following image illustrates the duplicated ship and the original ship:
+![image](https://github.com/yuzewang1998/RISE-EDITING/blob/master/assets/edit_meshlab2.png)
+The following image illstrates the edited scene:
+![image](https://github.com/yuzewang1998/RISE-EDITING/blob/master/assets/edit_meshlab1.png)
+The following image illustrates the rendering results:
+![image](https://github.com/yuzewang1998/RISE-EDITING/blob/master/assets/render.png)
+The following image illustrates the workspace file of the directory:
+![image](https://github.com/yuzewang1998/RISE-EDITING/blob/master/assets/file_directory.png)
+#### Option 2: Prompting the neural points with SAM
+The mainly difference is the select neural points step. We use a GUI to interactive segment the part we want to edit with SAM:
+```python ./Editor/SAMER/app.py```
+Then you will get the neural point you want to edit. And the following steps are same as the MeshLab one.
 ## Acknowledgement
-Our repo is developed based on [Point-NeRF](), [SAM]() and [SPIDR]()
+Our repo is developed based on [Point-NeRF](https://github.com/Xharlie/pointnerf), [SAM](https://github.com/facebookresearch/segment-anything) and [SPIDR](https://github.com/nexuslrf/SPIDR)
 
 Please also consider citing the corresponding papers. 
-
-The project is conducted collaboratively between Adobe Research and University of Southern California. 
 
 ## LICENSE
 The repo is licensed under Creative Commons Attribution-NonCommercial-ShareAlike 2.0, and is restricted to academic use only.
