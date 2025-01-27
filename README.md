@@ -162,10 +162,13 @@ The following image illustrates the rendering results:
 ![image](https://github.com/yuzewang1998/RISE-EDITING/blob/master/assets/render.png)
 The following image illustrates the workspace file of the directory:
 ![image](https://github.com/yuzewang1998/RISE-EDITING/blob/master/assets/file_directory.png)
+If the scene is continuously edited to generate multiple scenes (multiple checkpoints), then you can animate it.
+![image](https://github.com/yuzewang1998/RISE-EDITING/blob/master/assets/video_render.gif)
 #### Option 2: Prompting the neural points with SAM
 The mainly difference is the select neural points step. We use a GUI to interactive segment the part we want to edit with SAM:
 ```python ./Editor/SAMER/app.py```
 Then you will get the neural point you want to edit. And the following steps are same as the MeshLab one.
+![image](https://github.com/yuzewang1998/RISE-EDITING/blob/master/assets/sam_gui.png)
 ## Acknowledgement
 Our repo is developed based on [Point-NeRF](https://github.com/Xharlie/pointnerf), [SAM](https://github.com/facebookresearch/segment-anything) and [SPIDR](https://github.com/nexuslrf/SPIDR)
 
